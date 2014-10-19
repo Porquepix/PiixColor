@@ -1,3 +1,5 @@
+package pixcolor.test;
+
 import java.awt.Dimension;
 import java.awt.Panel;
 import java.io.File;
