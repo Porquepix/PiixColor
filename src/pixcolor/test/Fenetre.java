@@ -48,7 +48,9 @@ public class Fenetre extends JFrame {
 	}
 
 	public static void main(String args[]) {
-		new Fenetre(500, 200, "Test");
+		//new Fenetre(500, 200, "Test");
+		
+		Listing.liste("images");
 	}
 	
 }
