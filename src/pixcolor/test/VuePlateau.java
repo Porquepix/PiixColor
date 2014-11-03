@@ -61,57 +61,57 @@ public class VuePlateau extends JFrame implements MouseListener, MouseMotionList
 		panel.add(vide);
 		
 		//Ajout couleurs :
-		JLabel image = new JLabel(new ImageIcon("C:/Users/Yann/Pictures/Sprite/blue.png"));
+		JLabel image = new JLabel(new ImageIcon("images/blue.png"));
 		panel =  (JPanel) matrice.getComponent(4);
 		panel.add(image);
 		
-		image = new JLabel(new ImageIcon("C:/Users/Yann/Pictures/Sprite/red.png"));
+		image = new JLabel(new ImageIcon("images/red.png"));
 		panel = (JPanel) matrice.getComponent(8);
 		panel.add(image);
 		
 		
-		image = new JLabel(new ImageIcon("C:/Users/Yann/Pictures/Sprite/green.png"));
+		image = new JLabel(new ImageIcon("images/green.png"));
 		panel = (JPanel) matrice.getComponent(12);
 		panel.add(image);
 		
 		//Ajout formes :
-		image = new JLabel(new ImageIcon("C:/Users/Yann/Pictures/Sprite/triangle.png"));
+		image = new JLabel(new ImageIcon("images/triangle.png"));
 		panel = (JPanel) matrice.getComponent(1);
 		panel.add(image);
 		
-		image = new JLabel(new ImageIcon("C:/Users/Yann/Pictures/Sprite/cercle.png"));
+		image = new JLabel(new ImageIcon("images/cercle.png"));
 		panel = (JPanel) matrice.getComponent(2);
 		panel.add(image);
 		
-		image = new JLabel(new ImageIcon("C:/Users/Yann/Pictures/Sprite/carre.png"));
+		image = new JLabel(new ImageIcon("images/carre.png"));
 		panel = (JPanel) matrice.getComponent(3);
 		panel.add(image);
 		//####################################################################################
 		
-		//###############Ajout des formes colorés à "formes"##############################
+		//###############Ajout des formes colorÃ©s Ã  "formes"##############################
 		
 		//Ajout couleurs :
-		JLabel objetColore = new JLabel(new ImageIcon("C:/Users/Yann/Pictures/Sprite/carreRouge.png"));
+		JLabel objetColore = new JLabel(new ImageIcon("images/carreRouge.png"));
 		panel =  (JPanel) matrice.getComponent(17);
 		panel.add(objetColore);
 		
-		objetColore = new JLabel(new ImageIcon("C:/Users/Yann/Pictures/Sprite/cercleVert.png"));
+		objetColore = new JLabel(new ImageIcon("images/cercleVert.png"));
 		panel = (JPanel) matrice.getComponent(18);
 		panel.add(objetColore);
 		
-		objetColore = new JLabel(new ImageIcon("C:/Users/Yann/Pictures/Sprite/triangleVert.png"));
+		objetColore = new JLabel(new ImageIcon("images/triangleVert.png"));
 		panel = (JPanel) matrice.getComponent(19);
 		panel.add(objetColore);
 		
-		objetColore = new JLabel(new ImageIcon("C:/Users/Yann/Pictures/Sprite/carreBleu.png"));
+		objetColore = new JLabel(new ImageIcon("images/carreBleu.png"));
 		JPanel panel1 =  (JPanel) matrice.getComponent(21);
 		panel1.add(objetColore);
 		
-		objetColore = new JLabel(new ImageIcon("C:/Users/Yann/Pictures/Sprite/triangleRouge.png"));
+		objetColore = new JLabel(new ImageIcon("images/triangleRouge.png"));
 		panel1 = (JPanel) matrice.getComponent(22);
 		panel1.add(objetColore);
 		
-		objetColore = new JLabel(new ImageIcon("C:/Users/Yann/Pictures/Sprite/cercleBleu.png"));
+		objetColore = new JLabel(new ImageIcon("images/cercleBleu.png"));
 		panel1 = (JPanel) matrice.getComponent(23);
 		panel1.add(objetColore);
 		//####################################################################################
