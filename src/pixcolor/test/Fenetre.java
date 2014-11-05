@@ -10,10 +10,11 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 public class Fenetre extends JFrame {
 	
-	private Panel p;
+	private JPanel p;
 	
 	public Fenetre(int width, int height, String title) {
 		super();
@@ -21,7 +22,7 @@ public class Fenetre extends JFrame {
 		setPreferredSize(new Dimension(width, height));
 		setTitle(title);
 		
-		p = new Panel();
+		p = new JPanel();
 		getContentPane().add(p);
 		
 		setLocationRelativeTo(null);
@@ -31,43 +32,10 @@ public class Fenetre extends JFrame {
 		requestFocus();
 		pack();
 		
-		openFileChooser();
 	}
 	
-	/**
-	 * Ouvre un explorateur de fichier
-	 * Si un fichier est sélectionné appelle la fonction pour le sauvegarder dans le programme
-	 */
-	private void openFileChooser() {
-		JFileChooser fc = new JFileChooser();
-		fc.setDialogTitle("Ajouter une image");
-		
-		fc.setAcceptAllFileFilterUsed(false);
-		fc.addChoosableFileFilter(new ImageFilter());
-		
-		int returnVal = fc.showOpenDialog(this);
-		if(returnVal == JFileChooser.APPROVE_OPTION) {
-			saveImage(fc.getSelectedFile());
-		}
-	}
-	
-	/**
-	 * Enregistre une image en interne
-	 * 
-	 * @param file image a enregistré
-	 */
-	public void saveImage(File file) {
-		try {
-			BufferedImage i = ImageIO.read(file);
-			ImageIO.write(ImageHelper.imageToBufferedImage(i.getScaledInstance(100, 100, Image.SCALE_SMOOTH)), "png", new File("images/" + file.getName()));
-			System.out.println("Image sauvegardée.");
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.err.println("Un probleme est survenue lors de l'importaion de l'image");
-		}
-	}
 
-	public Panel getPanel() {
+	public JPanel getPanel() {
 		return p;
 	}
 

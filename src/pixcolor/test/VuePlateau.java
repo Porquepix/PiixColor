@@ -1,3 +1,5 @@
+package pixcolor.test;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -184,7 +186,7 @@ public class VuePlateau extends JFrame implements MouseListener, MouseMotionList
 	}
 	
 	public static void main(String[] args) {
-		JFrame frame = new VuePlateau(1000);
+		JFrame frame = new VuePlateau(500);
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		frame.pack();
 		frame.setResizable(false);
