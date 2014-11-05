@@ -2,10 +2,12 @@ package pixcolor.test;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.Arrays;
+import java.util.Comparator;
 
 public class Listing {
 
-	public static void liste(String path) {
+	public static File[] liste(String path) {
 		File f = new File(path);
 		System.out.println("Images dans le dossier " + f.getAbsolutePath() + "\n");
 		
@@ -17,10 +19,15 @@ public class Listing {
 
 		File[] files = f.listFiles(filtre);
 
-		if (files != null)
-			for (File file : files) {
-				System.out.println(file.getAbsolutePath());
-			}
+		Arrays.sort(files, new Comparator<File>() {
+	        public int compare(File f1, File f2) {
+	            long d1 = f1.lastModified();
+	            long d2 = f2.lastModified();
+	            return d1 > d2 ? 1 : d1 < d2 ? -1 : 0;
+	        }
+	    });
+		
+		return files;
 	}
 
 }
