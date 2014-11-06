@@ -90,7 +90,7 @@ public class VuePlateau extends JFrame implements MouseListener, MouseMotionList
 		panel.add(image);
 		//####################################################################################
 		
-		//###############Ajout des formes colorés à "formes"##############################
+		//###############Ajout des formes colorÃ©s Ã  "formes"##############################
 		
 		//Ajout couleurs :
 		JLabel objetColore = new JLabel(new ImageIcon("images/carreRouge.png"));
