@@ -9,7 +9,6 @@ public class Listing {
 
 	public static File[] liste(String path) {
 		File f = new File(path);
-		System.out.println("Images dans le dossier " + f.getAbsolutePath() + "\n");
 		
 		FilenameFilter filtre = new FilenameFilter() {
 			  public boolean accept(File dir, String name) {
