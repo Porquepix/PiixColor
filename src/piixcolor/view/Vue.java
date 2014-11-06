@@ -19,7 +19,7 @@ public abstract class Vue extends JPanel {
 	}
 	
 	public Controller getController() {
-		return this.getController();
+		return this.controller;
 	}
 
 	class SwitchViewListener implements ActionListener{

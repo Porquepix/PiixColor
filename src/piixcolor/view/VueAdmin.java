@@ -26,7 +26,7 @@ import javax.swing.border.Border;
 
 import piixcolor.controller.AdminController;
 import piixcolor.controller.Controller;
-import piixcolor.test.ImageFilter;
+import piixcolor.util.ImageFilter;
 import piixcolor.test.Listing;
 import piixcolor.util.Config;
 
@@ -44,6 +44,7 @@ public class VueAdmin extends Vue {
 	private static final String ATP_COULEURS_PANEL =  "atpCouleursPanel";
 	private static final String ATP_FORMES_SELECT_PANEL =  "atpSelectedFormesPanel";
 	private static final String ATP_MESSAGE_COULEURS_PANEL =  "atpMessageCouleursPanel";
+	private static final String ATP_MESSAGE_FORMES_PANEL = "atpMessageFormesPanel";
 	
 	//liste de tous les panels
 	private Map<String, JPanel> panels;
@@ -97,11 +98,18 @@ public class VueAdmin extends Vue {
 		jsp.setPreferredSize(new Dimension(width, height));
 		jsp.getVerticalScrollBar().setUnitIncrement(8);
 		jsp.setBorder(null);
+		jsp.getViewport().setBackground(Color.WHITE);
+		
+		JPanel messagePanel = new JPanel();
+		messagePanel.setBackground(Color.WHITE);
+		panels.put(ATP_MESSAGE_FORMES_PANEL, messagePanel);
 		
 		JPanel container = new JPanel(new BorderLayout());
 		container.setPreferredSize(new Dimension(width, height));
 		container.setBorder(border);
+		container.setBackground(Color.WHITE);
 		container.add(jsp, BorderLayout.CENTER);
+		container.add(messagePanel, BorderLayout.PAGE_END);
 
 		if (nbSelectedFormes == 0) {
 			JLabel message = new JLabel(" Vous n'avez pas encore selectionez de formes.");
@@ -269,6 +277,31 @@ public class VueAdmin extends Vue {
 		panels.get(ADMIN_TOP_PANEL).remove(panels.get(ATP_FORMES_SELECT_PANEL));
 		panels.replace(ATP_FORMES_SELECT_PANEL, initSelectedFormesPanel());
 		panels.get(ADMIN_TOP_PANEL).add(panels.get(ATP_FORMES_SELECT_PANEL), ATP_FORMES_SELECT_PANEL_P);
+		
+		JPanel messagePanel = panels.get(ATP_MESSAGE_FORMES_PANEL);
+		messagePanel.removeAll();
+		messagePanel.setBorder(null);
+		
+		int nbSelectedFormes = 0;
+		for (Map.Entry<JCheckBox, String> value : formesCheckBoxes.entrySet()) {
+			if (value.getKey().isSelected()) {
+				nbSelectedFormes++;
+			}
+			value.getKey().setEnabled(true);
+	    }
+		if (nbSelectedFormes >= Config.MAX_SELECTED_FORMES) {
+			for (Map.Entry<JCheckBox, String> value : formesCheckBoxes.entrySet()) {
+				if (!value.getKey().isSelected()) {
+					value.getKey().setEnabled(false);
+				}
+		    }
+			JLabel message = new JLabel("Nombre maximum de formes atteint.");
+			message.setHorizontalAlignment(JLabel.CENTER);
+			message.setForeground(Color.RED);
+			messagePanel.add(message);
+			messagePanel.setBorder(BorderFactory.createLineBorder(Color.black));
+		}
+		
 		commit();
 	}
 	
@@ -281,9 +314,13 @@ public class VueAdmin extends Vue {
 		
 		int returnVal = fc.showOpenDialog(this);
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
-			((AdminController) getController()).saveImage(fc.getSelectedFile());
-			JOptionPane.showMessageDialog(this, "Votre image a bien été enregistré.", "Information", JOptionPane.INFORMATION_MESSAGE);
-			refreshFormesPanel();
+			boolean saveStatut = ((AdminController) getController()).saveImage(fc.getSelectedFile());
+			if (saveStatut) {
+				JOptionPane.showMessageDialog(this, "Votre image a bien été enregistré.", "Information", JOptionPane.INFORMATION_MESSAGE);
+				refreshFormesPanel();
+			} else {
+				JOptionPane.showMessageDialog(this, "L'image n'a pas pu être enregistré.", "Erreur", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 	}
 	
@@ -296,7 +333,6 @@ public class VueAdmin extends Vue {
 
 	
 	private void commit() {
-		panels.get(ADMIN_TOP_PANEL).revalidate();
 		panels.get(PANEL_PRINCIPALE).revalidate();
 		panels.get(PANEL_PRINCIPALE).repaint();
 	}
