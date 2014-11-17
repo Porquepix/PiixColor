@@ -1,4 +1,4 @@
-package piixcolor.view;
+package piixcolor.vue;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -24,8 +24,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.Border;
 
-import piixcolor.controller.AdminController;
-import piixcolor.controller.Controller;
+import piixcolor.controleur.AdminController;
+import piixcolor.controleur.Controller;
 import piixcolor.util.ImageFilter;
 import piixcolor.test.Listing;
 import piixcolor.util.Config;

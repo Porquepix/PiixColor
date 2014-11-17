@@ -1,4 +1,4 @@
-package piixcolor.view;
+package piixcolor.vue;
 import java.awt.Dimension;
 
 import javax.swing.JFrame;
