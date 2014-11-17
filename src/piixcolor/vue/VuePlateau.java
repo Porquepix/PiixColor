@@ -1,4 +1,4 @@
-package piixcolor.view;
+package piixcolor.vue;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;

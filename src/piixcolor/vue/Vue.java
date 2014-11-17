@@ -1,10 +1,10 @@
-package piixcolor.view;
+package piixcolor.vue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
 
-import piixcolor.controller.Controller;
+import piixcolor.controleur.Controller;
 
 
 public abstract class Vue extends JPanel {
