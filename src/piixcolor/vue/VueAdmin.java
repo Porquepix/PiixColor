@@ -24,8 +24,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.Border;
 
-import piixcolor.controleur.AdminController;
-import piixcolor.controleur.Controller;
+import piixcolor.controller.AdminController;
+import piixcolor.controller.Controller;
 import piixcolor.util.ImageFilter;
 import piixcolor.test.Listing;
 import piixcolor.util.Config;
@@ -36,6 +36,10 @@ public class VueAdmin extends Vue {
 	private static final int ATP_COULEURS_PANEL_P = 0;
 	private static final int ATP_FORMES_PANEL_P = 1;
 	private static final int ATP_FORMES_SELECT_PANEL_P = 2;
+	
+	//taille des panels
+	private static final int ATP_PANEL_WIDTH = 900 / 3;
+	private static final int ATP_PANEL_HEIGHT = 400;
 	
 	//nom des panels
 	private static final String PANEL_PRINCIPALE = "mainPanel";
@@ -81,21 +85,19 @@ public class VueAdmin extends Vue {
 
 
 	private JPanel initSelectedFormesPanel() {
-		int width = 300, height = 400;
-		
 		Box box = Box.createVerticalBox();
 		Border border = BorderFactory.createLineBorder(Color.black);
 		
 		int nbSelectedFormes = 0;
 		for (Map.Entry<JCheckBox, String> value : formesCheckBoxes.entrySet()) {
 			if (value.getKey().isSelected()) {
-				box.add(formeFrame(new File("images/" + value.getValue()), width - 20, 100, false));
+				box.add(formeFrame(new File("images/" + value.getValue()), ATP_PANEL_WIDTH - 20, 100, false));
 				nbSelectedFormes++;
 			}
 	    }
 
 		JScrollPane jsp = new JScrollPane(box, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		jsp.setPreferredSize(new Dimension(width, height));
+		jsp.setPreferredSize(new Dimension(ATP_PANEL_WIDTH, ATP_PANEL_HEIGHT));
 		jsp.getVerticalScrollBar().setUnitIncrement(8);
 		jsp.setBorder(null);
 		jsp.getViewport().setBackground(Color.WHITE);
@@ -105,7 +107,7 @@ public class VueAdmin extends Vue {
 		panels.put(ATP_MESSAGE_FORMES_PANEL, messagePanel);
 		
 		JPanel container = new JPanel(new BorderLayout());
-		container.setPreferredSize(new Dimension(width, height));
+		container.setPreferredSize(new Dimension(ATP_PANEL_WIDTH, ATP_PANEL_HEIGHT));
 		container.setBorder(border);
 		container.setBackground(Color.WHITE);
 		container.add(jsp, BorderLayout.CENTER);
@@ -205,18 +207,16 @@ public class VueAdmin extends Vue {
 	}
 	
 	private JPanel initFormesPanel() {
-		int width = 300, height = 400;
-
 		Box box = Box.createVerticalBox();
 		Border border = BorderFactory.createLineBorder(Color.black);
 
 		File[] images = Listing.liste("images");
 		for (File image : images) {
-			box.add(formeFrame(image, width - 20, 100, true));
+			box.add(formeFrame(image, ATP_PANEL_WIDTH - 20, 100, true));
 		}
 
 		JScrollPane jsp = new JScrollPane(box, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		jsp.setPreferredSize(new Dimension(width, height - 30));
+		jsp.setPreferredSize(new Dimension(ATP_PANEL_WIDTH, ATP_PANEL_HEIGHT - 30));
 		jsp.getVerticalScrollBar().setUnitIncrement(8);
 		jsp.setBorder(border);
 
@@ -228,7 +228,7 @@ public class VueAdmin extends Vue {
 		});
 		
 		JPanel container = new JPanel(new BorderLayout());
-		container.setPreferredSize(new Dimension(width, height));
+		container.setPreferredSize(new Dimension(ATP_PANEL_WIDTH, ATP_PANEL_HEIGHT));
 		container.add(jsp, BorderLayout.NORTH);
 		container.add(b, BorderLayout.SOUTH); 
 		
@@ -316,10 +316,10 @@ public class VueAdmin extends Vue {
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
 			boolean saveStatut = ((AdminController) getController()).saveImage(fc.getSelectedFile());
 			if (saveStatut) {
-				JOptionPane.showMessageDialog(this, "Votre image a bien été enregistré.", "Information", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(this, "Votre image a bien Ã©tÃ© enregistrÃ©.", "Information", JOptionPane.INFORMATION_MESSAGE);
 				refreshFormesPanel();
 			} else {
-				JOptionPane.showMessageDialog(this, "L'image n'a pas pu être enregistré.", "Erreur", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, "L'image n'a pas pu Ãªtre enregistrÃ©.", "Erreur", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
