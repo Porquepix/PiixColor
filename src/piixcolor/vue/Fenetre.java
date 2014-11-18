@@ -1,4 +1,4 @@
-package piixcolor.view;
+package piixcolor.vue;
 import java.awt.Dimension;
 
 import javax.swing.JFrame;
@@ -16,10 +16,10 @@ public class Fenetre extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle(FRAME_TITLE);
 		
-		setContentPane(new VueAccueil(this));
-		
 		setVisible(true);
 		pack();
+		
+		setContentPane(new VueAccueil(this));
 		
 		setLocationRelativeTo(null);
 	}

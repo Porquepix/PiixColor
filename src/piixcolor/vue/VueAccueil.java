@@ -1,9 +1,9 @@
-package piixcolor.view;
+package piixcolor.vue;
 import java.awt.FlowLayout;
 
 import javax.swing.JButton;
 
-import piixcolor.controller.AdminController;
+import piixcolor.controleur.AdminController;
 
 public class VueAccueil extends Vue {
 

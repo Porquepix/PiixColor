@@ -1,4 +1,4 @@
-package piixcolor.test;
+﻿package piixcolor.test;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -10,6 +10,7 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.ActionEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -19,7 +20,7 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
-public class VuePlateau extends JFrame implements MouseListener, MouseMotionListener {
+public class VuePlateau extends Vue implements MouseListener, MouseMotionListener {
 	JLayeredPane layeredPane;
 	JPanel matrice;
 	JLabel formeCourante;
@@ -29,12 +30,13 @@ public class VuePlateau extends JFrame implements MouseListener, MouseMotionList
 	int nbcouleur = 3;
 	int nbforme = 3;
 
-	public VuePlateau(int taille) {
-		
+	public VuePlateau(Fenetre fenetre) {
+	public VuePlateau(Fenetre fenetre) {
+		super(fenetre, null);
 		// Utilisation du JLayeredPane
-		Dimension dimensionVue = new Dimension(taille, taille);
+		Dimension dimensionVue = new Dimension(fenetre.FRAME_WIDTH, fenetre.FRAME_HEIGHT);
 		layeredPane = new JLayeredPane();
-		getContentPane().add(layeredPane);
+		this.add(layeredPane);
 		layeredPane.setPreferredSize(dimensionVue);
 
 		layeredPane.addMouseListener(this);
@@ -122,21 +124,20 @@ public class VuePlateau extends JFrame implements MouseListener, MouseMotionList
 
 
 	public void mouseDragged(MouseEvent me) {
-		if (formeCourante == null)
-			return;
-		formeCourante.setLocation(me.getX() + ajustementX, me.getY() + ajustementY);
+		if(SwingUtilities.isLeftMouseButton(me)) {
+			if (formeCourante == null)
+				return;
+			formeCourante.setLocation(me.getX() + ajustementX, me.getY() + ajustementY);
+		}
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-
 	}
 
-	@Override
-	public void mouseClicked(MouseEvent arg0) {
+	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -153,45 +154,41 @@ public class VuePlateau extends JFrame implements MouseListener, MouseMotionList
 
 
 	public void mousePressed(MouseEvent e) {
-		formeCourante = null;
-		Component c = matrice.findComponentAt(e.getX(), e.getY());
-		caseFormeCourante =  c.getParent();
-		if (c instanceof JPanel)
-			return;
-		Point emplacementParent = c.getParent().getLocation();
-		if(emplacementParent.getY() >= matrice.getComponent((nbcouleur+1)*(nbforme+1)).getLocation().getY()) {
-			ajustementX = emplacementParent.x - e.getX();
-			ajustementY = emplacementParent.y - e.getY();
-			formeCourante = (JLabel) c;
-			formeCourante.setLocation(e.getX() + ajustementX, e.getY() + ajustementY);
-			formeCourante.setSize(formeCourante.getWidth(), formeCourante.getHeight());
-			layeredPane.add(formeCourante, JLayeredPane.DRAG_LAYER);
+		if(SwingUtilities.isLeftMouseButton(e)) {
+			formeCourante = null;
+			Component c = matrice.findComponentAt(e.getX(), e.getY());
+			caseFormeCourante =  c.getParent();
+			if (c instanceof JPanel)
+				return;
+			Point emplacementParent = c.getParent().getLocation();
+			if(emplacementParent.getY() >= matrice.getComponent((nbcouleur+1)*(nbforme+1)).getLocation().getY()) {
+				ajustementX = emplacementParent.x - e.getX();
+				ajustementY = emplacementParent.y - e.getY();
+				formeCourante = (JLabel) c;
+				formeCourante.setLocation(e.getX() + ajustementX, e.getY() + ajustementY);
+				formeCourante.setSize(formeCourante.getWidth(), formeCourante.getHeight());
+				layeredPane.add(formeCourante, JLayeredPane.DRAG_LAYER);
+			}
 		}
 	}
 
 
 	public void mouseReleased(MouseEvent e) {
-		if (formeCourante == null)
-			return;
-		formeCourante.setVisible(false);
-		Component c = matrice.findComponentAt(e.getX(), e.getY());
-		if (c instanceof JLabel) {
-			caseFormeCourante.add(formeCourante);
-		} else {
-			Container parent = (Container) c;
-			parent.add(formeCourante);
+		if(SwingUtilities.isLeftMouseButton(e)) {
+			if (formeCourante == null)
+				return;
+			formeCourante.setVisible(false);
+			Component c = matrice.findComponentAt(e.getX(), e.getY());
+			if (c instanceof JLabel || c == null) {
+				caseFormeCourante.add(formeCourante);
+			} else {
+				Container parent = (Container) c;
+				parent.add(formeCourante);
+			}
+			formeCourante.setVisible(true);
 		}
-		formeCourante.setVisible(true);
+	}
 
-	}
-	
-	public static void main(String[] args) {
-		JFrame frame = new VuePlateau(500);
-		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		frame.pack();
-		frame.setResizable(false);
-		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);
-	}
+	public void handleAction(ActionEvent e) {}
 
 }

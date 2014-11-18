@@ -1,6 +1,6 @@
-package piixcolor.controller;
+package piixcolor.controleur;
 
-import piixcolor.model.Model;
+import piixcolor.modele.Model;
 
 public abstract class Controller {
 	

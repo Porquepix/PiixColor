@@ -1,4 +1,4 @@
-package piixcolor.controller;
+package piixcolor.controleur;
 
 import java.awt.Graphics;
 import java.awt.Image;

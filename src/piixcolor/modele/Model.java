@@ -1,4 +1,4 @@
-package piixcolor.model;
+package piixcolor.modele;
 
 public abstract class Model {
 	
