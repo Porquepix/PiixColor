@@ -1,4 +1,4 @@
-package piixcolor.util;
+package piixcolor.utilitaire;
 
 import java.io.File;
 

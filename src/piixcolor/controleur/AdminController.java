@@ -8,8 +8,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import piixcolor.model.Model;
-import piixcolor.util.Config;
+import piixcolor.modele.Model;
+import piixcolor.utilitaire.Config;
 
 public class AdminController extends Controller {
 
