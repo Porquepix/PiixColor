@@ -26,9 +26,9 @@ import javax.swing.border.Border;
 
 import piixcolor.controleur.AdminController;
 import piixcolor.controleur.Controller;
-import piixcolor.test.Listing;
 import piixcolor.utilitaire.Config;
 import piixcolor.utilitaire.ImageFilter;
+import piixcolor.utilitaire.Listing;
 
 public class VueAdmin extends Vue {
 	
@@ -210,7 +210,7 @@ public class VueAdmin extends Vue {
 		Box box = Box.createVerticalBox();
 		Border border = BorderFactory.createLineBorder(Color.black);
 
-		File[] images = Listing.liste("images");
+		File[] images = Listing.listeImages("images");
 		for (File image : images) {
 			box.add(formeFrame(image, ATP_PANEL_WIDTH - 20, 100, true));
 		}
