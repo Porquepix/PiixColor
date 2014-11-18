@@ -275,7 +275,7 @@ public class VueAdmin extends Vue {
 	
 	private void refreshSelectedFormesPanel() {
 		panels.get(ADMIN_TOP_PANEL).remove(panels.get(ATP_FORMES_SELECT_PANEL));
-		panels.replace(ATP_FORMES_SELECT_PANEL, initSelectedFormesPanel());
+		panels.put(ATP_FORMES_SELECT_PANEL, initSelectedFormesPanel());
 		panels.get(ADMIN_TOP_PANEL).add(panels.get(ATP_FORMES_SELECT_PANEL), ATP_FORMES_SELECT_PANEL_P);
 		
 		JPanel messagePanel = panels.get(ATP_MESSAGE_FORMES_PANEL);
@@ -326,7 +326,7 @@ public class VueAdmin extends Vue {
 	
 	private void refreshFormesPanel() {
 		panels.get(ADMIN_TOP_PANEL).remove(panels.get(ATP_FORMES_PANEL));
-		panels.replace(ATP_FORMES_PANEL, initFormesPanel());
+		panels.put(ATP_FORMES_PANEL, initFormesPanel());
 		panels.get(ADMIN_TOP_PANEL).add(panels.get(ATP_FORMES_PANEL), ATP_FORMES_PANEL_P);
 		commit();
 	}
