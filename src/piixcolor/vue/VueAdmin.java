@@ -24,11 +24,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.Border;
 
-import piixcolor.controller.AdminController;
-import piixcolor.controller.Controller;
-import piixcolor.util.ImageFilter;
+import piixcolor.controleur.AdminController;
+import piixcolor.controleur.Controller;
 import piixcolor.test.Listing;
-import piixcolor.util.Config;
+import piixcolor.utilitaire.Config;
+import piixcolor.utilitaire.ImageFilter;
 
 public class VueAdmin extends Vue {
 	
