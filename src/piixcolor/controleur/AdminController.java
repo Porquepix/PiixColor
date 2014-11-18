@@ -31,14 +31,14 @@ public class AdminController extends Controller {
 			String imageName = image.getName().split("\\.")[0];
 			
 			//sécurité pour empécher l'écrasement d'image
-			File f = new File("images/" + imageName + ".png");
+			File f = new File(Config.DOSSIER_FORME + imageName + "." + Config.FORMAT_IMAGE_SAVE);
 			int j = 1;
 			while (f.exists()) {
-				f = new File("images/" + imageName + j + ".png");
+				f = new File(Config.DOSSIER_FORME + imageName + j + "." + Config.FORMAT_IMAGE_SAVE);
 				j++;
 			}
 			
-			ImageIO.write(resizeImage(i, Config.IMG_SIZE, Config.IMG_SIZE), "png", f);
+			ImageIO.write(resizeImage(i, Config.IMG_SIZE, Config.IMG_SIZE), Config.FORMAT_IMAGE_SAVE, f);
 			
 			return true;
 		} catch (IOException e) {

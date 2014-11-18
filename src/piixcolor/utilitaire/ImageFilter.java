@@ -13,10 +13,8 @@ public class ImageFilter extends FileFilter {
 
 		String fileExtension = ExtensionImage.getExtension(f);
 		if (fileExtension != null) {
-			for (ExtensionImage ext : ExtensionImage.values()) {
-				if (ext.getExtention().compareTo(fileExtension) == 0) {
-					return true;
-				}
+			if (ExtensionImage.isValidExtension(fileExtension)) {
+				return true;
 			}
 		}
 
