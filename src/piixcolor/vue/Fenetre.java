@@ -1,23 +1,23 @@
 package piixcolor.vue;
-import java.awt.Dimension;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 
 public class Fenetre extends JFrame {
 	
-	public static final int FRAME_WIDTH = 1000;
-	public static final int FRAME_HEIGHT = 600;
+	public static int FRAME_WIDTH = 1000;
+	public static int FRAME_HEIGHT = 600;
 	public static final String FRAME_TITLE = "PiixColor";
 
 	public Fenetre () {
-		setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setTitle(FRAME_TITLE);
-		
 		setVisible(true);
 		pack();
+		setSize((int)getToolkit().getScreenSize().getWidth(), ((int)getToolkit().getScreenSize().getHeight() - 40));
+		
+		FRAME_WIDTH = this.getWidth();
+		FRAME_HEIGHT = this.getHeight();
 		
 		setContentPane(new VueAccueil(this));
 		
