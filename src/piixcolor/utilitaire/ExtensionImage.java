@@ -1,4 +1,4 @@
-package piixcolor.util;
+package piixcolor.utilitaire;
 
 import java.io.File;
 
@@ -32,6 +32,15 @@ public enum ExtensionImage {
 		}
 		
 		return ext;
+	}
+
+	public static boolean isValidExtension(String extension) {
+		for (ExtensionImage ext : ExtensionImage.values()) {
+			if (ext.getExtention().compareTo(extension) == 0) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	

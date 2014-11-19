@@ -1,4 +1,4 @@
-﻿package piixcolor.test;
+﻿package piixcolor.vue;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -18,6 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 public class VuePlateau extends Vue implements MouseListener, MouseMotionListener {
@@ -30,7 +31,6 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 	int nbcouleur = 3;
 	int nbforme = 3;
 
-	public VuePlateau(Fenetre fenetre) {
 	public VuePlateau(Fenetre fenetre) {
 		super(fenetre, null);
 		// Utilisation du JLayeredPane
