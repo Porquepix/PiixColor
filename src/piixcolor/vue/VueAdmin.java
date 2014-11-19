@@ -37,9 +37,15 @@ public class VueAdmin extends Vue {
 	private static final int ATP_FORMES_PANEL_P = 1;
 	private static final int ATP_FORMES_SELECT_PANEL_P = 2;
 	
+	//divers informations
+	private static final int ATP_MARGIN = 15;
+	private static final int ATP_NB_PANEL = 3;
+	private static final int NB_ADMIN_PART = 2;
+	
 	//taille des panels
-	private static final int ATP_PANEL_WIDTH = 900 / 3;
-	private static final int ATP_PANEL_HEIGHT = 400;
+	private static final int ATP_PANEL_WIDTH = Fenetre.FRAME_WIDTH / ATP_NB_PANEL - (ATP_NB_PANEL - 1) * ATP_MARGIN;
+	private static final int ATP_PANEL_HEIGHT = Fenetre.FRAME_HEIGHT / NB_ADMIN_PART - (NB_ADMIN_PART - 1) * ATP_MARGIN;
+	private static final int ATP_FORME_FRAME_HEIGHT = Fenetre.FRAME_HEIGHT / 10 + 40;
 	
 	//nom des panels
 	private static final String PANEL_PRINCIPALE = "mainPanel";
@@ -67,7 +73,7 @@ public class VueAdmin extends Vue {
 		//init hashmap + madel
 		panels = new HashMap<String, JPanel>();
 		panels.put(PANEL_PRINCIPALE, new JPanel());
-		panels.put(ADMIN_TOP_PANEL, new JPanel(new GridLayout(1, 3, 15, 0)));
+		panels.put(ADMIN_TOP_PANEL, new JPanel(new GridLayout(1, ATP_NB_PANEL, ATP_MARGIN, 0)));
 		panels.put(ATP_FORMES_SELECT_PANEL, initSelectedFormesPanel());
 		panels.put(ATP_FORMES_PANEL, initFormesPanel());
 		panels.put(ATP_COULEURS_PANEL, initCouleursPanel());
@@ -91,7 +97,7 @@ public class VueAdmin extends Vue {
 		int nbSelectedFormes = 0;
 		for (Map.Entry<String, JCheckBox> value : formesCheckBoxes.entrySet()) {
 			if (value.getValue().isSelected()) {
-				box.add(formeFrame(new File(Config.DOSSIER_FORME + value.getKey()), ATP_PANEL_WIDTH - 20, 100, false));
+				box.add(formeFrame(new File(Config.DOSSIER_FORME + value.getKey()), ATP_PANEL_WIDTH - 20, ATP_FORME_FRAME_HEIGHT, false));
 				nbSelectedFormes++;
 			}
 	    }
@@ -128,12 +134,12 @@ public class VueAdmin extends Vue {
 		Border border = BorderFactory.createLineBorder(Color.black);
 		
 		JPanel container = new JPanel(new BorderLayout()); 
-		container.setPreferredSize(new Dimension(300, 370));
+		container.setPreferredSize(new Dimension(ATP_PANEL_WIDTH, ATP_PANEL_HEIGHT));
 		container.setBackground(Color.WHITE);
 		container.setBorder(border);
 		
 		JPanel jp = new JPanel();
-		jp.setPreferredSize(new Dimension(300, 370));
+		jp.setPreferredSize(new Dimension(ATP_PANEL_WIDTH, ATP_PANEL_HEIGHT - 30));
 		jp.setBackground(Color.WHITE);
 		jp.setLayout(new GridLayout(5, 2));
 
@@ -214,7 +220,7 @@ public class VueAdmin extends Vue {
 
 		File[] images = Listing.listeImages(Config.DOSSIER_FORME);
 		for (File image : images) {
-			box.add(formeFrame(image, ATP_PANEL_WIDTH - 20, 100, true));
+			box.add(formeFrame(image, ATP_PANEL_WIDTH - 18, ATP_FORME_FRAME_HEIGHT, true));
 		}
 
 		JScrollPane jsp = new JScrollPane(box, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
