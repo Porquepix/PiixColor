@@ -11,9 +11,9 @@ import javax.imageio.ImageIO;
 import piixcolor.modele.Model;
 import piixcolor.utilitaire.Config;
 
-public class AdminController extends Controller {
+public class AdminControleur extends Controleur {
 
-	public AdminController(Model m) {
+	public AdminControleur(Model m) {
 		super(m);
 	}
 	

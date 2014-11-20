@@ -3,7 +3,7 @@ import java.awt.FlowLayout;
 
 import javax.swing.JButton;
 
-import piixcolor.controleur.AdminController;
+import piixcolor.controleur.AdminControleur;
 
 public class VueAccueil extends Vue {
 
@@ -16,7 +16,7 @@ public class VueAccueil extends Vue {
 		setLayout(new FlowLayout());
 
 		playButton.addActionListener(new SwitchViewListener(new VuePlateau(fenetre)));
-		adminButton.addActionListener(new SwitchViewListener(new VueAdmin(fenetre, new AdminController(null))));
+		adminButton.addActionListener(new SwitchViewListener(new VueAdmin(fenetre, new AdminControleur(null))));
 
 		add(playButton);
 		add(adminButton);

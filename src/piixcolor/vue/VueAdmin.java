@@ -24,8 +24,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.Border;
 
-import piixcolor.controleur.AdminController;
-import piixcolor.controleur.Controller;
+import piixcolor.controleur.AdminControleur;
+import piixcolor.controleur.Controleur;
 import piixcolor.utilitaire.Config;
 import piixcolor.utilitaire.ImageFilter;
 import piixcolor.utilitaire.Listing;
@@ -63,7 +63,7 @@ public class VueAdmin extends Vue {
 	private Map<String, JCheckBox> formesCheckBoxes;
 	private Map<String, JCheckBox> couleursCheckBoxes;
 
-	public VueAdmin(Fenetre fenetre, Controller controller) {
+	public VueAdmin(Fenetre fenetre, Controleur controller) {
 		super(fenetre, controller);
 		
 		//init lists check box
@@ -334,7 +334,7 @@ public class VueAdmin extends Vue {
 		
 		int returnVal = fc.showOpenDialog(this);
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
-			boolean saveStatut = ((AdminController) getController()).saveImage(fc.getSelectedFile());
+			boolean saveStatut = ((AdminControleur) getControleur()).saveImage(fc.getSelectedFile());
 			if (saveStatut) {
 				JOptionPane.showMessageDialog(this, "Votre image a bien été enregistrée.", "Information", JOptionPane.INFORMATION_MESSAGE);
 				refreshFormesPanel();

@@ -2,11 +2,11 @@ package piixcolor.controleur;
 
 import piixcolor.modele.Model;
 
-public abstract class Controller {
+public abstract class Controleur {
 	
 	private Model model;
 	
-	public Controller(Model m) {
+	public Controleur(Model m) {
 		this.model = m;
 	}
 	
