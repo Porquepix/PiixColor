@@ -4,21 +4,21 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
 
-import piixcolor.controleur.Controller;
+import piixcolor.controleur.Controleur;
 
 
 public abstract class Vue extends JPanel {
 	
 	protected Fenetre fenetre;
-	private Controller controller;
+	private Controleur controller;
 	
-	public Vue(Fenetre fenetre, Controller controller) {
+	public Vue(Fenetre fenetre, Controleur controleur) {
 		this.fenetre = fenetre;
 		this.controller = controller;
 		setSize(fenetre.getWidth(), fenetre.getHeight());
 	}
 	
-	public Controller getController() {
+	public Controleur getControleur() {
 		return this.controller;
 	}
 
