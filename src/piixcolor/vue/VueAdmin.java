@@ -63,8 +63,8 @@ public class VueAdmin extends Vue {
 	private Map<String, JCheckBox> formesCheckBoxes;
 	private Map<String, JCheckBox> couleursCheckBoxes;
 
-	public VueAdmin(Fenetre fenetre, Controleur controller) {
-		super(fenetre, controller);
+	public VueAdmin(Fenetre fenetre, Controleur controleur) {
+		super(fenetre, controleur, null);
 		
 		//init lists check box
 		formesCheckBoxes = new LinkedHashMap<String, JCheckBox>();
@@ -355,6 +355,13 @@ public class VueAdmin extends Vue {
 	private void commit() {
 		panels.get(PANEL_PRINCIPALE).revalidate();
 		panels.get(PANEL_PRINCIPALE).repaint();
+	}
+
+
+	@Override
+	public void actualise() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
