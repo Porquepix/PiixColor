@@ -26,7 +26,20 @@ public class Fenetre extends JFrame {
 
 	public static void main(String[] args) {
 		new Fenetre();
-
+		
+		/** TEST XML
+		
+		Config.getInstance().getMatriceCouleur();
+		System.out.println(".----------------.");
+		Config.getInstance().addMatriceCouleur(3);
+		try {
+			Config.getInstance().enregistrer(Config.FICHIER_CONFIG);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		Config.getInstance().getMatriceCouleur();
+		
+		**/
 	}
 	
 	public void switchPanel(JPanel p) {
