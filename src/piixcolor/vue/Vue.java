@@ -5,21 +5,25 @@ import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 
 import piixcolor.controleur.Controleur;
+import piixcolor.modele.Modele;
+import piixcolor.utilitaire.Observateur;
 
 
-public abstract class Vue extends JPanel {
+public abstract class Vue extends JPanel implements Observateur {
 	
 	protected Fenetre fenetre;
-	private Controleur controller;
+	private Controleur controleur;
+	private Modele modele;
 	
-	public Vue(Fenetre fenetre, Controleur controleur) {
+	public Vue(Fenetre fenetre, Controleur controleur, Modele modele) {
 		this.fenetre = fenetre;
-		this.controller = controller;
+		this.controleur = controleur;
+		this.modele = modele;
 		setSize(fenetre.getWidth(), fenetre.getHeight());
 	}
 	
 	public Controleur getControleur() {
-		return this.controller;
+		return this.controleur;
 	}
 
 	class SwitchViewListener implements ActionListener{

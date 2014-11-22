@@ -11,7 +11,7 @@ public class VueAccueil extends Vue {
 	private JButton adminButton = new JButton("Espace enseignant");
 
 	public VueAccueil(Fenetre fenetre) {
-		super(fenetre, null);
+		super(fenetre, null, null);
 
 		setLayout(new FlowLayout());
 
@@ -20,6 +20,12 @@ public class VueAccueil extends Vue {
 
 		add(playButton);
 		add(adminButton);
+	}
+
+	@Override
+	public void actualise() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

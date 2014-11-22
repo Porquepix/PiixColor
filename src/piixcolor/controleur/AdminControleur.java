@@ -8,12 +8,12 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import piixcolor.modele.Model;
+import piixcolor.modele.Modele;
 import piixcolor.utilitaire.Config;
 
 public class AdminControleur extends Controleur {
 
-	public AdminControleur(Model m) {
+	public AdminControleur(Modele m) {
 		super(m);
 	}
 	
@@ -72,6 +72,12 @@ public class AdminControleur extends Controleur {
 		g.drawImage(image, 0, 0, null);
 		g.dispose();
 		return bi;
+	}
+
+	@Override
+	public void actualise() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
