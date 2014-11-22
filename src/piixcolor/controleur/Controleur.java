@@ -1,17 +1,19 @@
 package piixcolor.controleur;
 
-import piixcolor.modele.Model;
+import piixcolor.modele.Modele;
+import piixcolor.utilitaire.Observateur;
 
-public abstract class Controleur {
+
+public abstract class Controleur implements Observateur {
 	
-	private Model model;
+	private Modele modele;
 	
-	public Controleur(Model m) {
-		this.model = m;
+	public Controleur(Modele m) {
+		this.modele = m;
 	}
 	
-	public Model getModel () {
-		return this.model;
+	public Modele getModel () {
+		return this.modele;
 	}
 
 }

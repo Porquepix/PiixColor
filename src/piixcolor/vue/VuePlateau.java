@@ -32,7 +32,7 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 	int nbforme = 3;
 
 	public VuePlateau(Fenetre fenetre) {
-		super(fenetre, null);
+		super(fenetre, null, null);
 		// Utilisation du JLayeredPane
 		Dimension dimensionVue = new Dimension(fenetre.FRAME_WIDTH, fenetre.FRAME_HEIGHT);
 		layeredPane = new JLayeredPane();
@@ -121,7 +121,10 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 		//####################################################################################
 		
 	}
-
+	
+	public void init() {
+		
+	}
 
 	public void mouseDragged(MouseEvent me) {
 		if(SwingUtilities.isLeftMouseButton(me)) {
@@ -190,5 +193,11 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 	}
 
 	public void handleAction(ActionEvent e) {}
+
+	@Override
+	public void actualise() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
