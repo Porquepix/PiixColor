@@ -1,11 +1,6 @@
 package piixcolor.vue;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
-import piixcolor.utilitaire.Config;
 
 
 public class Fenetre extends JFrame {
