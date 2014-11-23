@@ -14,14 +14,6 @@ import javax.imageio.ImageIO;
 
 public class ImageHelper {
 
-	public static BufferedImage imageToBufferedImage(Image im) {
-		BufferedImage bi = new BufferedImage(im.getWidth(null), im.getHeight(null), BufferedImage.TYPE_INT_RGB);
-		Graphics bg = bi.getGraphics();
-		bg.drawImage(im, 0, 0, null);
-		bg.dispose();
-		return bi;
-	}
-
 	public static void filterImage(BufferedImage img, Color c) {
 		int w = img.getWidth();
 		int h = img.getHeight();
@@ -38,63 +30,20 @@ public class ImageHelper {
 		}
 		img.setRGB(0, 0, w, h, pixels, 0, w);
 	}
-
-	public static void floodFill(BufferedImage image, Color targetColor,
-			Color replacementColor) {
-		Point node = new Point(0, 0);
-		int width = image.getWidth();
-		int height = image.getHeight();
-		int target = targetColor.getRGB();
-		int replacement = replacementColor.getRGB();
-		while (node.y < height && image.getRGB(node.x, node.y) != target) {
-			if (node.x < width) {
-				node.x++;
-			} else {
-				node.x = 0;
-				node.y++;
-			}
-		}
-		if (target != replacement) {
-			Deque<Point> queue = new LinkedList<Point>();
-			do {
-				int x = node.x;
-				int y = node.y;
-				while (x > 0 && image.getRGB(x - 1, y) == target) {
-					x--;
-				}
-				boolean spanUp = false;
-				boolean spanDown = false;
-				while (x < width && image.getRGB(x, y) == target) {
-					image.setRGB(x, y, replacement);
-					if (!spanUp && y > 0 && image.getRGB(x, y - 1) == target) {
-						queue.add(new Point(x, y - 1));
-						spanUp = true;
-					} else if (spanUp && y > 0
-							&& image.getRGB(x, y - 1) != target) {
-						spanUp = false;
-					}
-					if (!spanDown && y < height - 1
-							&& image.getRGB(x, y + 1) == target) {
-						queue.add(new Point(x, y + 1));
-						spanDown = true;
-					} else if (spanDown && y < height - 1
-							&& image.getRGB(x, y + 1) != target) {
-						spanDown = false;
-					}
-					x++;
-				}
-			} while ((node = queue.pollFirst()) != null);
-		}
+	
+	public static BufferedImage changeMode(BufferedImage in, int newMode) {
+		BufferedImage newImage = new BufferedImage(in.getWidth(), in.getHeight(), newMode);
+		Graphics2D g = newImage.createGraphics();
+		g.drawImage(in, 0, 0, null);
+		g.dispose();
+		return newImage;
 	}
 
 	public static void main(String args[]) {
 		try {
 
 			BufferedImage in = ImageIO.read(new File("test.jpg"));
-			BufferedImage newImage = new BufferedImage(in.getWidth(), in.getHeight(), BufferedImage.TYPE_INT_ARGB);
-			Graphics2D g = newImage.createGraphics();
-			g.drawImage(in, 0, 0, null);
-			g.dispose();
+			BufferedImage newImage = changeMode(in, BufferedImage.TYPE_INT_ARGB);
 
 			ImageHelper.filterImage(newImage, Color.BLUE);
 

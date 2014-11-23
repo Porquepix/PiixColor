@@ -7,6 +7,8 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -243,7 +245,7 @@ public class VueAdmin extends Vue {
 		return container;
 	}
 	
-	public JPanel formeFrame(File image, int width, int height, boolean withCheckBox) {
+	public JPanel formeFrame(final File image, int width, int height, boolean withActions) {
 		Border border = BorderFactory.createLineBorder(Color.black);
 		
 		JPanel container = new JPanel();
@@ -260,11 +262,15 @@ public class VueAdmin extends Vue {
 		imagePreview.setMinimumSize(new Dimension(Config.IMG_SIZE, Config.IMG_SIZE));
 		container.add(imagePreview, BorderLayout.LINE_START);
 		
-		JLabel imageName = new JLabel(image.getName().toUpperCase().split("\\.")[0]);
+		String name = image.getName().toUpperCase().split("\\.")[0];
+		JLabel imageName = new JLabel(name);
 		imageName.setHorizontalAlignment(JLabel.CENTER);
 		container.add(imageName, BorderLayout.CENTER);
 		
-		if (withCheckBox) {
+		JPanel action = new JPanel(new BorderLayout());
+		action.setBackground(Color.WHITE);
+		
+		if (withActions) {
 			JCheckBox cb;
 			
 			if (formesCheckBoxes.containsKey(image.getName())) {
@@ -283,8 +289,40 @@ public class VueAdmin extends Vue {
 				formesCheckBoxes.put(image.getName(), cb);
 			}
 			
-			container.add(cb, BorderLayout.LINE_END);
+			action.add(cb, BorderLayout.LINE_START);
+		
+			JLabel delete = new JLabel("x");
+			delete.setForeground(Color.RED);
+			delete.setPreferredSize(new Dimension(30, 100));
+			delete.setHorizontalAlignment(JLabel.CENTER);
+			delete.addMouseListener(new MouseListener() {
+				public void mouseReleased(MouseEvent e) {}
+				public void mousePressed(MouseEvent e) {}
+				public void mouseExited(MouseEvent e) {}
+				public void mouseEntered(MouseEvent e) {}
+			
+				public void mouseClicked(MouseEvent e) {
+					Object[] options = {"Oui", "Non"};
+					int retour = JOptionPane.showOptionDialog(fenetre, "Voulez-vous vraiment supprimer cette image ?", "Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]); 
+					if (retour == JOptionPane.OK_OPTION) {
+						boolean deleteStatut = ((AdminControleur) getControleur()).deleteImage(image);
+						if (deleteStatut) {
+							JOptionPane.showMessageDialog(fenetre, "Votre image a bien été supprimée.", "Information", JOptionPane.INFORMATION_MESSAGE);
+							formesCheckBoxes.remove(image.getName());
+							refreshFormesPanel();
+							refreshSelectedFormesPanel();
+						} else {
+							JOptionPane.showMessageDialog(fenetre, "L'image n'a pas pu être supprimée.", "Erreur", JOptionPane.ERROR_MESSAGE);
+						}
+					}	
+				}
+			});
+			
+			action.add(delete, BorderLayout.CENTER);
+		
 		}
+		
+		container.add(action, BorderLayout.LINE_END);
 		
 		refreshFormesCheckBoxes();
 		
