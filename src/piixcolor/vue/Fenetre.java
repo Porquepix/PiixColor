@@ -8,8 +8,10 @@ public class Fenetre extends JFrame {
 	public static int FRAME_WIDTH = 1000;
 	public static int FRAME_HEIGHT = 600;
 	public static final String FRAME_TITLE = "PiixColor";
+	
+	private static Fenetre instance = null;
 
-	public Fenetre () {
+	private Fenetre () {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setTitle(FRAME_TITLE);
 		setVisible(true);
@@ -19,29 +21,19 @@ public class Fenetre extends JFrame {
 		FRAME_WIDTH = this.getWidth();
 		FRAME_HEIGHT = this.getHeight();
 		
-		setContentPane(new VueAccueil(this));
-		
 		setLocationRelativeTo(null);
 	}
 
 	public static void main(String[] args) {
-		new Fenetre();
-		
-		/** TEST XML
-		
-		Config.getInstance().getMatriceCouleur();
-		System.out.println(".----------------.");
-		Config.getInstance().addMatriceCouleur(3);
-		try {
-			Config.getInstance().enregistrer(Config.FICHIER_CONFIG);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		Config.getInstance().getMatriceCouleur();
-		
-		**/
+		Fenetre f = Fenetre.getInstance();
+		f.switchPanel(new VueAccueil(f));
 	}
 	
+	public static Fenetre getInstance() {
+		if (instance == null) instance = new Fenetre();
+		return instance;
+	}
+
 	public void switchPanel(JPanel p) {
 		this.getContentPane().removeAll();
 		this.setContentPane(p);
