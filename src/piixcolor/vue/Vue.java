@@ -26,18 +26,4 @@ public abstract class Vue extends JPanel implements Observateur {
 		return this.controleur;
 	}
 
-	class SwitchViewListener implements ActionListener{
-		
-		private Vue v;
-		
-		public SwitchViewListener(Vue v) {
-			this.v = v;
-		}
-		
-	    public void actionPerformed(ActionEvent e) {
-	      fenetre.switchPanel(v);
-	    }    
-	    
-	}
-
 }
