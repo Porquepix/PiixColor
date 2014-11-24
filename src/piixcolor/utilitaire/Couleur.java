@@ -16,9 +16,8 @@ public enum Couleur {
 	VIOLET (156, 39, 176);
 	
 	private Color couleur;
-	
 
-	Couleur2(int r, int g, int b) {
+	Couleur(int r, int g, int b) {
 		this.setCoul(new Color(r, g, b));
 	}
 
