@@ -2,6 +2,7 @@ package piixcolor.vue;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Insets;
@@ -16,6 +17,7 @@ import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -58,6 +60,7 @@ public class VueAdmin extends Vue {
 	private static final String ATP_FORMES_SELECT_PANEL =  "atpSelectedFormesPanel";
 	private static final String ATP_MESSAGE_COULEURS_PANEL =  "atpMessageCouleursPanel";
 	private static final String ATP_MESSAGE_FORMES_PANEL = "atpMessageFormesPanel";
+	private static final String ADMIN_ACTION_PANEL = "adminActionPanel";
 	
 	//liste de tous les panels
 	private Map<String, JPanel> panels;
@@ -66,8 +69,8 @@ public class VueAdmin extends Vue {
 	private Map<String, JCheckBox> formesCheckBoxes;
 	private Map<Integer, JCheckBox> couleursCheckBoxes;
 
-	public VueAdmin(Fenetre fenetre, Controleur controleur) {
-		super(fenetre, controleur, null);
+	public VueAdmin(Fenetre f, Controleur controleur) {
+		super(f, controleur, null);
 		
 		//init lists check box
 		formesCheckBoxes = new LinkedHashMap<String, JCheckBox>();
@@ -75,21 +78,56 @@ public class VueAdmin extends Vue {
 
 		//init hashmap + madel
 		panels = new HashMap<String, JPanel>();
-		panels.put(PANEL_PRINCIPALE, new JPanel());
+		panels.put(PANEL_PRINCIPALE, new JPanel(new GridLayout(3, 1)));
 		panels.put(ADMIN_TOP_PANEL, new JPanel(new GridLayout(1, ATP_NB_PANEL, ATP_MARGIN, 0)));
 		panels.put(ATP_FORMES_SELECT_PANEL, initSelectedFormesPanel());
 		panels.put(ATP_FORMES_PANEL, initFormesPanel());
 		panels.put(ATP_COULEURS_PANEL, initCouleursPanel());
+		panels.put(ADMIN_ACTION_PANEL, initActionsPanel());
 		
 		//connection panel
 		add(panels.get(PANEL_PRINCIPALE));
 		panels.get(ADMIN_TOP_PANEL).add(panels.get(ATP_COULEURS_PANEL), ATP_COULEURS_PANEL_P);
 		panels.get(ADMIN_TOP_PANEL).add(panels.get(ATP_FORMES_PANEL), ATP_FORMES_PANEL_P);
 		panels.get(ADMIN_TOP_PANEL).add(panels.get(ATP_FORMES_SELECT_PANEL), ATP_FORMES_SELECT_PANEL_P);
-		panels.get(PANEL_PRINCIPALE).add(panels.get(ADMIN_TOP_PANEL), BorderLayout.PAGE_START);
+		panels.get(PANEL_PRINCIPALE).add(panels.get(ADMIN_TOP_PANEL));
+		panels.get(PANEL_PRINCIPALE).add(panels.get(ADMIN_ACTION_PANEL));
 		
 		//display panel
 		commit();
+	}
+
+	private JPanel initActionsPanel() {
+		JPanel container = new JPanel();
+		
+		//sauvegarder
+		JButton button1 = new JButton("Sauvegarder");
+		button1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		container.add(button1);
+		
+		//apercus
+		JButton button2 = new JButton("Apercus");
+		button2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		container.add(button2);
+		
+		//retour
+		JButton button3 = new JButton("Retour accueil");
+		button3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				fenetre.switchPanel(new VueAccueil(fenetre));
+			}
+		});
+		container.add(button3);
+		
+		return container;
 	}
 
 	private JPanel initSelectedFormesPanel() {
