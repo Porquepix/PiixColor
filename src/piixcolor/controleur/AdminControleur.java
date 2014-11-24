@@ -47,6 +47,13 @@ public class AdminControleur extends Controleur {
 			return false;
 		}
 	}
+	
+	public boolean deleteImage(File image) {
+		if (image.delete()) {
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * Redimensionne une image.

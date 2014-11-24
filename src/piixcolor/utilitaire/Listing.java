@@ -5,6 +5,8 @@ import java.io.FilenameFilter;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import javax.swing.JOptionPane;
+
 public class Listing {
 
 	public static File[] listeImages(String path) {
