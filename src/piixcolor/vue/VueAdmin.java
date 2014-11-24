@@ -291,9 +291,9 @@ public class VueAdmin extends Vue {
 			
 			action.add(cb, BorderLayout.LINE_START);
 		
-			JLabel delete = new JLabel("x");
+			JLabel delete = new JLabel("Supprimer");
 			delete.setForeground(Color.RED);
-			delete.setPreferredSize(new Dimension(30, 100));
+			delete.setPreferredSize(new Dimension(100, 100));
 			delete.setHorizontalAlignment(JLabel.CENTER);
 			delete.addMouseListener(new MouseListener() {
 				public void mouseReleased(MouseEvent e) {}
@@ -307,12 +307,12 @@ public class VueAdmin extends Vue {
 					if (retour == JOptionPane.OK_OPTION) {
 						boolean deleteStatut = ((AdminControleur) getControleur()).deleteImage(image);
 						if (deleteStatut) {
-							JOptionPane.showMessageDialog(fenetre, "Votre image a bien été supprimée.", "Information", JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.showMessageDialog(fenetre, "Votre image a bien Ã©tÃ© supprimÃ©e.", "Information", JOptionPane.INFORMATION_MESSAGE);
 							formesCheckBoxes.remove(image.getName());
 							refreshFormesPanel();
 							refreshSelectedFormesPanel();
 						} else {
-							JOptionPane.showMessageDialog(fenetre, "L'image n'a pas pu être supprimée.", "Erreur", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(fenetre, "L'image n'a pas pu Ãªtre supprimÃ©e.", "Erreur", JOptionPane.ERROR_MESSAGE);
 						}
 					}	
 				}
@@ -374,10 +374,10 @@ public class VueAdmin extends Vue {
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
 			boolean saveStatut = ((AdminControleur) getControleur()).saveImage(fc.getSelectedFile());
 			if (saveStatut) {
-				JOptionPane.showMessageDialog(this, "Votre image a bien été enregistrée.", "Information", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(this, "Votre image a bien Ã©tÃ© enregistrÃ©e.", "Information", JOptionPane.INFORMATION_MESSAGE);
 				refreshFormesPanel();
 			} else {
-				JOptionPane.showMessageDialog(this, "L'image n'a pas pu être enregistrée.", "Erreur", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, "L'image n'a pas pu Ãªtre enregistrÃ©e.", "Erreur", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
