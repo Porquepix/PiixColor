@@ -7,10 +7,7 @@ import java.util.Comparator;
 
 import javax.swing.JOptionPane;
 
-<<<<<<< HEAD
-=======
 import piixcolor.modele.Modele;
->>>>>>> origin/master
 import piixcolor.vue.Fenetre;
 
 public class Listing {

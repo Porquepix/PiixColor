@@ -29,11 +29,7 @@ import javax.swing.border.EmptyBorder;
 
 import piixcolor.controleur.AdminControleur;
 import piixcolor.controleur.Controleur;
-<<<<<<< HEAD
-import piixcolor.utilitaire.Config;
-=======
 import piixcolor.modele.Modele;
->>>>>>> origin/master
 import piixcolor.utilitaire.Couleur;
 import piixcolor.utilitaire.ImageFilter;
 import piixcolor.utilitaire.Listing;
@@ -70,22 +66,14 @@ public class VueAdmin extends Vue {
 	
 	//liste de toutes les checkbox des formes
 	private Map<String, JCheckBox> formesCheckBoxes;
-<<<<<<< HEAD
-	private Map<Integer, JCheckBox> couleursCheckBoxes;
-=======
 	private Map<Couleur, JCheckBox> couleursCheckBoxes;
->>>>>>> origin/master
 
 	public VueAdmin(Fenetre fenetre, Controleur controleur) {
 		super(fenetre, controleur);
 		
 		//init lists check box
 		formesCheckBoxes = new LinkedHashMap<String, JCheckBox>();
-<<<<<<< HEAD
-		couleursCheckBoxes = new HashMap<Integer, JCheckBox>();
-=======
 		couleursCheckBoxes = new HashMap<Couleur, JCheckBox>();
->>>>>>> origin/master
 
 		//init hashmap + madel
 		panels = new HashMap<String, JPanel>();
@@ -108,8 +96,6 @@ public class VueAdmin extends Vue {
 		commit();
 	}
 
-<<<<<<< HEAD
-=======
 	private JPanel initActionsPanel() {
 		JPanel container = new JPanel();
 		
@@ -143,7 +129,6 @@ public class VueAdmin extends Vue {
 		return container;
 	}
 
->>>>>>> origin/master
 	private JPanel initSelectedFormesPanel() {
 		Box box = Box.createVerticalBox();
 		Border border = BorderFactory.createLineBorder(Color.black);
@@ -199,12 +184,9 @@ public class VueAdmin extends Vue {
 
 		for (Couleur c : Couleur.values()) {
 			initColor(jp, c);
-<<<<<<< HEAD
-=======
 			if (controleur.getModele().getCouleursConfig().contains(c.getCouleur())) {
 				couleursCheckBoxes.get(c).setSelected(true);
 			}
->>>>>>> origin/master
 		}
 		
 		JPanel messagePanel = new JPanel();
@@ -224,11 +206,7 @@ public class VueAdmin extends Vue {
 		container.setBackground(Color.WHITE);
 		
 		JPanel colorIcon = new JPanel();
-<<<<<<< HEAD
-		colorIcon.setBackground(c.getCoul());
-=======
 		colorIcon.setBackground(c.getCouleur());
->>>>>>> origin/master
 		colorIcon.setPreferredSize(new Dimension(50, 20));
 		
 		JCheckBox cb = new JCheckBox();
@@ -239,11 +217,7 @@ public class VueAdmin extends Vue {
 			}
 		});
 		
-<<<<<<< HEAD
-		couleursCheckBoxes.put(c.ordinal(), cb);
-=======
 		couleursCheckBoxes.put(c, cb);
->>>>>>> origin/master
 		
 		container.add(colorIcon, BorderLayout.NORTH);
 		container.add(cb, BorderLayout.SOUTH);
@@ -255,23 +229,14 @@ public class VueAdmin extends Vue {
 		messagePanel.removeAll();
 		
 		int nbSelectedCouleurs = 0;
-<<<<<<< HEAD
-		for (Map.Entry<Integer, JCheckBox> value : couleursCheckBoxes.entrySet()) {
-=======
 		for (Map.Entry<Couleur, JCheckBox> value : couleursCheckBoxes.entrySet()) {
->>>>>>> origin/master
 			if (value.getValue().isSelected()) {
 				nbSelectedCouleurs++;
 			}
 			value.getValue().setEnabled(true);
 	    }
-<<<<<<< HEAD
-		if (nbSelectedCouleurs >= Config.MAX_SELECTED_COULEURS) {
-			for (Map.Entry<Integer, JCheckBox> value : couleursCheckBoxes.entrySet()) {
-=======
 		if (nbSelectedCouleurs >= Modele.MAX_SELECTED_COULEURS) {
 			for (Map.Entry<Couleur, JCheckBox> value : couleursCheckBoxes.entrySet()) {
->>>>>>> origin/master
 				if (!value.getValue().isSelected()) {
 					value.getValue().setEnabled(false);
 				}
@@ -364,10 +329,7 @@ public class VueAdmin extends Vue {
 			final JLabel delete = new JLabel(new ImageIcon(Modele.DOSSIER_FORME + "asset/corbeille.jpg"));
 			delete.setPreferredSize(new Dimension(30, 30));
 			delete.setHorizontalAlignment(JLabel.CENTER);
-<<<<<<< HEAD
-=======
 			delete.setForeground(Color.RED);
->>>>>>> origin/master
 			delete.addMouseListener(new MouseListener() {
 				public void mouseReleased(MouseEvent e) {}
 				public void mousePressed(MouseEvent e) {}
@@ -450,17 +412,10 @@ public class VueAdmin extends Vue {
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
 			boolean saveStatut = ((AdminControleur) getControleur()).saveImage(fc.getSelectedFile());
 			if (saveStatut) {
-<<<<<<< HEAD
-				JOptionPane.showMessageDialog(fenetre, "Votre image a bien été enregistrée.", "Information", JOptionPane.INFORMATION_MESSAGE);
-				refreshFormesPanel();
-			} else {
-				JOptionPane.showMessageDialog(fenetre, "L'image n'a pas pu être enregistrée.", "Erreur", JOptionPane.ERROR_MESSAGE);
-=======
 				JOptionPane.showMessageDialog(fenetre, "Votre image a bien ï¿½tï¿½ enregistrï¿½e.", "Information", JOptionPane.INFORMATION_MESSAGE);
 				refreshFormesPanel();
 			} else {
 				JOptionPane.showMessageDialog(fenetre, "L'image n'a pas pu ï¿½tre enregistrï¿½e.", "Erreur", JOptionPane.ERROR_MESSAGE);
->>>>>>> origin/master
 			}
 		}
 	}
