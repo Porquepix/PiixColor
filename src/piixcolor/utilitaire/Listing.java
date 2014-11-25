@@ -5,11 +5,20 @@ import java.io.FilenameFilter;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import javax.swing.JOptionPane;
+
+import piixcolor.vue.Fenetre;
+
 public class Listing {
 
 	public static File[] listeImages(String path) {
 		File f = new File(path);
 		
+		if (!f.exists()) {
+			JOptionPane.showMessageDialog(Fenetre.getInstance(), "Impossible d'ouvrir le dossier : '" + f.getAbsolutePath() + "'", "Erreur", JOptionPane.ERROR_MESSAGE);
+			System.exit(-1);
+		}
+
 		FilenameFilter filtre = new FilenameFilter() {
 			  public boolean accept(File dir, String name) {
 				    return name.endsWith(Config.FORMAT_IMAGE_SAVE);
