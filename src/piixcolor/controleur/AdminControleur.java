@@ -42,7 +42,7 @@ public class AdminControleur extends Controleur {
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.err.println("Un probleme est survenue lors de l'importaion de l'image");
+			System.err.println("Un probleme est survenu lors de l'importaion de l'image");
 			return false;
 		}
 	}

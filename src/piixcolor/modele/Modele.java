@@ -29,7 +29,6 @@ public class Modele {
 	private List<Observateur> observateurs = new ArrayList<Observateur>();
 	private List<Color> couleursConfig = new ArrayList<Color>();
 	private List<File> formesConfig = new ArrayList<File>();
-
 	private List<ObjetColore> reserveForme = new ArrayList<ObjetColore>();
 	
 	public static final int IMG_SIZE = 100;
@@ -51,6 +50,7 @@ public class Modele {
 			racine = document.getRootElement();
 			this.loadCouleurConfig();
 			this.loadFormeConfig();
+			this.loadReserveForme();
 		} catch (JDOMException e) {
 			System.err.println("Impossible de parser le fichier XML.");
 			e.printStackTrace();
@@ -88,6 +88,25 @@ public class Modele {
 		      this.formesConfig.add(f);
 		}
 	}
+	
+	public void loadReserveForme() {
+		List listObjetColore = racine.getChild("formePool").getChildren("forme");
+		Iterator i = listObjetColore.iterator();
+		while(i.hasNext()) {
+		      Element courant = (Element)i.next();
+		      ObjetColore o;
+			try {
+				o = new ObjetColore((Couleur.values()[Integer.parseInt(courant.getChild("couleur").getText())-1]), ImageIO.read(new File(Modele.DOSSIER_FORME + courant.getChild("path").getText())));
+				this.reserveForme.add(o);
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+				System.err.println("Un probleme est survenu avec le format de l'image");
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.err.println("Un probleme est survenu lors du chargement de l'image");
+			}
+		}
+	}
 
 	public void addMatriceCouleur(Couleur couleur) {
 		Element listCouleurs = racine.getChild("matrice").getChild("couleurs");
@@ -121,6 +140,15 @@ public class Modele {
 
 	public List<File> getFormesConfig() {
 		return formesConfig;
+	}
+
+	public List<ObjetColore> getReserveForme() {
+		return reserveForme;
+	}
+
+	public void setReserveForme(List<ObjetColore> reserveForme) {
+		this.reserveForme = reserveForme;
+		notifier();
 	}
 
 	public void setFormesConfig(ArrayList<File> formesConfig) {

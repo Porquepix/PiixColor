@@ -75,49 +75,24 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 		
 		//Ajout Couleurs :
 		int k = 0;
-		for(int j = controleur.getNbForme()+1; j <= (controleur.getNbCouleur()*(controleur.getNbForme()+1)); j = j + controleur.getNbForme()+1){
+		for(int i = controleur.getNbForme()+1; i <= (controleur.getNbCouleur()*(controleur.getNbForme()+1)); i = i + controleur.getNbForme() + 1){
 			image = new JLabel(new ImageIcon());
-			panel =  (JPanel) matrice.getComponent(j);
+			panel =  (JPanel) matrice.getComponent(i);
 			panel.setBackground(controleur.getModele().getCouleursConfig().get(k));
 			panel.add(image);
 			k++;
 		}
 		
-		//####################################################################################
-		
 		//###############Ajout des formes colorés à "formes"##############################
-		
-		//Ajout couleurs :
-		JLabel objetColore = new JLabel(new ImageIcon("images/carreRouge.png"));
-		panel =  (JPanel) matrice.getComponent(17);
-		panel.add(objetColore);
-		
-		objetColore = new JLabel(new ImageIcon("images/cercleVert.png"));
-		panel = (JPanel) matrice.getComponent(18);
-		panel.add(objetColore);
-		
-		objetColore = new JLabel(new ImageIcon("images/triangleVert.png"));
-		panel = (JPanel) matrice.getComponent(19);
-		panel.add(objetColore);
-		
-		objetColore = new JLabel(new ImageIcon("images/carreBleu.png"));
-		JPanel panel1 =  (JPanel) matrice.getComponent(21);
-		panel1.add(objetColore);
-		
-		objetColore = new JLabel(new ImageIcon("images/triangleRouge.png"));
-		panel1 = (JPanel) matrice.getComponent(22);
-		panel1.add(objetColore);
-		
-		objetColore = new JLabel(new ImageIcon("images/cercleBleu.png"));
-		panel1 = (JPanel) matrice.getComponent(23);
-		panel1.add(objetColore);
-		//####################################################################################
-		
+		int l = ((controleur.getNbCouleur()+1)*(controleur.getNbForme()+1));
+		for(int i = 0; i < controleur.getNbObjetColore(); i++){
+			JLabel objetColore = new JLabel(new ImageIcon(controleur.getModele().getReserveForme().get(i).getImage()));
+			panel =  (JPanel) matrice.getComponent(l);
+			l++;
+			panel.add(objetColore);
+		}		
 	}
-	
-	public void init() {
-		
-	}
+
 
 	public void mouseDragged(MouseEvent me) {
 		if(SwingUtilities.isLeftMouseButton(me)) {
