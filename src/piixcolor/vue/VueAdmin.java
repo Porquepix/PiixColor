@@ -10,12 +10,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
@@ -27,6 +25,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 
 import piixcolor.controleur.AdminControleur;
 import piixcolor.controleur.Controleur;
@@ -38,7 +37,6 @@ import piixcolor.modele.Modele;
 import piixcolor.utilitaire.Couleur;
 import piixcolor.utilitaire.ImageFilter;
 import piixcolor.utilitaire.Listing;
-import sun.security.krb5.Config;
 
 public class VueAdmin extends Vue {
 	
@@ -93,8 +91,8 @@ public class VueAdmin extends Vue {
 		panels = new HashMap<String, JPanel>();
 		panels.put(PANEL_PRINCIPALE, new JPanel(new GridLayout(3, 1)));
 		panels.put(ADMIN_TOP_PANEL, new JPanel(new GridLayout(1, ATP_NB_PANEL, ATP_MARGIN, 0)));
-		panels.put(ATP_FORMES_SELECT_PANEL, initSelectedFormesPanel());
 		panels.put(ATP_FORMES_PANEL, initFormesPanel());
+		panels.put(ATP_FORMES_SELECT_PANEL, initSelectedFormesPanel());
 		panels.put(ATP_COULEURS_PANEL, initCouleursPanel());
 		panels.put(ADMIN_ACTION_PANEL, initActionsPanel());
 		
@@ -315,8 +313,6 @@ public class VueAdmin extends Vue {
 		container.add(jsp, BorderLayout.NORTH);
 		container.add(b, BorderLayout.SOUTH); 
 		
-		refreshFormesCheckBoxes();
-		
 		return container;
 	}
 	
@@ -352,7 +348,6 @@ public class VueAdmin extends Vue {
 				cb = formesCheckBoxes.get(image.getName());
 			} else {	
 				cb = new JCheckBox();
-				cb.setMargin(new Insets(0, 0, 0, 15));
 				cb.setBackground(Color.WHITE);
 				cb.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
@@ -366,8 +361,8 @@ public class VueAdmin extends Vue {
 			
 			action.add(cb, BorderLayout.LINE_START);
 		
-			JLabel delete = new JLabel("Supprimer");
-			delete.setPreferredSize(new Dimension(100, 100));
+			final JLabel delete = new JLabel(new ImageIcon(Modele.DOSSIER_FORME + "asset/corbeille.jpg"));
+			delete.setPreferredSize(new Dimension(30, 30));
 			delete.setHorizontalAlignment(JLabel.CENTER);
 <<<<<<< HEAD
 =======
@@ -376,8 +371,13 @@ public class VueAdmin extends Vue {
 			delete.addMouseListener(new MouseListener() {
 				public void mouseReleased(MouseEvent e) {}
 				public void mousePressed(MouseEvent e) {}
-				public void mouseExited(MouseEvent e) {}
-				public void mouseEntered(MouseEvent e) {}
+				public void mouseExited(MouseEvent e) {
+					delete.setIcon(new ImageIcon(Modele.DOSSIER_FORME + "asset/corbeille.jpg"));
+				}
+				
+				public void mouseEntered(MouseEvent e) {
+					delete.setIcon(new ImageIcon(Modele.DOSSIER_FORME + "asset/corbeille-hover.jpg"));
+				}
 			
 				public void mouseClicked(MouseEvent e) {
 					Object[] options = {"Oui", "Non"};
@@ -401,8 +401,6 @@ public class VueAdmin extends Vue {
 		}
 		
 		container.add(action, BorderLayout.LINE_END);
-		
-		refreshFormesCheckBoxes();
 		
 		return container;
 	}
