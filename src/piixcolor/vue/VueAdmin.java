@@ -2,7 +2,6 @@ package piixcolor.vue;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Insets;
@@ -11,13 +10,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -30,10 +30,11 @@ import javax.swing.border.Border;
 
 import piixcolor.controleur.AdminControleur;
 import piixcolor.controleur.Controleur;
-import piixcolor.utilitaire.Config;
+import piixcolor.modele.Modele;
 import piixcolor.utilitaire.Couleur;
 import piixcolor.utilitaire.ImageFilter;
 import piixcolor.utilitaire.Listing;
+import sun.security.krb5.Config;
 
 public class VueAdmin extends Vue {
 	
@@ -67,14 +68,14 @@ public class VueAdmin extends Vue {
 	
 	//liste de toutes les checkbox des formes
 	private Map<String, JCheckBox> formesCheckBoxes;
-	private Map<Integer, JCheckBox> couleursCheckBoxes;
+	private Map<Couleur, JCheckBox> couleursCheckBoxes;
 
-	public VueAdmin(Fenetre f, Controleur controleur) {
-		super(f, controleur, null);
+	public VueAdmin(Fenetre fenetre, Controleur controleur) {
+		super(fenetre, controleur);
 		
 		//init lists check box
 		formesCheckBoxes = new LinkedHashMap<String, JCheckBox>();
-		couleursCheckBoxes = new HashMap<Integer, JCheckBox>();
+		couleursCheckBoxes = new HashMap<Couleur, JCheckBox>();
 
 		//init hashmap + madel
 		panels = new HashMap<String, JPanel>();
@@ -110,7 +111,7 @@ public class VueAdmin extends Vue {
 		container.add(button1);
 		
 		//apercus
-		JButton button2 = new JButton("Apercus");
+		JButton button2 = new JButton("AperÃ§u");
 		button2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -137,7 +138,7 @@ public class VueAdmin extends Vue {
 		int nbSelectedFormes = 0;
 		for (Map.Entry<String, JCheckBox> value : formesCheckBoxes.entrySet()) {
 			if (value.getValue().isSelected()) {
-				box.add(formeFrame(new File(Config.DOSSIER_FORME + value.getKey()), ATP_PANEL_WIDTH - 20, ATP_FORME_FRAME_HEIGHT, false));
+				box.add(formeFrame(new File(Modele.DOSSIER_FORME + value.getKey()), ATP_PANEL_WIDTH - 20, ATP_FORME_FRAME_HEIGHT, false));
 				nbSelectedFormes++;
 			}
 	    }
@@ -185,6 +186,9 @@ public class VueAdmin extends Vue {
 
 		for (Couleur c : Couleur.values()) {
 			initColor(jp, c);
+			if (controleur.getModele().getCouleursConfig().contains(c.getCouleur())) {
+				couleursCheckBoxes.get(c).setSelected(true);
+			}
 		}
 		
 		JPanel messagePanel = new JPanel();
@@ -194,6 +198,8 @@ public class VueAdmin extends Vue {
 		container.add(jp, BorderLayout.PAGE_START);
 		container.add(messagePanel, BorderLayout.PAGE_END);
 		
+		refreshColorPanel();
+		
 		return container;
 	}
 	
@@ -202,7 +208,7 @@ public class VueAdmin extends Vue {
 		container.setBackground(Color.WHITE);
 		
 		JPanel colorIcon = new JPanel();
-		colorIcon.setBackground(c.getCoul());
+		colorIcon.setBackground(c.getCouleur());
 		colorIcon.setPreferredSize(new Dimension(50, 20));
 		
 		JCheckBox cb = new JCheckBox();
@@ -213,7 +219,7 @@ public class VueAdmin extends Vue {
 			}
 		});
 		
-		couleursCheckBoxes.put(c.ordinal(), cb);
+		couleursCheckBoxes.put(c, cb);
 		
 		container.add(colorIcon, BorderLayout.NORTH);
 		container.add(cb, BorderLayout.SOUTH);
@@ -225,14 +231,14 @@ public class VueAdmin extends Vue {
 		messagePanel.removeAll();
 		
 		int nbSelectedCouleurs = 0;
-		for (Map.Entry<Integer, JCheckBox> value : couleursCheckBoxes.entrySet()) {
+		for (Map.Entry<Couleur, JCheckBox> value : couleursCheckBoxes.entrySet()) {
 			if (value.getValue().isSelected()) {
 				nbSelectedCouleurs++;
 			}
 			value.getValue().setEnabled(true);
 	    }
-		if (nbSelectedCouleurs >= Config.MAX_SELECTED_COULEURS) {
-			for (Map.Entry<Integer, JCheckBox> value : couleursCheckBoxes.entrySet()) {
+		if (nbSelectedCouleurs >= Modele.MAX_SELECTED_COULEURS) {
+			for (Map.Entry<Couleur, JCheckBox> value : couleursCheckBoxes.entrySet()) {
 				if (!value.getValue().isSelected()) {
 					value.getValue().setEnabled(false);
 				}
@@ -249,9 +255,12 @@ public class VueAdmin extends Vue {
 		Box box = Box.createVerticalBox();
 		Border border = BorderFactory.createLineBorder(Color.black);
 
-		File[] images = Listing.listeImages(Config.DOSSIER_FORME);
+		File[] images = Listing.listeImages(Modele.DOSSIER_FORME);
 		for (File image : images) {
 			box.add(formeFrame(image, ATP_PANEL_WIDTH - 18, ATP_FORME_FRAME_HEIGHT, true));
+			if (controleur.getModele().getFormesConfig().contains(image)) {
+				formesCheckBoxes.get(image.getName()).setSelected(true);
+			}
 		}
 
 		JScrollPane jsp = new JScrollPane(box, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -271,6 +280,8 @@ public class VueAdmin extends Vue {
 		container.add(jsp, BorderLayout.NORTH);
 		container.add(b, BorderLayout.SOUTH); 
 		
+		refreshFormesCheckBoxes();
+		
 		return container;
 	}
 	
@@ -286,9 +297,9 @@ public class VueAdmin extends Vue {
 
 		String imagePath = image.getAbsolutePath();
 		JLabel imagePreview = new JLabel(new ImageIcon(imagePath));
-		imagePreview.setMaximumSize(new Dimension(Config.IMG_SIZE, Config.IMG_SIZE));
-		imagePreview.setPreferredSize(new Dimension(Config.IMG_SIZE, Config.IMG_SIZE));
-		imagePreview.setMinimumSize(new Dimension(Config.IMG_SIZE, Config.IMG_SIZE));
+		imagePreview.setMaximumSize(new Dimension(Modele.IMG_SIZE, Modele.IMG_SIZE));
+		imagePreview.setPreferredSize(new Dimension(Modele.IMG_SIZE, Modele.IMG_SIZE));
+		imagePreview.setMinimumSize(new Dimension(Modele.IMG_SIZE, Modele.IMG_SIZE));
 		container.add(imagePreview, BorderLayout.LINE_START);
 		
 		String name = image.getName().toUpperCase().split("\\.")[0];
@@ -323,6 +334,7 @@ public class VueAdmin extends Vue {
 			JLabel delete = new JLabel("Supprimer");
 			delete.setPreferredSize(new Dimension(100, 100));
 			delete.setHorizontalAlignment(JLabel.CENTER);
+			delete.setForeground(Color.RED);
 			delete.addMouseListener(new MouseListener() {
 				public void mouseReleased(MouseEvent e) {}
 				public void mousePressed(MouseEvent e) {}
@@ -376,7 +388,7 @@ public class VueAdmin extends Vue {
 			}
 			value.getValue().setEnabled(true);
 	    }
-		if (nbSelectedFormes >= Config.MAX_SELECTED_FORMES) {
+		if (nbSelectedFormes >= Modele.MAX_SELECTED_FORMES) {
 			for (Map.Entry<String, JCheckBox> value : formesCheckBoxes.entrySet()) {
 				if (!value.getValue().isSelected()) {
 					value.getValue().setEnabled(false);
@@ -402,10 +414,10 @@ public class VueAdmin extends Vue {
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
 			boolean saveStatut = ((AdminControleur) getControleur()).saveImage(fc.getSelectedFile());
 			if (saveStatut) {
-				JOptionPane.showMessageDialog(fenetre, "Votre image a bien été enregistrée.", "Information", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(fenetre, "Votre image a bien ï¿½tï¿½ enregistrï¿½e.", "Information", JOptionPane.INFORMATION_MESSAGE);
 				refreshFormesPanel();
 			} else {
-				JOptionPane.showMessageDialog(fenetre, "L'image n'a pas pu être enregistrée.", "Erreur", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(fenetre, "L'image n'a pas pu ï¿½tre enregistrï¿½e.", "Erreur", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}

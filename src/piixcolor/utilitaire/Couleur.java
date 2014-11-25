@@ -18,17 +18,21 @@ public enum Couleur {
 	private Color couleur;
 
 	Couleur(int r, int g, int b) {
-		this.setCoul(new Color(r, g, b));
+		this.setCouleur(new Color(r, g, b));
 	}
 
 
-	public Color getCoul() {
+	public Color getCouleur() {
 		return couleur;
 	}
 
 
-	public void setCoul(Color coul) {
+	public void setCouleur(Color coul) {
 		this.couleur = coul;
+	}
+	
+	public boolean equals(Couleur c) {
+		return c.equals(couleur);
 	}
 
 }

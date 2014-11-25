@@ -7,6 +7,7 @@ import java.util.Comparator;
 
 import javax.swing.JOptionPane;
 
+import piixcolor.modele.Modele;
 import piixcolor.vue.Fenetre;
 
 public class Listing {
@@ -21,7 +22,7 @@ public class Listing {
 
 		FilenameFilter filtre = new FilenameFilter() {
 			  public boolean accept(File dir, String name) {
-				    return name.endsWith(Config.FORMAT_IMAGE_SAVE);
+				    return name.endsWith(Modele.FORMAT_IMAGE_SAVE);
 			  }
 		};
 

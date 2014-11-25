@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
 import piixcolor.controleur.AdminControleur;
+import piixcolor.controleur.PlateauControleur;
+import piixcolor.modele.Modele;
 
 public class VueAccueil extends Vue {
 
@@ -13,18 +15,22 @@ public class VueAccueil extends Vue {
 	private JButton adminButton = new JButton("Espace enseignant");
 
 	public VueAccueil(Fenetre f) {
-		super(f, null, null);
-
+		super(f, null);
 		setLayout(new FlowLayout());
 
 		playButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				fenetre.switchPanel(new VuePlateau(fenetre));
+				Modele m = Modele.getInstance();
+				PlateauControleur pc = new PlateauControleur(m);
+				fenetre.switchPanel(new VuePlateau(fenetre, pc));
 			}
 		});
+		
 		adminButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				fenetre.switchPanel(new VueAdmin(fenetre, new AdminControleur(null)));
+				Modele m = Modele.getInstance();
+				AdminControleur ac = new AdminControleur(m);
+				fenetre.switchPanel(new VueAdmin(fenetre, ac));
 			}
 		});
 
