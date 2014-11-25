@@ -2,6 +2,8 @@ package piixcolor.vue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import piixcolor.modele.Modele;
+
 
 public class Fenetre extends JFrame {
 	
@@ -22,11 +24,6 @@ public class Fenetre extends JFrame {
 		FRAME_HEIGHT = this.getHeight();
 		
 		setLocationRelativeTo(null);
-	}
-
-	public static void main(String[] args) {
-		Fenetre f = Fenetre.getInstance();
-		f.switchPanel(new VueAccueil(f));
 	}
 	
 	public static Fenetre getInstance() {

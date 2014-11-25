@@ -12,7 +12,7 @@ public abstract class Controleur implements Observateur {
 		this.modele = m;
 	}
 	
-	public Modele getModel () {
+	public Modele getModele () {
 		return this.modele;
 	}
 

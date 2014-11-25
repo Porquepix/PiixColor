@@ -4,11 +4,12 @@
     <couleurs>
       <couleur>4</couleur>
       <couleur>1</couleur>
-      <couleur>9</couleur>
       <couleur>3</couleur>
     </couleurs>
     <formes>
       <forme>carre.png</forme>
+      <forme>triangle.png</forme>
+       <forme>cercle.png</forme>
     </formes>
   </matrice>
   <formePool>

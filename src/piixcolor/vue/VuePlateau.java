@@ -7,19 +7,21 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.event.ActionEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import javax.swing.WindowConstants;
+
+import piixcolor.controleur.Controleur;
+import piixcolor.controleur.PlateauControleur;
+import piixcolor.modele.Modele;
 
 public class VuePlateau extends Vue implements MouseListener, MouseMotionListener {
 	JLayeredPane layeredPane;
@@ -28,11 +30,11 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 	Container caseFormeCourante;
 	int ajustementX;
 	int ajustementY;
-	int nbcouleur = 3;
-	int nbforme = 3;
 
-	public VuePlateau(Fenetre fenetre) {
-		super(fenetre, null, null);
+
+	public VuePlateau(Fenetre f, PlateauControleur controleur) {
+		super(f, controleur);
+
 		// Utilisation du JLayeredPane
 		Dimension dimensionVue = new Dimension(fenetre.FRAME_WIDTH, fenetre.FRAME_HEIGHT);
 		layeredPane = new JLayeredPane();
@@ -46,50 +48,41 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 		matrice = new JPanel();
 		layeredPane.add(matrice, JLayeredPane.DEFAULT_LAYER);
 		matrice.setPreferredSize(new Dimension(dimensionVue.width, dimensionVue.height));
-		matrice.setLayout(new GridLayout((nbcouleur*2) + 1, nbforme + 1));
+		matrice.setLayout(new GridLayout((controleur.getNbCouleur()*2) + 1, controleur.getNbForme() + 1));
 		matrice.setBounds(0, 0, dimensionVue.width, dimensionVue.height);
 		
-		for (int i = 0; i < ((nbcouleur*2) + 1) * (nbforme + 1); i++) {
+		for (int i = 0; i < ((controleur.getNbCouleur()*2) + 1) * (controleur.getNbForme() + 1); i++) {
 			JPanel square = new JPanel(new BorderLayout());
 			matrice.add(square);
 			square.setBackground(Color.white);
-			if(i < (nbcouleur+1) * (nbforme +1)) {
+			if(i < (controleur.getNbCouleur()+1) * (controleur.getNbForme() +1)) {
 				square.setBorder(BorderFactory.createLineBorder(Color.black));
 			}
 		}
 
 		//###############Ajout des formes et couleurs de la matrice##############################
 		
-		JLabel vide = new JLabel();
+		JLabel image = new JLabel();
 		JPanel panel = (JPanel) matrice.getComponent(0);
-		panel.add(vide);
-		
-		//Ajout couleurs :
-		JLabel image = new JLabel(new ImageIcon("images/blue.png"));
-		panel =  (JPanel) matrice.getComponent(4);
 		panel.add(image);
 		
-		image = new JLabel(new ImageIcon("images/red.png"));
-		panel = (JPanel) matrice.getComponent(8);
-		panel.add(image);
+		//Ajout Formes :
+		for(int i = 1; i <= controleur.getNbForme(); i++){
+			image = new JLabel(new ImageIcon(controleur.getModele().getFormesConfig().get(i-1).getAbsolutePath()));
+			panel = (JPanel) matrice.getComponent(i);
+			panel.add(image);
+		}
 		
+		//Ajout Couleurs :
+		int k = 0;
+		for(int j = controleur.getNbForme()+1; j <= (controleur.getNbCouleur()*(controleur.getNbForme()+1)); j = j + controleur.getNbForme()+1){
+			image = new JLabel(new ImageIcon());
+			panel =  (JPanel) matrice.getComponent(j);
+			panel.setBackground(controleur.getModele().getCouleursConfig().get(k));
+			panel.add(image);
+			k++;
+		}
 		
-		image = new JLabel(new ImageIcon("images/green.png"));
-		panel = (JPanel) matrice.getComponent(12);
-		panel.add(image);
-		
-		//Ajout formes :
-		image = new JLabel(new ImageIcon("images/triangle.png"));
-		panel = (JPanel) matrice.getComponent(1);
-		panel.add(image);
-		
-		image = new JLabel(new ImageIcon("images/cercle.png"));
-		panel = (JPanel) matrice.getComponent(2);
-		panel.add(image);
-		
-		image = new JLabel(new ImageIcon("images/carre.png"));
-		panel = (JPanel) matrice.getComponent(3);
-		panel.add(image);
 		//####################################################################################
 		
 		//###############Ajout des formes colorés à "formes"##############################
@@ -164,7 +157,7 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 			if (c instanceof JPanel)
 				return;
 			Point emplacementParent = c.getParent().getLocation();
-			if(emplacementParent.getY() >= matrice.getComponent((nbcouleur+1)*(nbforme+1)).getLocation().getY()) {
+			if(emplacementParent.getY() >= (matrice.getComponent((((PlateauControleur)(controleur)).getNbCouleur()+1)*(((PlateauControleur)(controleur)).getNbForme()+1))).getLocation().getY()) {
 				ajustementX = emplacementParent.x - e.getX();
 				ajustementY = emplacementParent.y - e.getY();
 				formeCourante = (JLabel) c;
