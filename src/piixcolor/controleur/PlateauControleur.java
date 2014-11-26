@@ -18,6 +18,10 @@ public class PlateauControleur extends Controleur{
 		return getModele().getFormesConfig().size();
 	}
 	
+	public int getNbObjetColore() {
+		return getModele().getReserveForme().size();
+	}
+	
 	public void actualise() {
 		// TODO Auto-generated method stub
 		

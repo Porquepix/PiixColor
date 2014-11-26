@@ -9,7 +9,7 @@
     <formes>
       <forme>carre.png</forme>
       <forme>triangle.png</forme>
-       <forme>cercle.png</forme>
+      <forme>cercle.png</forme>
     </formes>
   </matrice>
   <formePool>
