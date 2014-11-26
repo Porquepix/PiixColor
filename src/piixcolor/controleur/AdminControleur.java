@@ -30,10 +30,10 @@ public class AdminControleur extends Controleur {
 			String imageName = image.getName().split("\\.")[0];
 			
 			//sécurité pour empécher l'écrasement d'image
-			File f = new File(Modele.DOSSIER_FORME + imageName + "." + Modele.FORMAT_IMAGE_SAVE);
+			File f = new File(Modele.DOSSIER_FORMES + imageName + "." + Modele.FORMAT_IMAGE_SAVE);
 			int j = 1;
 			while (f.exists()) {
-				f = new File(Modele.DOSSIER_FORME + imageName + j + "." + Modele.FORMAT_IMAGE_SAVE);
+				f = new File(Modele.DOSSIER_FORMES + imageName + j + "." + Modele.FORMAT_IMAGE_SAVE);
 				j++;
 			}
 			
