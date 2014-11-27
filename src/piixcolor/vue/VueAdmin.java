@@ -4,14 +4,15 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
@@ -25,7 +26,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 
 import piixcolor.controleur.AdminControleur;
 import piixcolor.controleur.Controleur;
@@ -99,32 +99,32 @@ public class VueAdmin extends Vue {
 	private JPanel initActionsPanel() {
 		JPanel container = new JPanel();
 		
-		//sauvegarder
-		JButton button1 = new JButton("Sauvegarder");
-		button1.addActionListener(new ActionListener() {
+		//Boutton Sauvegarder
+		JButton bouttonSauvegarder = new JButton("Sauvegarder");
+		bouttonSauvegarder.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				BoiteDialogue.enregistrerConfig(Modele.FICHIER_CONFIG);
+			}
+		});
+		container.add(bouttonSauvegarder);
+		
+		//Boutton Apercu
+		JButton bouttonApercu = new JButton("Aperçu");
+		bouttonApercu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
 			}
 		});
-		container.add(button1);
+		container.add(bouttonApercu);
 		
-		//apercus
-		JButton button2 = new JButton("Aperçu");
-		button2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-			}
-		});
-		container.add(button2);
-		
-		//retour
-		JButton button3 = new JButton("Retour accueil");
-		button3.addActionListener(new ActionListener() {
+		//Boutton Retour
+		JButton bouttonRetour = new JButton("Retour accueil");
+		bouttonRetour.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				fenetre.switchPanel(new VueAccueil(fenetre));
 			}
 		});
-		container.add(button3);
+		container.add(bouttonRetour);
 		
 		return container;
 	}
@@ -133,12 +133,8 @@ public class VueAdmin extends Vue {
 		Box box = Box.createVerticalBox();
 		Border border = BorderFactory.createLineBorder(Color.black);
 		
-		int nbSelectedFormes = 0;
-		for (Map.Entry<String, JCheckBox> value : formesCheckBoxes.entrySet()) {
-			if (value.getValue().isSelected()) {
-				box.add(formeFrame(new File(Modele.DOSSIER_FORME + value.getKey()), ATP_PANEL_WIDTH - 20, ATP_FORME_FRAME_HEIGHT, false));
-				nbSelectedFormes++;
-			}
+		for (File value : getControleur().getModele().getFormesConfig()) {
+			box.add(formeFrame(value, ATP_PANEL_WIDTH - 20, ATP_FORME_FRAME_HEIGHT, false));
 	    }
 
 		JScrollPane jsp = new JScrollPane(box, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -158,7 +154,7 @@ public class VueAdmin extends Vue {
 		container.add(jsp, BorderLayout.CENTER);
 		container.add(messagePanel, BorderLayout.PAGE_END);
 
-		if (nbSelectedFormes == 0) {
+		if (getControleur().getModele().getFormesConfig().size() == 0) {
 			JLabel message = new JLabel(" Vous n'avez pas encore selectionez de formes.");
 			message.setHorizontalAlignment(JLabel.CENTER);
 			container.add(message, BorderLayout.CENTER);
@@ -184,7 +180,7 @@ public class VueAdmin extends Vue {
 
 		for (Couleur c : Couleur.values()) {
 			initColor(jp, c);
-			if (controleur.getModele().getCouleursConfig().contains(c.getCouleur())) {
+			if (controleur.getModele().getCouleursConfig().contains(c)) {
 				couleursCheckBoxes.get(c).setSelected(true);
 			}
 		}
@@ -228,14 +224,15 @@ public class VueAdmin extends Vue {
 		JPanel messagePanel = panels.get(ATP_MESSAGE_COULEURS_PANEL);
 		messagePanel.removeAll();
 		
-		int nbSelectedCouleurs = 0;
+		List<Couleur> selectedCouleurs = new ArrayList<Couleur>();
 		for (Map.Entry<Couleur, JCheckBox> value : couleursCheckBoxes.entrySet()) {
 			if (value.getValue().isSelected()) {
-				nbSelectedCouleurs++;
+				selectedCouleurs.add(value.getKey());
 			}
 			value.getValue().setEnabled(true);
 	    }
-		if (nbSelectedCouleurs >= Modele.MAX_SELECTED_COULEURS) {
+		getControleur().getModele().setCouleursConfig(selectedCouleurs);
+		if (getControleur().getModele().getCouleursConfig().size() >= Modele.MAX_SELECTED_COULEURS) {
 			for (Map.Entry<Couleur, JCheckBox> value : couleursCheckBoxes.entrySet()) {
 				if (!value.getValue().isSelected()) {
 					value.getValue().setEnabled(false);
@@ -253,10 +250,10 @@ public class VueAdmin extends Vue {
 		Box box = Box.createVerticalBox();
 		Border border = BorderFactory.createLineBorder(Color.black);
 
-		File[] images = Listing.listeImages(Modele.DOSSIER_FORME);
+		File[] images = Listing.listeImages(Modele.DOSSIER_FORMES);
 		for (File image : images) {
 			box.add(formeFrame(image, ATP_PANEL_WIDTH - 18, ATP_FORME_FRAME_HEIGHT, true));
-			if (controleur.getModele().getFormesConfig().contains(image)) {
+			if (getControleur().getModele().getFormesConfig().contains(image)) {
 				formesCheckBoxes.get(image.getName()).setSelected(true);
 			}
 		}
@@ -291,8 +288,7 @@ public class VueAdmin extends Vue {
 		container.setBorder(border);
 		container.setLayout(new BorderLayout());
 
-		String imagePath = image.getAbsolutePath();
-		JLabel imagePreview = new JLabel(new ImageIcon(imagePath));
+		JLabel imagePreview = new JLabel(new ImageIcon(image.getAbsolutePath()));
 		imagePreview.setMaximumSize(new Dimension(Modele.IMG_SIZE, Modele.IMG_SIZE));
 		imagePreview.setPreferredSize(new Dimension(Modele.IMG_SIZE, Modele.IMG_SIZE));
 		imagePreview.setMinimumSize(new Dimension(Modele.IMG_SIZE, Modele.IMG_SIZE));
@@ -303,8 +299,8 @@ public class VueAdmin extends Vue {
 		imageName.setHorizontalAlignment(JLabel.CENTER);
 		container.add(imageName, BorderLayout.CENTER);
 		
-		JPanel action = new JPanel(new BorderLayout());
-		action.setBackground(Color.WHITE);
+		JPanel actionPane = new JPanel(new BorderLayout());
+		actionPane.setBackground(Color.WHITE);
 		
 		if (withActions) {
 			JCheckBox cb;
@@ -316,6 +312,7 @@ public class VueAdmin extends Vue {
 				cb.setBackground(Color.WHITE);
 				cb.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						refreshFormesCheckBoxes();
 						refreshSelectedFormesPanel();	
 					}
 				});
@@ -324,21 +321,21 @@ public class VueAdmin extends Vue {
 				formesCheckBoxes.put(image.getName(), cb);
 			}
 			
-			action.add(cb, BorderLayout.LINE_START);
+			actionPane.add(cb, BorderLayout.LINE_START);
 		
-			final JLabel delete = new JLabel(new ImageIcon(Modele.DOSSIER_FORME + "asset/corbeille.jpg"));
-			delete.setPreferredSize(new Dimension(30, 30));
+			JLabel delete = new JLabel(new ImageIcon(Modele.DOSSIER_ASSETS + "corbeille.jpg"));
+			delete.setPreferredSize(new Dimension(60, 30));
 			delete.setHorizontalAlignment(JLabel.CENTER);
 			delete.setForeground(Color.RED);
 			delete.addMouseListener(new MouseListener() {
 				public void mouseReleased(MouseEvent e) {}
 				public void mousePressed(MouseEvent e) {}
 				public void mouseExited(MouseEvent e) {
-					delete.setIcon(new ImageIcon(Modele.DOSSIER_FORME + "asset/corbeille.jpg"));
+					((JLabel) e.getSource()).setIcon(new ImageIcon(Modele.DOSSIER_ASSETS + "corbeille.jpg"));
 				}
 				
 				public void mouseEntered(MouseEvent e) {
-					delete.setIcon(new ImageIcon(Modele.DOSSIER_FORME + "asset/corbeille-hover.jpg"));
+					((JLabel) e.getSource()).setIcon(new ImageIcon(Modele.DOSSIER_ASSETS + "corbeille-hover.jpg"));
 				}
 			
 				public void mouseClicked(MouseEvent e) {
@@ -350,6 +347,7 @@ public class VueAdmin extends Vue {
 							JOptionPane.showMessageDialog(fenetre, "Votre image a bien été supprimée.", "Information", JOptionPane.INFORMATION_MESSAGE);
 							formesCheckBoxes.remove(image.getName());
 							refreshFormesPanel();
+							refreshFormesCheckBoxes();
 							refreshSelectedFormesPanel();
 						} else {
 							JOptionPane.showMessageDialog(fenetre, "L'image n'a pas pu être supprimée.", "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -358,11 +356,11 @@ public class VueAdmin extends Vue {
 				}
 			});
 			
-			action.add(delete, BorderLayout.CENTER);
+			actionPane.add(delete, BorderLayout.CENTER);
 		
 		}
 		
-		container.add(action, BorderLayout.LINE_END);
+		container.add(actionPane, BorderLayout.LINE_END);
 		
 		return container;
 	}
@@ -379,14 +377,15 @@ public class VueAdmin extends Vue {
 		messagePanel.removeAll();
 		messagePanel.setBorder(null);
 		
-		int nbSelectedFormes = 0;
+		List<File> selectedFormes = new ArrayList<File>();
 		for (Map.Entry<String, JCheckBox> value : formesCheckBoxes.entrySet()) {
 			if (value.getValue().isSelected()) {
-				nbSelectedFormes++;
+				selectedFormes.add(new File(Modele.DOSSIER_FORMES + value.getKey()));
 			}
 			value.getValue().setEnabled(true);
 	    }
-		if (nbSelectedFormes >= Modele.MAX_SELECTED_FORMES) {
+		getControleur().getModele().setFormesConfig(selectedFormes);
+		if (getControleur().getModele().getFormesConfig().size() >= Modele.MAX_SELECTED_FORMES) {
 			for (Map.Entry<String, JCheckBox> value : formesCheckBoxes.entrySet()) {
 				if (!value.getValue().isSelected()) {
 					value.getValue().setEnabled(false);
@@ -433,10 +432,7 @@ public class VueAdmin extends Vue {
 		panels.get(PANEL_PRINCIPALE).repaint();
 	}
 
-
-	@Override
 	public void actualise() {
-		// TODO Auto-generated method stub
 		
 	}
 

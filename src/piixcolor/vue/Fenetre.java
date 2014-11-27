@@ -1,9 +1,12 @@
 package piixcolor.vue;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import piixcolor.modele.Modele;
-
 
 public class Fenetre extends JFrame {
 	
@@ -14,7 +17,13 @@ public class Fenetre extends JFrame {
 	private static Fenetre instance = null;
 
 	private Fenetre () {
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+            	closeOperation();
+            }
+		});
+		
 		setTitle(FRAME_TITLE);
 		setVisible(true);
 		pack();
@@ -24,6 +33,21 @@ public class Fenetre extends JFrame {
 		FRAME_HEIGHT = this.getHeight();
 		
 		setLocationRelativeTo(null);
+	}
+	
+	private void closeOperation() {
+    	if (Modele.getInstance().isEstModifie()) {
+    		String[] options = {"Enregistrer", "Ne pas enregistrer", "Annuler"}; 
+			int retour = BoiteDialogue.createOptionBox(JOptionPane.YES_NO_CANCEL_OPTION, "Attention", "Attention ! Des modifications ont été aporté a la configuration sans être sauvegardé. Voulez-vous enregister ses modifications ?", options, 0);
+			if (retour == JOptionPane.OK_OPTION) {
+				BoiteDialogue.enregistrerConfig(Modele.FICHIER_CONFIG);
+				System.exit(0);
+			} else if(retour == JOptionPane.NO_OPTION) {
+				System.exit(0);
+			}
+    	} else {		
+    		System.exit(0);
+    	}
 	}
 	
 	public static Fenetre getInstance() {

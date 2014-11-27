@@ -2,9 +2,9 @@
 <piixcolor>
   <matrice>
     <couleurs>
-      <couleur>4</couleur>
-      <couleur>1</couleur>
       <couleur>3</couleur>
+      <couleur>0</couleur>
+      <couleur>2</couleur>
     </couleurs>
     <formes>
       <forme>carre.png</forme>
@@ -15,15 +15,15 @@
   <formePool>
     <forme>
       <path>carre.png</path>
-      <couleur>1</couleur>
+      <couleur>0</couleur>
     </forme>
     <forme>
       <path>triangle.png</path>
-      <couleur>8</couleur>
+      <couleur>7</couleur>
     </forme>
     <forme>
       <path>cercle.png</path>
-      <couleur>5</couleur>
+      <couleur>4</couleur>
     </forme>
   </formePool>
 </piixcolor>

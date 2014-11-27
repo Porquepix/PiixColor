@@ -78,7 +78,7 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 		for(int i = controleur.getNbForme()+1; i <= (controleur.getNbCouleur()*(controleur.getNbForme()+1)); i = i + controleur.getNbForme() + 1){
 			image = new JLabel(new ImageIcon());
 			panel =  (JPanel) matrice.getComponent(i);
-			panel.setBackground(controleur.getModele().getCouleursConfig().get(k));
+			panel.setBackground(controleur.getModele().getCouleursConfig().get(k).getCouleur());
 			panel.add(image);
 			k++;
 		}
