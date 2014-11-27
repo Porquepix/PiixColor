@@ -26,5 +26,9 @@ public class BoiteDialogue {
 		int retour = JOptionPane.showOptionDialog(Fenetre.getInstance(), message, titre, type, JOptionPane.QUESTION_MESSAGE, null, options, options[optionParDefaut]); 
 		return retour;
 	}
+	
+	public static void createModalBox(int type, String titre, String message) {
+		JOptionPane.showMessageDialog(Fenetre.getInstance(), message, titre, type);
+	}
 
 }

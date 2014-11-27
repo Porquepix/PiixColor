@@ -80,9 +80,7 @@ public class AdminControleur extends Controleur {
 		return bi;
 	}
 
-	@Override
 	public void actualise() {
-		// TODO Auto-generated method stub
 		
 	}
 

@@ -1,7 +1,5 @@
 package piixcolor.modele;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -75,10 +73,10 @@ public class Modele {
 	}
 	
 	public void loadCouleurConfig() {
-		List listCouleurs = racine.getChild("matrice").getChild("couleurs").getChildren("couleur");
-		Iterator i = listCouleurs.iterator();
+		List<Element> listCouleurs = racine.getChild("matrice").getChild("couleurs").getChildren("couleur");
+		Iterator<Element> i = listCouleurs.iterator();
 		while(i.hasNext()) {
-		      Element courant = (Element)i.next();
+		      Element courant = i.next();
 		      this.couleursConfig.add((Couleur.values()[Integer.parseInt(courant.getText())]));
 		}
 	}
@@ -94,10 +92,10 @@ public class Modele {
 	}
 	
 	public void loadFormeConfig() {
-		List listFormes = racine.getChild("matrice").getChild("formes").getChildren("forme");
-		Iterator i = listFormes.iterator();
+		List<Element> listFormes = racine.getChild("matrice").getChild("formes").getChildren("forme");
+		Iterator<Element> i = listFormes.iterator();
 		while(i.hasNext()) {
-		      Element courant = (Element)i.next();
+		      Element courant = i.next();
 		      File f = new File(Modele.DOSSIER_FORMES + courant.getText());
 		      this.formesConfig.add(f);
 		}
@@ -114,10 +112,10 @@ public class Modele {
 	}
 	
 	public void loadReserveForme() {
-		List listObjetColore = racine.getChild("formePool").getChildren("forme");
-		Iterator i = listObjetColore.iterator();
+		List<Element> listObjetColore = racine.getChild("formePool").getChildren("forme");
+		Iterator<Element> i = listObjetColore.iterator();
 		while(i.hasNext()) {
-		      Element courant = (Element)i.next();
+		      Element courant = i.next();
 		      ObjetColore o;
 			try {
 				o = new ObjetColore((Couleur.values()[Integer.parseInt(courant.getChild("couleur").getText())]), ImageIO.read(new File(Modele.DOSSIER_FORMES + courant.getChild("path").getText())));
