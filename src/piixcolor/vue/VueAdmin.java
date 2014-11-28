@@ -29,6 +29,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
 
 import piixcolor.controleur.AdminControleur;
@@ -41,9 +42,9 @@ import piixcolor.utilitaire.Listing;
 public class VueAdmin extends Vue {
 	
 	//positions des panels
-	private static final int ATP_COULEURS_PANEL_P = 0;
-	private static final int ATP_FORMES_PANEL_P = 1;
-	private static final int ATP_FORMES_SELECT_PANEL_P = 2;
+	private static final int ATP_COULEURS_PANEL_POS = 0;
+	private static final int ATP_FORMES_PANEL_POS = 1;
+	private static final int ATP_FORMES_SELECT_PANEL_POS = 2;
 	
 	//divers informations
 	private static final int ADMIN_MARGIN = 15;
@@ -52,53 +53,72 @@ public class VueAdmin extends Vue {
 	private static final int NB_ADMIN_PART = 2;
 	
 	//taille des panels
-	private static final int ATP_PANEL_WIDTH = Fenetre.FRAME_WIDTH / ATP_NB_PANEL - (ATP_NB_PANEL - 1) * ADMIN_MARGIN;
-	private static final int ATP_PANEL_HEIGHT = Fenetre.FRAME_HEIGHT / NB_ADMIN_PART - NB_ADMIN_PART * ADMIN_MARGIN - 30;
-	private static final int ATP_FORME_FRAME_HEIGHT = Fenetre.FRAME_HEIGHT / 10 + 40;
+	private static final int PANEL_WIDTH = Fenetre.FRAME_WIDTH / ATP_NB_PANEL - (ATP_NB_PANEL - 1) * ADMIN_MARGIN;
+	private static final int PANEL_HEIGHT = Fenetre.FRAME_HEIGHT / NB_ADMIN_PART - NB_ADMIN_PART * ADMIN_MARGIN - 30;
+	private static final int FORME_FRAME_HEIGHT = Fenetre.FRAME_HEIGHT / 10 + 40;
 	
 	//nom des panels
 	private static final String PANEL_PRINCIPALE = "mainPanel";
+	//atp (Admin Top Panel)
 	private static final String ADMIN_TOP_PANEL =  "adminTopPanel";
 	private static final String ATP_FORMES_PANEL =  "atpFormesPanel";
 	private static final String ATP_COULEURS_PANEL =  "atpCouleursPanel";
 	private static final String ATP_FORMES_SELECT_PANEL =  "atpSelectedFormesPanel";
 	private static final String ATP_MESSAGE_COULEURS_PANEL =  "atpMessageCouleursPanel";
 	private static final String ATP_MESSAGE_FORMES_PANEL = "atpMessageFormesPanel";
+	//abp (Admin Bottom Panel)
 	private static final String ADMIN_BOT_PANEL =  "adminBotPanel";
 	private static final String ABP_COULEURS_PANEL =  "abpCouleursPanel";
+	private static final String ABP_FORMES_PANEL =  "abpFormesPanel";
+	private static final String ABP_INTRUDERS_PANEL =  "abpSelectedFormesPanel";
 	private static final String ADMIN_ACTION_PANEL = "adminActionPanel";
 	
 	//liste de tous les panels
 	private Map<String, JPanel> panels;
 	
 	//liste de toutes les checkbox des formes
-	private Map<String, JCheckBox> formesCheckBoxes;
-	private Map<Couleur, JCheckBox> couleursCheckBoxes;
+	private Map<String, JCheckBox> atpFormesCheckBoxes;
+	private Map<Couleur, JCheckBox> atpCouleursCheckBoxes;
+	private Map<String, JCheckBox> abpFormesCheckBoxes;
+	private Map<Couleur, JCheckBox> abpCouleursCheckBoxes;
 
 	public VueAdmin(Fenetre fenetre, Controleur controleur) {
 		super(fenetre, controleur);
 		
+		//TEST^^
+		/*
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		}catch (Exception e) {}
+		*/
+
 		//init lists check box
-		formesCheckBoxes = new LinkedHashMap<String, JCheckBox>();
-		couleursCheckBoxes = new HashMap<Couleur, JCheckBox>();
+		atpFormesCheckBoxes = new LinkedHashMap<String, JCheckBox>();
+		atpCouleursCheckBoxes = new HashMap<Couleur, JCheckBox>();
+		abpFormesCheckBoxes = new HashMap<String, JCheckBox>();
+		abpCouleursCheckBoxes = new HashMap<Couleur, JCheckBox>();
 
 		//init hashmap + madel
 		panels = new HashMap<String, JPanel>();
 		panels.put(PANEL_PRINCIPALE, new JPanel(new GridBagLayout()));
 		panels.put(ADMIN_TOP_PANEL, new JPanel(new GridLayout(1, ATP_NB_PANEL, ADMIN_MARGIN, 0)));
-		panels.put(ATP_FORMES_PANEL, initFormesPanel());
+		panels.put(ATP_FORMES_PANEL, initAtpFormesPanel());
 		panels.put(ATP_FORMES_SELECT_PANEL, initSelectedFormesPanel());
-		panels.put(ATP_COULEURS_PANEL, initCouleursPanel());
+		panels.put(ATP_COULEURS_PANEL, initAtpCouleursPanel());
 		panels.put(ADMIN_BOT_PANEL, new JPanel(new GridLayout(1, ABP_NB_PANEL, ADMIN_MARGIN, 0)));
-		panels.put(ABP_COULEURS_PANEL, initCouleursPanel());
+		panels.put(ABP_FORMES_PANEL, initAbpFormesPanel());
+		panels.put(ABP_INTRUDERS_PANEL, initIntrudersPanel());
+		panels.put(ABP_COULEURS_PANEL, initAbpCouleursPanel());
 		panels.put(ADMIN_ACTION_PANEL, initActionsPanel());
 		
 		//connection panel
 		add(panels.get(PANEL_PRINCIPALE));
-		panels.get(ADMIN_TOP_PANEL).add(panels.get(ATP_COULEURS_PANEL), ATP_COULEURS_PANEL_P);
-		panels.get(ADMIN_TOP_PANEL).add(panels.get(ATP_FORMES_PANEL), ATP_FORMES_PANEL_P);
-		panels.get(ADMIN_TOP_PANEL).add(panels.get(ATP_FORMES_SELECT_PANEL), ATP_FORMES_SELECT_PANEL_P);
-		panels.get(ADMIN_BOT_PANEL).add(panels.get(ABP_COULEURS_PANEL), ATP_COULEURS_PANEL_P);
+		panels.get(ADMIN_TOP_PANEL).add(panels.get(ATP_COULEURS_PANEL), ATP_COULEURS_PANEL_POS);
+		panels.get(ADMIN_TOP_PANEL).add(panels.get(ATP_FORMES_PANEL), ATP_FORMES_PANEL_POS);
+		panels.get(ADMIN_TOP_PANEL).add(panels.get(ATP_FORMES_SELECT_PANEL), ATP_FORMES_SELECT_PANEL_POS);
+		panels.get(ADMIN_BOT_PANEL).add(panels.get(ABP_COULEURS_PANEL), ATP_COULEURS_PANEL_POS);
+		panels.get(ADMIN_BOT_PANEL).add(panels.get(ABP_FORMES_PANEL), ATP_FORMES_PANEL_POS);
+		panels.get(ADMIN_BOT_PANEL).add(panels.get(ABP_INTRUDERS_PANEL), ATP_FORMES_SELECT_PANEL_POS);
 		
 		//gridbag du panel principal
 		GridBagConstraints c = new GridBagConstraints();
@@ -156,38 +176,70 @@ public class VueAdmin extends Vue {
 		return container;
 	}
 	
+	private JPanel initIntrudersPanel() {
+		JPanel container = createContainer();
+		container.add(createMessagePanel("PLACEHOLDER"));
+		return container;
+	}
+
+	private JPanel initAbpFormesPanel() {
+		Box box = Box.createVerticalBox();
+
+		File[] images = Listing.listeImages(Modele.DOSSIER_FORMES);
+		for (File image : images) {
+			box.add(formeFrame(image, true, abpFormesCheckBoxes));
+		}
+
+		JScrollPane jsp = createScrollPane(box);
+		jsp.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT - 30));
+		jsp.setBorder(BorderFactory.createLineBorder(Color.black));
+
+		GridLayout grid = new GridLayout(1, 2);
+		grid.setHgap(ADMIN_MARGIN);
+		JPanel buttonPanel = new JPanel(grid);
+		JButton ajouterButton = new JButton("Ajouter l'intrus");
+		ajouterButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		buttonPanel.add(ajouterButton, 0);
+		JButton supprimerButton = new JButton("Supprimer l'intrus");
+		supprimerButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		buttonPanel.add(supprimerButton, 1);
+		
+		JPanel container = createContainer();
+		container.setBackground(null);
+		container.setBorder(null);
+		container.add(jsp, BorderLayout.NORTH);
+		container.add(buttonPanel, BorderLayout.SOUTH); 
+		
+		return container;
+	}
+	
 	private JPanel initSelectedFormesPanel() {
 		Box box = Box.createVerticalBox();
-		Border border = BorderFactory.createLineBorder(Color.black);
 		
 		for (File value : getControleur().getModele().getFormesConfig()) {
-			box.add(formeFrame(value, ATP_PANEL_WIDTH - 20, ATP_FORME_FRAME_HEIGHT, false));
+			box.add(formeFrame(value, false, null));
 	    }
 
-		JScrollPane jsp = new JScrollPane(box, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		jsp.setPreferredSize(new Dimension(ATP_PANEL_WIDTH, ATP_PANEL_HEIGHT));
-		jsp.getVerticalScrollBar().setUnitIncrement(8);
-		jsp.setBorder(null);
-		jsp.getViewport().setBackground(Color.WHITE);
+		JScrollPane jsp = createScrollPane(box);
 		
-		JPanel messagePanel = new JPanel();
-		messagePanel.setBackground(Color.WHITE);
-		JLabel message = new JLabel("Nombre maximum de formes atteint.");
-		message.setHorizontalAlignment(JLabel.CENTER);
-		message.setForeground(Color.RED);
-		messagePanel.add(message);
+		JPanel messagePanel = createMessagePanel("Nombre maximum de formes atteint.");
 		messagePanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		panels.put(ATP_MESSAGE_FORMES_PANEL, messagePanel);
 		
-		JPanel container = new JPanel(new BorderLayout());
-		container.setPreferredSize(new Dimension(ATP_PANEL_WIDTH, ATP_PANEL_HEIGHT));
-		container.setBorder(border);
-		container.setBackground(Color.WHITE);
+		JPanel container = createContainer();
 		container.add(jsp, BorderLayout.CENTER);
 		container.add(messagePanel, BorderLayout.PAGE_END);
 
 		if (getControleur().getModele().getFormesConfig().size() == 0) {
-			message = new JLabel(" Vous n'avez pas encore selectionez de formes.");
+			JLabel message = new JLabel(" Vous n'avez pas encore selectionez de formes.");
 			message.setHorizontalAlignment(JLabel.CENTER);
 			container.add(message, BorderLayout.CENTER);
 		}
@@ -197,44 +249,82 @@ public class VueAdmin extends Vue {
 		return container;
 	}
 
-	private JPanel initCouleursPanel() {
-		Border border = BorderFactory.createLineBorder(Color.black);
-		
-		JPanel container = new JPanel(new BorderLayout()); 
-		container.setPreferredSize(new Dimension(ATP_PANEL_WIDTH, ATP_PANEL_HEIGHT));
-		container.setBackground(Color.WHITE);
-		container.setBorder(border);
-		
-		JPanel colorsTable = new JPanel();
-		colorsTable.setPreferredSize(new Dimension(ATP_PANEL_WIDTH, ATP_PANEL_HEIGHT - 30));
-		colorsTable.setBackground(Color.WHITE);
-		colorsTable.setLayout(new GridLayout(5, 2));
+	private JScrollPane createScrollPane(Box box) {
+		JScrollPane jsp = new JScrollPane(box, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		jsp.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+		jsp.getVerticalScrollBar().setUnitIncrement(8);
+		jsp.setBorder(null);
+		jsp.getViewport().setBackground(Color.WHITE);
+		return jsp;
+	}
+
+	private JPanel initAtpCouleursPanel() {
+		JPanel container = createContainer();
+		JPanel colorsTable = createColorsTable();
 
 		for (Couleur c : Couleur.values()) {
-			colorsTable.add(colorFrame(c));
+			colorsTable.add(colorFrame(c, atpCouleursCheckBoxes));
 			if (controleur.getModele().getCouleursConfig().contains(c)) {
-				couleursCheckBoxes.get(c).setSelected(true);
+				atpCouleursCheckBoxes.get(c).setSelected(true);
 			}
 		}
 		
-		//message erreur
-		JPanel messagePanel = new JPanel();
-		messagePanel.setBackground(Color.WHITE);
-		JLabel message = new JLabel("Nombre maximum de couleurs atteint.");
-		message.setHorizontalAlignment(JLabel.CENTER);
-		message.setForeground(Color.RED);
-		messagePanel.add(message);
+		JPanel messagePanel = createMessagePanel("Nombre maximum de couleurs atteint.");
 		panels.put(ATP_MESSAGE_COULEURS_PANEL, messagePanel);
 		
 		container.add(colorsTable, BorderLayout.PAGE_START);
 		container.add(messagePanel, BorderLayout.PAGE_END);
 		
-		refreshColorPanel();
+		refreshAtpColorsPanel();
 		
 		return container;
 	}
 	
-	private JPanel colorFrame(Couleur c) {
+	private JPanel initAbpCouleursPanel() {
+		JPanel container = createContainer();
+		JPanel colorsTable = createColorsTable();
+
+		for (Couleur c : Couleur.values()) {
+			colorsTable.add(colorFrame(c, abpCouleursCheckBoxes));
+		}
+		
+		container.add(colorsTable, BorderLayout.PAGE_START);
+		
+		return container;
+	}
+	
+	private JPanel createMessagePanel(String message) {
+		JPanel messagePanel = new JPanel();
+		messagePanel.setBackground(Color.WHITE);
+		
+		JLabel messageLabel = new JLabel(message);
+		messageLabel.setHorizontalAlignment(JLabel.CENTER);
+		messageLabel.setForeground(Color.RED);
+		messagePanel.add(messageLabel);
+		
+		return messagePanel;
+	}
+
+	private JPanel createColorsTable() {
+		JPanel colorsTable = new JPanel();
+		colorsTable.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT - 30));
+		colorsTable.setBackground(Color.WHITE);
+		colorsTable.setLayout(new GridLayout(5, 2));
+		return colorsTable;
+	}
+
+	private JPanel createContainer() {
+		Border border = BorderFactory.createLineBorder(Color.black);
+		
+		JPanel container = new JPanel(new BorderLayout()); 
+		container.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+		container.setBackground(Color.WHITE);
+		container.setBorder(border);
+		
+		return container;
+	}
+
+	private JPanel colorFrame(Couleur c, Map<Couleur, JCheckBox> whereSaveCheckBoxs) {
 		JPanel container = new JPanel();
 		container.setBackground(Color.WHITE);
 		
@@ -246,11 +336,15 @@ public class VueAdmin extends Vue {
 		cb.setBackground(Color.WHITE);
 		cb.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				refreshColorPanel()	;	
+				if (atpCouleursCheckBoxes.containsValue(e.getSource())) {
+					refreshAtpColorsPanel();	
+				} else {
+					refreshAbpColorsPanel();
+				}
 			}
 		});
 		
-		couleursCheckBoxes.put(c, cb);
+		whereSaveCheckBoxs.put(c, cb);
 		
 		container.add(colorIcon, BorderLayout.WEST);
 		container.add(cb, BorderLayout.EAST);
@@ -258,9 +352,28 @@ public class VueAdmin extends Vue {
 		return container;
 	}
 	
-	private void refreshColorPanel() {
+	private void refreshAbpColorsPanel() {
+		int nbSelectedCouleurs = 0;
+		for (Map.Entry<Couleur, JCheckBox> value : abpCouleursCheckBoxes.entrySet()) {
+			if (value.getValue().isSelected()) {
+				nbSelectedCouleurs++;
+				value.getValue().setEnabled(true);
+				break;
+			}
+			value.getValue().setEnabled(true);
+	    }
+		if (nbSelectedCouleurs > 0) {
+			for (Map.Entry<Couleur, JCheckBox> value : abpCouleursCheckBoxes.entrySet()) {
+				if (!value.getValue().isSelected()) {
+					value.getValue().setEnabled(false);
+				}
+		    }
+		}
+	}
+
+	private void refreshAtpColorsPanel() {
 		List<Couleur> selectedCouleurs = new ArrayList<Couleur>();
-		for (Map.Entry<Couleur, JCheckBox> value : couleursCheckBoxes.entrySet()) {
+		for (Map.Entry<Couleur, JCheckBox> value : atpCouleursCheckBoxes.entrySet()) {
 			if (value.getValue().isSelected()) {
 				selectedCouleurs.add(value.getKey());
 			}
@@ -272,7 +385,7 @@ public class VueAdmin extends Vue {
 		if (getControleur().getModele().getCouleursConfig().size() < Modele.MAX_SELECTED_COULEURS) {
 			messagePanel.setVisible(false);
 		} else {	
-			for (Map.Entry<Couleur, JCheckBox> value : couleursCheckBoxes.entrySet()) {
+			for (Map.Entry<Couleur, JCheckBox> value : atpCouleursCheckBoxes.entrySet()) {
 				if (!value.getValue().isSelected()) {
 					value.getValue().setEnabled(false);
 				}
@@ -282,22 +395,20 @@ public class VueAdmin extends Vue {
 		commit();
 	}
 	
-	private JPanel initFormesPanel() {
+	private JPanel initAtpFormesPanel() {
 		Box box = Box.createVerticalBox();
-		Border border = BorderFactory.createLineBorder(Color.black);
 
 		File[] images = Listing.listeImages(Modele.DOSSIER_FORMES);
 		for (File image : images) {
-			box.add(formeFrame(image, ATP_PANEL_WIDTH - 18, ATP_FORME_FRAME_HEIGHT, true));
+			box.add(formeFrame(image, true, atpFormesCheckBoxes));
 			if (getControleur().getModele().getFormesConfig().contains(image)) {
-				formesCheckBoxes.get(image.getName()).setSelected(true);
+				atpFormesCheckBoxes.get(image.getName()).setSelected(true);
 			}
 		}
 
-		JScrollPane jsp = new JScrollPane(box, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		jsp.setPreferredSize(new Dimension(ATP_PANEL_WIDTH, ATP_PANEL_HEIGHT - 30));
-		jsp.getVerticalScrollBar().setUnitIncrement(8);
-		jsp.setBorder(border);
+		JScrollPane jsp = createScrollPane(box);
+		jsp.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT - 30));
+		jsp.setBorder(BorderFactory.createLineBorder(Color.black));
 
 		JButton b = new JButton("Ajouter une nouvelle image");
 		b.addActionListener(new ActionListener() {
@@ -306,19 +417,24 @@ public class VueAdmin extends Vue {
 			}
 		});
 		
-		JPanel container = new JPanel(new BorderLayout());
-		container.setPreferredSize(new Dimension(ATP_PANEL_WIDTH, ATP_PANEL_HEIGHT));
+		JPanel container = createContainer();
+		container.setBackground(null);
+		container.setBorder(null);
 		container.add(jsp, BorderLayout.NORTH);
 		container.add(b, BorderLayout.SOUTH); 
 		
 		return container;
 	}
 	
-	public JPanel formeFrame(final File image, int width, int height, boolean withActions) {
+	public JPanel formeFrame(final File image, boolean withActions, final Map<String, JCheckBox> whereSaveCheckBoxs) {
+		if (whereSaveCheckBoxs == null) {
+			withActions = false;
+		}
+		
 		Border border = BorderFactory.createLineBorder(Color.black);
 		
 		JPanel container = new JPanel();
-		container.setMaximumSize(new Dimension(width, height));
+		container.setMaximumSize(new Dimension(PANEL_WIDTH - 18, FORME_FRAME_HEIGHT));
 		container.setBackground(Color.WHITE);
 		container.setBorder(border);
 		container.setLayout(new BorderLayout());
@@ -339,8 +455,8 @@ public class VueAdmin extends Vue {
 		
 		if (withActions) {
 			JCheckBox cb;
-			if (formesCheckBoxes.containsKey(image.getName())) {
-				cb = formesCheckBoxes.get(image.getName());
+			if (whereSaveCheckBoxs.containsKey(image.getName())) {
+				cb = whereSaveCheckBoxs.get(image.getName());
 			} else {	
 				cb = new JCheckBox();
 				cb.setBackground(Color.WHITE);
@@ -351,7 +467,7 @@ public class VueAdmin extends Vue {
 					}
 				});
 				cb.setEnabled(false);
-				formesCheckBoxes.put(image.getName(), cb);
+				whereSaveCheckBoxs.put(image.getName(), cb);
 			}
 			actionPane.add(cb, BorderLayout.LINE_START);
 		
@@ -377,7 +493,7 @@ public class VueAdmin extends Vue {
 						boolean deleteStatut = ((AdminControleur) getControleur()).deleteImage(image);
 						if (deleteStatut) {
 							BoiteDialogue.createModalBox(JOptionPane.INFORMATION_MESSAGE, "Information", "Votre image a bien été supprimée. La configuration va être automatiquement sauvegardée.");
-							formesCheckBoxes.remove(image.getName());
+							whereSaveCheckBoxs.remove(image.getName());
 							refreshFormesPanel();
 							refreshFormesCheckBoxes();
 							refreshSelectedFormesPanel();
@@ -401,13 +517,13 @@ public class VueAdmin extends Vue {
 	private void refreshSelectedFormesPanel() {
 		panels.get(ADMIN_TOP_PANEL).remove(panels.get(ATP_FORMES_SELECT_PANEL));
 		panels.put(ATP_FORMES_SELECT_PANEL, initSelectedFormesPanel());
-		panels.get(ADMIN_TOP_PANEL).add(panels.get(ATP_FORMES_SELECT_PANEL), ATP_FORMES_SELECT_PANEL_P);
+		panels.get(ADMIN_TOP_PANEL).add(panels.get(ATP_FORMES_SELECT_PANEL), ATP_FORMES_SELECT_PANEL_POS);
 		commit();
 	}
 	
 	private void refreshFormesCheckBoxes() {
 		List<File> selectedFormes = new ArrayList<File>();
-		for (Map.Entry<String, JCheckBox> value : formesCheckBoxes.entrySet()) {
+		for (Map.Entry<String, JCheckBox> value : atpFormesCheckBoxes.entrySet()) {
 			if (value.getValue().isSelected()) {
 				selectedFormes.add(new File(Modele.DOSSIER_FORMES + value.getKey()));
 			}
@@ -419,7 +535,7 @@ public class VueAdmin extends Vue {
 		if (getControleur().getModele().getFormesConfig().size() < Modele.MAX_SELECTED_FORMES) {
 			messagePanel.setVisible(false);
 		} else {
-			for (Map.Entry<String, JCheckBox> value : formesCheckBoxes.entrySet()) {
+			for (Map.Entry<String, JCheckBox> value : atpFormesCheckBoxes.entrySet()) {
 				if (!value.getValue().isSelected()) {
 					value.getValue().setEnabled(false);
 				}
@@ -432,6 +548,7 @@ public class VueAdmin extends Vue {
 	private void openFileChooser() {
 		JFileChooser fc = new JFileChooser();
 		fc.setDialogTitle("Ajouter une image");
+		fc.setApproveButtonText("Ajouter");
 		
 		fc.setAcceptAllFileFilterUsed(false);
 		fc.addChoosableFileFilter(new ImageFilter());
@@ -450,8 +567,8 @@ public class VueAdmin extends Vue {
 	
 	private void refreshFormesPanel() {
 		panels.get(ADMIN_TOP_PANEL).remove(panels.get(ATP_FORMES_PANEL));
-		panels.put(ATP_FORMES_PANEL, initFormesPanel());
-		panels.get(ADMIN_TOP_PANEL).add(panels.get(ATP_FORMES_PANEL), ATP_FORMES_PANEL_P);
+		panels.put(ATP_FORMES_PANEL, initAtpFormesPanel());
+		panels.get(ADMIN_TOP_PANEL).add(panels.get(ATP_FORMES_PANEL), ATP_FORMES_PANEL_POS);
 		commit();
 	}
 
