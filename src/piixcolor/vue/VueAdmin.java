@@ -3,7 +3,10 @@ package piixcolor.vue;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -43,13 +46,14 @@ public class VueAdmin extends Vue {
 	private static final int ATP_FORMES_SELECT_PANEL_P = 2;
 	
 	//divers informations
-	private static final int ATP_MARGIN = 15;
+	private static final int ADMIN_MARGIN = 15;
 	private static final int ATP_NB_PANEL = 3;
+	private static final int ABP_NB_PANEL = 3;
 	private static final int NB_ADMIN_PART = 2;
 	
 	//taille des panels
-	private static final int ATP_PANEL_WIDTH = Fenetre.FRAME_WIDTH / ATP_NB_PANEL - (ATP_NB_PANEL - 1) * ATP_MARGIN;
-	private static final int ATP_PANEL_HEIGHT = Fenetre.FRAME_HEIGHT / NB_ADMIN_PART - (NB_ADMIN_PART - 1) * ATP_MARGIN;
+	private static final int ATP_PANEL_WIDTH = Fenetre.FRAME_WIDTH / ATP_NB_PANEL - (ATP_NB_PANEL - 1) * ADMIN_MARGIN;
+	private static final int ATP_PANEL_HEIGHT = Fenetre.FRAME_HEIGHT / NB_ADMIN_PART - NB_ADMIN_PART * ADMIN_MARGIN - 30;
 	private static final int ATP_FORME_FRAME_HEIGHT = Fenetre.FRAME_HEIGHT / 10 + 40;
 	
 	//nom des panels
@@ -60,6 +64,8 @@ public class VueAdmin extends Vue {
 	private static final String ATP_FORMES_SELECT_PANEL =  "atpSelectedFormesPanel";
 	private static final String ATP_MESSAGE_COULEURS_PANEL =  "atpMessageCouleursPanel";
 	private static final String ATP_MESSAGE_FORMES_PANEL = "atpMessageFormesPanel";
+	private static final String ADMIN_BOT_PANEL =  "adminBotPanel";
+	private static final String ABP_COULEURS_PANEL =  "abpCouleursPanel";
 	private static final String ADMIN_ACTION_PANEL = "adminActionPanel";
 	
 	//liste de tous les panels
@@ -78,11 +84,13 @@ public class VueAdmin extends Vue {
 
 		//init hashmap + madel
 		panels = new HashMap<String, JPanel>();
-		panels.put(PANEL_PRINCIPALE, new JPanel(new GridLayout(3, 1)));
-		panels.put(ADMIN_TOP_PANEL, new JPanel(new GridLayout(1, ATP_NB_PANEL, ATP_MARGIN, 0)));
+		panels.put(PANEL_PRINCIPALE, new JPanel(new GridBagLayout()));
+		panels.put(ADMIN_TOP_PANEL, new JPanel(new GridLayout(1, ATP_NB_PANEL, ADMIN_MARGIN, 0)));
 		panels.put(ATP_FORMES_PANEL, initFormesPanel());
 		panels.put(ATP_FORMES_SELECT_PANEL, initSelectedFormesPanel());
 		panels.put(ATP_COULEURS_PANEL, initCouleursPanel());
+		panels.put(ADMIN_BOT_PANEL, new JPanel(new GridLayout(1, ABP_NB_PANEL, ADMIN_MARGIN, 0)));
+		panels.put(ABP_COULEURS_PANEL, initCouleursPanel());
 		panels.put(ADMIN_ACTION_PANEL, initActionsPanel());
 		
 		//connection panel
@@ -90,8 +98,21 @@ public class VueAdmin extends Vue {
 		panels.get(ADMIN_TOP_PANEL).add(panels.get(ATP_COULEURS_PANEL), ATP_COULEURS_PANEL_P);
 		panels.get(ADMIN_TOP_PANEL).add(panels.get(ATP_FORMES_PANEL), ATP_FORMES_PANEL_P);
 		panels.get(ADMIN_TOP_PANEL).add(panels.get(ATP_FORMES_SELECT_PANEL), ATP_FORMES_SELECT_PANEL_P);
-		panels.get(PANEL_PRINCIPALE).add(panels.get(ADMIN_TOP_PANEL));
-		panels.get(PANEL_PRINCIPALE).add(panels.get(ADMIN_ACTION_PANEL));
+		panels.get(ADMIN_BOT_PANEL).add(panels.get(ABP_COULEURS_PANEL), ATP_COULEURS_PANEL_P);
+		
+		//gridbag du panel principal
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 1;
+		c.gridy = 0;
+		panels.get(PANEL_PRINCIPALE).add(panels.get(ADMIN_TOP_PANEL), c);
+		c.gridy = 1;
+		c.insets = new Insets(ADMIN_MARGIN,0,0,0);
+		panels.get(PANEL_PRINCIPALE).add(panels.get(ADMIN_BOT_PANEL), c);
+		c.gridy = 2;
+		c.anchor = GridBagConstraints.PAGE_START;
+		c.insets = new Insets(ADMIN_MARGIN,0,0,0);
+		panels.get(PANEL_PRINCIPALE).add(panels.get(ADMIN_ACTION_PANEL), c);
 		
 		//display panel
 		commit();
@@ -99,7 +120,6 @@ public class VueAdmin extends Vue {
 
 	private JPanel initActionsPanel() {
 		JPanel container = new JPanel();
-		
 		container.setLayout(new BoxLayout(container, BoxLayout.LINE_AXIS));
 		
 		//Boutton Sauvegarder
@@ -135,7 +155,7 @@ public class VueAdmin extends Vue {
 		
 		return container;
 	}
-
+	
 	private JPanel initSelectedFormesPanel() {
 		Box box = Box.createVerticalBox();
 		Border border = BorderFactory.createLineBorder(Color.black);
