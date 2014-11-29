@@ -11,8 +11,6 @@ public class BoiteDialogue {
 	
 	public static void enregistrerConfig(String path) {
 		try {
-			Modele.getInstance().saveCouleurConfig();
-			Modele.getInstance().saveFormeConfig();
 			Modele.getInstance().enregistrer(path);
 			JOptionPane.showMessageDialog(Fenetre.getInstance(), "La configuration a bien été sauvgardée.", "Information", JOptionPane.INFORMATION_MESSAGE);
 		} catch (FileNotFoundException e1) {

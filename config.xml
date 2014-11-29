@@ -25,5 +25,9 @@
       <path>cercle.png</path>
       <couleur>4</couleur>
     </forme>
+    <forme>
+      <path>carre.png</path>
+      <couleur>2</couleur>
+    </forme>
   </formePool>
 </piixcolor>

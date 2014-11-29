@@ -2,6 +2,7 @@ package piixcolor.vue;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -38,6 +40,7 @@ import piixcolor.modele.Modele;
 import piixcolor.utilitaire.Couleur;
 import piixcolor.utilitaire.ImageFilter;
 import piixcolor.utilitaire.Listing;
+import piixcolor.utilitaire.ObjetColore;
 
 public class VueAdmin extends Vue {
 	
@@ -70,7 +73,7 @@ public class VueAdmin extends Vue {
 	private static final String ADMIN_BOT_PANEL =  "adminBotPanel";
 	private static final String ABP_COULEURS_PANEL =  "abpCouleursPanel";
 	private static final String ABP_FORMES_PANEL =  "abpFormesPanel";
-	private static final String ABP_INTRUDERS_PANEL =  "abpSelectedFormesPanel";
+	private static final String ABP_FORMES_POOL_PANEL =  "abpSelectedFormesPanel";
 	private static final String ADMIN_ACTION_PANEL = "adminActionPanel";
 	
 	//liste de tous les panels
@@ -107,7 +110,7 @@ public class VueAdmin extends Vue {
 		panels.put(ATP_COULEURS_PANEL, initAtpCouleursPanel());
 		panels.put(ADMIN_BOT_PANEL, new JPanel(new GridLayout(1, ABP_NB_PANEL, ADMIN_MARGIN, 0)));
 		panels.put(ABP_FORMES_PANEL, initAbpFormesPanel());
-		panels.put(ABP_INTRUDERS_PANEL, initIntrudersPanel());
+		panels.put(ABP_FORMES_POOL_PANEL, initFormesPoolPanel());
 		panels.put(ABP_COULEURS_PANEL, initAbpCouleursPanel());
 		panels.put(ADMIN_ACTION_PANEL, initActionsPanel());
 		
@@ -118,7 +121,7 @@ public class VueAdmin extends Vue {
 		panels.get(ADMIN_TOP_PANEL).add(panels.get(ATP_FORMES_SELECT_PANEL), ATP_FORMES_SELECT_PANEL_POS);
 		panels.get(ADMIN_BOT_PANEL).add(panels.get(ABP_COULEURS_PANEL), ATP_COULEURS_PANEL_POS);
 		panels.get(ADMIN_BOT_PANEL).add(panels.get(ABP_FORMES_PANEL), ATP_FORMES_PANEL_POS);
-		panels.get(ADMIN_BOT_PANEL).add(panels.get(ABP_INTRUDERS_PANEL), ATP_FORMES_SELECT_PANEL_POS);
+		panels.get(ADMIN_BOT_PANEL).add(panels.get(ABP_FORMES_POOL_PANEL), ATP_FORMES_SELECT_PANEL_POS);
 		
 		//gridbag du panel principal
 		GridBagConstraints c = new GridBagConstraints();
@@ -136,6 +139,50 @@ public class VueAdmin extends Vue {
 		
 		//display panel
 		commit();
+	}
+	
+	/**
+	 * Crée un conteneur de taille fixe
+	 * 
+	 * @return Le conteneur (JPanel)
+	 */
+	private JPanel createContainer() {
+		Border border = BorderFactory.createLineBorder(Color.black);
+		
+		JPanel container = new JPanel(new BorderLayout()); 
+		container.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+		container.setBackground(Color.WHITE);
+		container.setBorder(border);
+		
+		return container;
+	}
+	
+	/**
+	 * Crée la structure du tableau pour les panel des couleurs
+	 * 
+	 * @return Le tableau (JPanel)
+	 */
+	private JPanel createColorsTable() {
+		JPanel colorsTable = new JPanel();
+		colorsTable.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT - 30));
+		colorsTable.setBackground(Color.WHITE);
+		colorsTable.setLayout(new GridLayout(5, 2));
+		return colorsTable;
+	}
+	
+	/**
+	 * Crée un panel scrollable a  partir d'une box
+	 * 
+	 * @param box Box contenant les elements a scrollé
+	 * @return Un JScrollPane
+	 */
+	private JScrollPane createScrollPane(Box box) {
+		JScrollPane jsp = new JScrollPane(box, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		jsp.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+		jsp.getVerticalScrollBar().setUnitIncrement(8);
+		jsp.setBorder(null);
+		jsp.getViewport().setBackground(Color.WHITE);
+		return jsp;
 	}
 
 	private JPanel initActionsPanel() {
@@ -176,9 +223,40 @@ public class VueAdmin extends Vue {
 		return container;
 	}
 	
-	private JPanel initIntrudersPanel() {
+	private JPanel initFormesPoolPanel() {
+		Box box = Box.createVerticalBox();
+
+		for (ObjetColore obj : getControleur().getModele().getReserveForme()) {
+			box.add(formePoolFrame(obj));
+		}
+		
+		JScrollPane jsp = createScrollPane(box);
+		
 		JPanel container = createContainer();
-		container.add(createMessagePanel("PLACEHOLDER"));
+		container.add(jsp);
+		
+		return container;
+	}
+
+	private JPanel formePoolFrame(ObjetColore obj) {
+		Border border = BorderFactory.createLineBorder(Color.black);
+		
+		JPanel container = new JPanel();
+		container.setMaximumSize(new Dimension(PANEL_WIDTH - 18, FORME_FRAME_HEIGHT));
+		container.setBackground(Color.WHITE);
+		container.setBorder(border);
+		container.setLayout(new BorderLayout());
+
+		JLabel imagePreview = new JLabel(new ImageIcon(obj.getImage()));
+		imagePreview.setMaximumSize(new Dimension(Modele.IMG_SIZE, Modele.IMG_SIZE));
+		imagePreview.setMinimumSize(new Dimension(Modele.IMG_SIZE, Modele.IMG_SIZE));
+		container.add(imagePreview, BorderLayout.LINE_START);
+		
+		String name = obj.getOrigineFile().getName().toUpperCase().split("\\.")[0] + " " + obj.getCouleur().toString();
+		JLabel imageName = new JLabel(name);
+		imageName.setHorizontalAlignment(JLabel.CENTER);
+		container.add(imageName, BorderLayout.CENTER);
+		
 		return container;
 	}
 
@@ -197,14 +275,47 @@ public class VueAdmin extends Vue {
 		GridLayout grid = new GridLayout(1, 2);
 		grid.setHgap(ADMIN_MARGIN);
 		JPanel buttonPanel = new JPanel(grid);
-		JButton ajouterButton = new JButton("Ajouter l'intrus");
+		JButton ajouterButton = new JButton("Ajouter la forme au bac");
 		ajouterButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Couleur selectedCouleur = null;
+				for (Map.Entry<Couleur, JCheckBox> value : abpCouleursCheckBoxes.entrySet()) {
+					if (value.getValue().isSelected()) {
+						selectedCouleur = value.getKey();
+						break;
+					}
+				}
+				if (selectedCouleur == null) {
+					return;
+				}
 				
+				String selectedForme = null;
+				for (Map.Entry<String, JCheckBox> value : abpFormesCheckBoxes.entrySet()) {
+					if (value.getValue().isSelected()) {
+						selectedForme = value.getKey();
+						break;
+					}
+				}
+				if (selectedForme == null) {
+					return;
+				}
+				
+				List<ObjetColore> obj = new ArrayList<ObjetColore>();
+				for (ObjetColore oc : getControleur().getModele().getReserveForme()) {
+					obj.add(oc);
+				}
+				obj.add(new ObjetColore(selectedCouleur, new File(Modele.DOSSIER_FORMES + selectedForme)));
+				getControleur().getModele().setReserveForme(obj);
+				
+				abpCouleursCheckBoxes.get(selectedCouleur).setSelected(false);
+				abpFormesCheckBoxes.get(selectedForme).setSelected(false);
+				refreshAbpColorsCheckBoxs();
+				refreshAbpFormesCheckBoxs();
+				refreshFormesPoolPanel();
 			}
 		});
 		buttonPanel.add(ajouterButton, 0);
-		JButton supprimerButton = new JButton("Supprimer l'intrus");
+		JButton supprimerButton = new JButton("Supprimer la forme du bac");
 		supprimerButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -217,6 +328,8 @@ public class VueAdmin extends Vue {
 		container.setBorder(null);
 		container.add(jsp, BorderLayout.NORTH);
 		container.add(buttonPanel, BorderLayout.SOUTH); 
+		
+		refreshAbpFormesCheckBoxs();
 		
 		return container;
 	}
@@ -244,18 +357,9 @@ public class VueAdmin extends Vue {
 			container.add(message, BorderLayout.CENTER);
 		}
 		
-		refreshFormesCheckBoxes();
+		refreshAtpFormesCheckBoxes();
 		
 		return container;
-	}
-
-	private JScrollPane createScrollPane(Box box) {
-		JScrollPane jsp = new JScrollPane(box, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		jsp.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
-		jsp.getVerticalScrollBar().setUnitIncrement(8);
-		jsp.setBorder(null);
-		jsp.getViewport().setBackground(Color.WHITE);
-		return jsp;
 	}
 
 	private JPanel initAtpCouleursPanel() {
@@ -275,7 +379,7 @@ public class VueAdmin extends Vue {
 		container.add(colorsTable, BorderLayout.PAGE_START);
 		container.add(messagePanel, BorderLayout.PAGE_END);
 		
-		refreshAtpColorsPanel();
+		refreshAtpColorsCheckBoxs();
 		
 		return container;
 	}
@@ -305,25 +409,6 @@ public class VueAdmin extends Vue {
 		return messagePanel;
 	}
 
-	private JPanel createColorsTable() {
-		JPanel colorsTable = new JPanel();
-		colorsTable.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT - 30));
-		colorsTable.setBackground(Color.WHITE);
-		colorsTable.setLayout(new GridLayout(5, 2));
-		return colorsTable;
-	}
-
-	private JPanel createContainer() {
-		Border border = BorderFactory.createLineBorder(Color.black);
-		
-		JPanel container = new JPanel(new BorderLayout()); 
-		container.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
-		container.setBackground(Color.WHITE);
-		container.setBorder(border);
-		
-		return container;
-	}
-
 	private JPanel colorFrame(Couleur c, Map<Couleur, JCheckBox> whereSaveCheckBoxs) {
 		JPanel container = new JPanel();
 		container.setBackground(Color.WHITE);
@@ -337,9 +422,9 @@ public class VueAdmin extends Vue {
 		cb.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (atpCouleursCheckBoxes.containsValue(e.getSource())) {
-					refreshAtpColorsPanel();	
+					refreshAtpColorsCheckBoxs();	
 				} else {
-					refreshAbpColorsPanel();
+					refreshAbpColorsCheckBoxs();
 				}
 			}
 		});
@@ -352,15 +437,14 @@ public class VueAdmin extends Vue {
 		return container;
 	}
 	
-	private void refreshAbpColorsPanel() {
+	private void refreshAbpColorsCheckBoxs() {
 		int nbSelectedCouleurs = 0;
 		for (Map.Entry<Couleur, JCheckBox> value : abpCouleursCheckBoxes.entrySet()) {
+			value.getValue().setEnabled(true);
 			if (value.getValue().isSelected()) {
 				nbSelectedCouleurs++;
-				value.getValue().setEnabled(true);
 				break;
 			}
-			value.getValue().setEnabled(true);
 	    }
 		if (nbSelectedCouleurs > 0) {
 			for (Map.Entry<Couleur, JCheckBox> value : abpCouleursCheckBoxes.entrySet()) {
@@ -371,7 +455,7 @@ public class VueAdmin extends Vue {
 		}
 	}
 
-	private void refreshAtpColorsPanel() {
+	private void refreshAtpColorsCheckBoxs() {
 		List<Couleur> selectedCouleurs = new ArrayList<Couleur>();
 		for (Map.Entry<Couleur, JCheckBox> value : atpCouleursCheckBoxes.entrySet()) {
 			if (value.getValue().isSelected()) {
@@ -426,7 +510,7 @@ public class VueAdmin extends Vue {
 		return container;
 	}
 	
-	public JPanel formeFrame(final File image, boolean withActions, final Map<String, JCheckBox> whereSaveCheckBoxs) {
+	public JPanel formeFrame(final File image, boolean withActions, Map<String, JCheckBox> whereSaveCheckBoxs) {
 		if (whereSaveCheckBoxs == null) {
 			withActions = false;
 		}
@@ -441,7 +525,6 @@ public class VueAdmin extends Vue {
 
 		JLabel imagePreview = new JLabel(new ImageIcon(image.getAbsolutePath()));
 		imagePreview.setMaximumSize(new Dimension(Modele.IMG_SIZE, Modele.IMG_SIZE));
-		imagePreview.setPreferredSize(new Dimension(Modele.IMG_SIZE, Modele.IMG_SIZE));
 		imagePreview.setMinimumSize(new Dimension(Modele.IMG_SIZE, Modele.IMG_SIZE));
 		container.add(imagePreview, BorderLayout.LINE_START);
 		
@@ -450,78 +533,85 @@ public class VueAdmin extends Vue {
 		imageName.setHorizontalAlignment(JLabel.CENTER);
 		container.add(imageName, BorderLayout.CENTER);
 		
-		JPanel actionPane = new JPanel(new BorderLayout());
-		actionPane.setBackground(Color.WHITE);
-		
 		if (withActions) {
-			JCheckBox cb;
-			if (whereSaveCheckBoxs.containsKey(image.getName())) {
-				cb = whereSaveCheckBoxs.get(image.getName());
-			} else {	
-				cb = new JCheckBox();
-				cb.setBackground(Color.WHITE);
-				cb.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						refreshFormesCheckBoxes();
-						refreshSelectedFormesPanel();	
-					}
-				});
-				cb.setEnabled(false);
-				whereSaveCheckBoxs.put(image.getName(), cb);
-			}
-			actionPane.add(cb, BorderLayout.LINE_START);
-		
-			JLabel delete = new JLabel(new ImageIcon(Modele.DOSSIER_ASSETS + "corbeille.jpg"));
-			delete.setPreferredSize(new Dimension(60, 30));
-			delete.setHorizontalAlignment(JLabel.CENTER);
-			delete.setForeground(Color.RED);
-			delete.addMouseListener(new MouseListener() {
-				public void mouseReleased(MouseEvent e) {}
-				public void mousePressed(MouseEvent e) {}
-				public void mouseExited(MouseEvent e) {
-					((JLabel) e.getSource()).setIcon(new ImageIcon(Modele.DOSSIER_ASSETS + "corbeille.jpg"));
-				}
-				
-				public void mouseEntered(MouseEvent e) {
-					((JLabel) e.getSource()).setIcon(new ImageIcon(Modele.DOSSIER_ASSETS + "corbeille-hover.jpg"));
-				}
-			
-				public void mouseClicked(MouseEvent e) {
-					String[] options = {"Oui", "Non"}; 
-					int retour = BoiteDialogue.createOptionBox(JOptionPane.YES_NO_OPTION, "Confirmation", "Voulez-vous vraiment supprimer cette image ?", options, 1);
-					if (retour == JOptionPane.OK_OPTION) {
-						boolean deleteStatut = ((AdminControleur) getControleur()).deleteImage(image);
-						if (deleteStatut) {
-							BoiteDialogue.createModalBox(JOptionPane.INFORMATION_MESSAGE, "Information", "Votre image a bien été supprimée. La configuration va être automatiquement sauvegardée.");
-							whereSaveCheckBoxs.remove(image.getName());
-							refreshFormesPanel();
-							refreshFormesCheckBoxes();
-							refreshSelectedFormesPanel();
-							BoiteDialogue.enregistrerConfig(Modele.FICHIER_CONFIG);
-						} else {
-							BoiteDialogue.createModalBox(JOptionPane.ERROR_MESSAGE, "Erreur", "Votre image n'a pas pu être supprimée.");
-						}
-					}	
-				}
-			});
-			
-			actionPane.add(delete, BorderLayout.CENTER);
-		
+			JPanel actionPane = createActionPane(image, whereSaveCheckBoxs);
+			container.add(actionPane, BorderLayout.LINE_END);
 		}
 		
-		container.add(actionPane, BorderLayout.LINE_END);
 		
 		return container;
 	}
 	
-	private void refreshSelectedFormesPanel() {
-		panels.get(ADMIN_TOP_PANEL).remove(panels.get(ATP_FORMES_SELECT_PANEL));
-		panels.put(ATP_FORMES_SELECT_PANEL, initSelectedFormesPanel());
-		panels.get(ADMIN_TOP_PANEL).add(panels.get(ATP_FORMES_SELECT_PANEL), ATP_FORMES_SELECT_PANEL_POS);
-		commit();
-	}
+	private JPanel createActionPane(final File image, final Map<String, JCheckBox> whereSaveCheckBoxs) {
+		JPanel actionPane = new JPanel(new BorderLayout());
+		actionPane.setBackground(Color.WHITE); 
+		
+		JCheckBox cb;
+		String imageName = image.getName();
+		if (whereSaveCheckBoxs.containsKey(imageName)) {
+			cb = whereSaveCheckBoxs.get(imageName);
+		} else {	
+			cb = new JCheckBox();
+			cb.setBackground(Color.WHITE);
+			cb.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if (atpFormesCheckBoxes.containsValue(e.getSource())) {
+						refreshAtpFormesCheckBoxes();
+						refreshSelectedFormesPanel();	
+					} else {
+						refreshAbpFormesCheckBoxs();
+					}
+				}
+			});
+			cb.setEnabled(false);
+			whereSaveCheckBoxs.put(imageName, cb);
+		}
+		actionPane.add(cb, BorderLayout.LINE_START);
 	
-	private void refreshFormesCheckBoxes() {
+		JLabel delete = new JLabel(new ImageIcon(Modele.DOSSIER_ASSETS + "corbeille.jpg"));
+		delete.setPreferredSize(new Dimension(60, 30));
+		delete.setHorizontalAlignment(JLabel.CENTER);
+		delete.addMouseListener(new MouseListener() {
+			public void mouseReleased(MouseEvent e) {}
+			public void mousePressed(MouseEvent e) {}
+			public void mouseExited(MouseEvent e) {
+				((JLabel) e.getSource()).setIcon(new ImageIcon(Modele.DOSSIER_ASSETS + "corbeille.jpg"));
+			}
+			
+			public void mouseEntered(MouseEvent e) {
+				((JLabel) e.getSource()).setIcon(new ImageIcon(Modele.DOSSIER_ASSETS + "corbeille-hover.jpg"));
+			}
+		
+			public void mouseClicked(MouseEvent e) {
+				String[] options = {"Oui", "Non"}; 
+				int retour = BoiteDialogue.createOptionBox(JOptionPane.YES_NO_OPTION, "Confirmation", "Voulez-vous vraiment supprimer cette image ? (Si oui, la configuration va être automatiquement sauvegardée)", options, 1);
+				if (retour == JOptionPane.OK_OPTION) {
+					boolean deleteStatut = ((AdminControleur) getControleur()).deleteImage(image);
+					if (deleteStatut) {
+						BoiteDialogue.createModalBox(JOptionPane.INFORMATION_MESSAGE, "Information", "Votre image a bien été supprimée. La configuration va être automatiquement sauvegardée.");
+						
+						atpFormesCheckBoxes.remove(image.getName());
+						abpFormesCheckBoxes.remove(image.getName());
+						refreshAtpFormesPanel();
+						refreshAtpFormesCheckBoxes();
+						refreshSelectedFormesPanel();
+						refreshAbpFormesPanel();
+						refreshAbpFormesCheckBoxs();
+						
+						BoiteDialogue.enregistrerConfig(Modele.FICHIER_CONFIG);
+					} else {
+						BoiteDialogue.createModalBox(JOptionPane.ERROR_MESSAGE, "Erreur", "Votre image n'a pas pu être supprimée.");
+					}
+				}	
+			}
+		});
+		
+		actionPane.add(delete, BorderLayout.CENTER);
+		
+		return actionPane;
+	}
+
+	private void refreshAtpFormesCheckBoxes() {
 		List<File> selectedFormes = new ArrayList<File>();
 		for (Map.Entry<String, JCheckBox> value : atpFormesCheckBoxes.entrySet()) {
 			if (value.getValue().isSelected()) {
@@ -543,8 +633,32 @@ public class VueAdmin extends Vue {
 			messagePanel.setVisible(true);
 		}
 	}
+	
+	private void refreshAbpFormesCheckBoxs() {
+		int nbSelectedFormes = 0;
+		for (Map.Entry<String, JCheckBox> value : abpFormesCheckBoxes.entrySet()) {
+			value.getValue().setEnabled(true);
+			if (value.getValue().isSelected()) {
+				nbSelectedFormes++;
+				break;
+			}
+	    }
+		if (nbSelectedFormes > 0) {
+			for (Map.Entry<String, JCheckBox> value : abpFormesCheckBoxes.entrySet()) {
+				if (!value.getValue().isSelected()) {
+					value.getValue().setEnabled(false);
+				}
+		    }
+		}
+	}
 
-
+	/**
+	 * Ouvre un explorateur de fichier qui prend en compte uniquement les images.
+	 * Si une image est selectioné l'enregistre en fesant appelle au controlleur.
+	 * 
+	 * @see ImageFilter
+	 * @see AdminControleur#saveImage(File)
+	 */
 	private void openFileChooser() {
 		JFileChooser fc = new JFileChooser();
 		fc.setDialogTitle("Ajouter une image");
@@ -558,21 +672,56 @@ public class VueAdmin extends Vue {
 			boolean saveStatut = ((AdminControleur) getControleur()).saveImage(fc.getSelectedFile());
 			if (saveStatut) {
 				BoiteDialogue.createModalBox(JOptionPane.INFORMATION_MESSAGE, "Information", "Votre image a bien été enregistrée.");
-				refreshFormesPanel();
+				refreshAtpFormesPanel();
 			} else {
 				BoiteDialogue.createModalBox(JOptionPane.ERROR_MESSAGE, "Erreur", "Votre image n'a pas pu être enregistrée.");
 			}
 		}
 	}
 	
-	private void refreshFormesPanel() {
+	/**
+	 * Actualise le panel des formes qui sert dans la création de la matrice.
+	 */
+	private void refreshAtpFormesPanel() {
 		panels.get(ADMIN_TOP_PANEL).remove(panels.get(ATP_FORMES_PANEL));
 		panels.put(ATP_FORMES_PANEL, initAtpFormesPanel());
 		panels.get(ADMIN_TOP_PANEL).add(panels.get(ATP_FORMES_PANEL), ATP_FORMES_PANEL_POS);
 		commit();
 	}
-
 	
+	/**
+	 * Actualise le panel des formes qui sert dans la création d'intrus.
+	 */
+	private void refreshAbpFormesPanel() {
+		panels.get(ADMIN_BOT_PANEL).remove(panels.get(ABP_FORMES_PANEL));
+		panels.put(ABP_FORMES_PANEL, initAbpFormesPanel());
+		panels.get(ADMIN_BOT_PANEL).add(panels.get(ABP_FORMES_PANEL), ATP_FORMES_PANEL_POS);
+		commit();
+	}
+	
+	/**
+	 * Actualise le panel des formes selectionnées.
+	 */
+	private void refreshSelectedFormesPanel() {
+		panels.get(ADMIN_TOP_PANEL).remove(panels.get(ATP_FORMES_SELECT_PANEL));
+		panels.put(ATP_FORMES_SELECT_PANEL, initSelectedFormesPanel());
+		panels.get(ADMIN_TOP_PANEL).add(panels.get(ATP_FORMES_SELECT_PANEL), ATP_FORMES_SELECT_PANEL_POS);
+		commit();
+	}
+	
+	/**
+	 * Actualise le panel des intrus.
+	 */
+	private void refreshFormesPoolPanel() {
+		panels.get(ADMIN_BOT_PANEL).remove(panels.get(ABP_FORMES_POOL_PANEL));
+		panels.put(ABP_FORMES_POOL_PANEL, initFormesPoolPanel());
+		panels.get(ADMIN_BOT_PANEL).add(panels.get(ABP_FORMES_POOL_PANEL), ATP_FORMES_SELECT_PANEL_POS);
+		commit();
+	}
+
+	/**
+	 * Valide et repaint la vue.
+	 */
 	private void commit() {
 		panels.get(PANEL_PRINCIPALE).revalidate();
 		panels.get(PANEL_PRINCIPALE).repaint();
