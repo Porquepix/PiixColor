@@ -65,5 +65,13 @@ public class ObjetColore  {
 	public File getOrigineFile() {
 		return origineFile;
 	}
+	
+	public boolean equals(Object o) {
+		if (o.getClass() != this.getClass()) {
+			return false;
+		}
+		ObjetColore oc = (ObjetColore) o;
+		return this.getOrigineFile().equals(oc.getOrigineFile()) && this.getCouleur().equals(oc.getCouleur());
+	}
 
 }

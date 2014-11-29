@@ -191,6 +191,16 @@ public class Modele {
 			notifier();
 		}
 	}
+	
+	public void deleteObjetsColoresByImage(File image) {
+		List<ObjetColore> listObjet = new ArrayList<ObjetColore>(reserveForme);
+		for (ObjetColore oc : reserveForme) {
+			if (oc.getOrigineFile().equals(image)) {
+				listObjet.remove(oc);
+			}
+		}
+		this.setReserveForme(listObjet);
+	}
 
 	public boolean isEstModifie() {
 		return estModifie;
@@ -199,6 +209,7 @@ public class Modele {
 	public void setEstModifie(boolean estModifie) {
 		this.estModifie = estModifie;
 	}
+
 	
 	
 }

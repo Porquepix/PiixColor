@@ -2,7 +2,6 @@ package piixcolor.vue;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -18,7 +17,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -31,7 +29,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.UIManager;
 import javax.swing.border.Border;
 
 import piixcolor.controleur.AdminControleur;
@@ -318,7 +315,42 @@ public class VueAdmin extends Vue {
 		JButton supprimerButton = new JButton("Supprimer la forme du bac");
 		supprimerButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Couleur selectedCouleur = null;
+				for (Map.Entry<Couleur, JCheckBox> value : abpCouleursCheckBoxes.entrySet()) {
+					if (value.getValue().isSelected()) {
+						selectedCouleur = value.getKey();
+						break;
+					}
+				}
+				if (selectedCouleur == null) {
+					return;
+				}
 				
+				String selectedForme = null;
+				for (Map.Entry<String, JCheckBox> value : abpFormesCheckBoxes.entrySet()) {
+					if (value.getValue().isSelected()) {
+						selectedForme = value.getKey();
+						break;
+					}
+				}
+				if (selectedForme == null) {
+					return;
+				}
+				
+				List<ObjetColore> obj = new ArrayList<ObjetColore>();
+				ObjetColore ocd = new ObjetColore(selectedCouleur, new File(Modele.DOSSIER_FORMES + selectedForme));
+				for (ObjetColore oc : getControleur().getModele().getReserveForme()) {
+					if (!oc.equals(ocd)) {
+						obj.add(oc);
+					}
+				}
+				getControleur().getModele().setReserveForme(obj);
+				
+				abpCouleursCheckBoxes.get(selectedCouleur).setSelected(false);
+				abpFormesCheckBoxes.get(selectedForme).setSelected(false);
+				refreshAbpColorsCheckBoxs();
+				refreshAbpFormesCheckBoxs();
+				refreshFormesPoolPanel();
 			}
 		});
 		buttonPanel.add(supprimerButton, 1);
@@ -592,11 +624,12 @@ public class VueAdmin extends Vue {
 						
 						atpFormesCheckBoxes.remove(image.getName());
 						abpFormesCheckBoxes.remove(image.getName());
+						getControleur().getModele().deleteObjetsColoresByImage(image);
 						refreshAtpFormesPanel();
 						refreshAtpFormesCheckBoxes();
 						refreshSelectedFormesPanel();
 						refreshAbpFormesPanel();
-						refreshAbpFormesCheckBoxs();
+						refreshFormesPoolPanel();
 						
 						BoiteDialogue.enregistrerConfig(Modele.FICHIER_CONFIG);
 					} else {
@@ -673,6 +706,8 @@ public class VueAdmin extends Vue {
 			if (saveStatut) {
 				BoiteDialogue.createModalBox(JOptionPane.INFORMATION_MESSAGE, "Information", "Votre image a bien été enregistrée.");
 				refreshAtpFormesPanel();
+				refreshAtpFormesCheckBoxes();
+				refreshAbpFormesPanel();
 			} else {
 				BoiteDialogue.createModalBox(JOptionPane.ERROR_MESSAGE, "Erreur", "Votre image n'a pas pu être enregistrée.");
 			}

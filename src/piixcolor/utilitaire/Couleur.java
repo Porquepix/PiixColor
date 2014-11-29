@@ -32,7 +32,7 @@ public enum Couleur {
 	}
 	
 	public boolean equals(Couleur c) {
-		return c.equals(couleur);
+		return c.getCouleur().equals(couleur);
 	}
 
 }
