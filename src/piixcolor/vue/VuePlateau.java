@@ -150,10 +150,10 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 				return;
 			formeCourante.setVisible(false);
 			Component c = matrice.findComponentAt(e.getX(), e.getY());
-			if (c instanceof JLabel || c == null) {
+			Container parent = (Container) c;
+			if (c instanceof JLabel || c == null || parent.getComponentCount() > 0) {
 				caseFormeCourante.add(formeCourante);
 			} else {
-				Container parent = (Container) c;
 				parent.add(formeCourante);
 			}
 			formeCourante.setVisible(true);

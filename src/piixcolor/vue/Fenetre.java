@@ -27,7 +27,7 @@ public class Fenetre extends JFrame {
 		setTitle(FRAME_TITLE);
 		setVisible(true);
 		pack();
-		setSize((int)getToolkit().getScreenSize().getWidth(), ((int)getToolkit().getScreenSize().getHeight() - 40));
+		setSize((int)getToolkit().getScreenSize().getWidth(), ((int)getToolkit().getScreenSize().getHeight()));
 		
 		FRAME_WIDTH = this.getWidth();
 		FRAME_HEIGHT = this.getHeight();
