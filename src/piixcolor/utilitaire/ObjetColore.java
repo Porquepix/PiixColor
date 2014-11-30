@@ -2,15 +2,25 @@ package piixcolor.utilitaire;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 public class ObjetColore  {
 	
 	private Couleur couleur;
 	private BufferedImage image;
+	private File origineFile;
 	
-	public ObjetColore(Couleur couleur, BufferedImage img) {
+	public ObjetColore(Couleur couleur, File image) {
 		this.couleur = couleur;
-		this.image = img;
+		this.origineFile = image;
+		try {
+			this.image = ImageIO.read(image);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		this.filtreImage(couleur);
 	}
 	
@@ -22,11 +32,12 @@ public class ObjetColore  {
 		int pixels[] = new int[w * h];
 		image.getRGB(0, 0, w, h, pixels, 0, w);
 		for (int i = 0; i < w * h; i++) {
+			int a = (pixels[i] & 0xFF000000) >> 24;
 			int r = (pixels[i] & 0xFF0000) >> 16;
 			int g = (pixels[i] & 0xFF00) >> 8;
 			int b = (pixels[i] & 0xFF);
-
-			pixels[i] = ((int) (r + g + b) / 3) < 200 ? c.getCouleur().getRGB() : 0x00FFFFFF;
+			
+			pixels[i] = ((int) (r + g + b) / 3) < 200 ? a << 24 | c.getCouleur().getRGB() : 0x00FFFFFF;
 		}
 		
 		image.setRGB(0, 0, w, h, pixels, 0, w);
@@ -46,6 +57,21 @@ public class ObjetColore  {
 
 	public BufferedImage getImage() {
 		return image;
+	}
+
+	/**
+	 * @return the origineFile
+	 */
+	public File getOrigineFile() {
+		return origineFile;
+	}
+	
+	public boolean equals(Object o) {
+		if (o.getClass() != this.getClass()) {
+			return false;
+		}
+		ObjetColore oc = (ObjetColore) o;
+		return this.getOrigineFile().equals(oc.getOrigineFile()) && this.getCouleur().equals(oc.getCouleur());
 	}
 
 }

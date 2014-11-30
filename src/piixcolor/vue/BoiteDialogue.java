@@ -11,8 +11,6 @@ public class BoiteDialogue {
 	
 	public static void enregistrerConfig(String path) {
 		try {
-			Modele.getInstance().saveCouleurConfig();
-			Modele.getInstance().saveFormeConfig();
 			Modele.getInstance().enregistrer(path);
 			JOptionPane.showMessageDialog(Fenetre.getInstance(), "La configuration a bien été sauvgardée.", "Information", JOptionPane.INFORMATION_MESSAGE);
 		} catch (FileNotFoundException e1) {
@@ -25,6 +23,10 @@ public class BoiteDialogue {
 	public static int createOptionBox(int type, String titre, String message, String[] options, int optionParDefaut) {
 		int retour = JOptionPane.showOptionDialog(Fenetre.getInstance(), message, titre, type, JOptionPane.QUESTION_MESSAGE, null, options, options[optionParDefaut]); 
 		return retour;
+	}
+	
+	public static void createModalBox(int type, String titre, String message) {
+		JOptionPane.showMessageDialog(Fenetre.getInstance(), message, titre, type);
 	}
 
 }

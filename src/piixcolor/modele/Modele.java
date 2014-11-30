@@ -1,7 +1,5 @@
 package piixcolor.modele;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -9,8 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.imageio.ImageIO;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -32,7 +28,7 @@ public class Modele {
 	private List<ObjetColore> reserveForme = new ArrayList<ObjetColore>();
 	
 	public static final int IMG_SIZE = 100;
-	public static final int MAX_SELECTED_FORMES = 3;
+	public static final int MAX_SELECTED_FORMES = 4;
 	public static final int MAX_SELECTED_COULEURS = 4;
 	public static final String DOSSIER_FORMES = "images/";
 	public static final String DOSSIER_ASSETS = DOSSIER_FORMES + "assets/";
@@ -69,16 +65,20 @@ public class Modele {
 	}
 	
 	public void enregistrer(String path) throws FileNotFoundException, IOException {
+		saveCouleurConfig();
+		saveFormeConfig();
+		saveReserveConfig();
+		
 		XMLOutputter sortie = new XMLOutputter(Format.getPrettyFormat());
         sortie.output(document, new FileOutputStream(path));
         setEstModifie(false);
 	}
 	
 	public void loadCouleurConfig() {
-		List listCouleurs = racine.getChild("matrice").getChild("couleurs").getChildren("couleur");
-		Iterator i = listCouleurs.iterator();
+		List<Element> listCouleurs = racine.getChild("matrice").getChild("couleurs").getChildren("couleur");
+		Iterator<Element> i = listCouleurs.iterator();
 		while(i.hasNext()) {
-		      Element courant = (Element)i.next();
+		      Element courant = i.next();
 		      this.couleursConfig.add((Couleur.values()[Integer.parseInt(courant.getText())]));
 		}
 	}
@@ -94,10 +94,10 @@ public class Modele {
 	}
 	
 	public void loadFormeConfig() {
-		List listFormes = racine.getChild("matrice").getChild("formes").getChildren("forme");
-		Iterator i = listFormes.iterator();
+		List<Element> listFormes = racine.getChild("matrice").getChild("formes").getChildren("forme");
+		Iterator<Element> i = listFormes.iterator();
 		while(i.hasNext()) {
-		      Element courant = (Element)i.next();
+		      Element courant = i.next();
 		      File f = new File(Modele.DOSSIER_FORMES + courant.getText());
 		      this.formesConfig.add(f);
 		}
@@ -114,21 +114,31 @@ public class Modele {
 	}
 	
 	public void loadReserveForme() {
-		List listObjetColore = racine.getChild("formePool").getChildren("forme");
-		Iterator i = listObjetColore.iterator();
+		List<Element> listObjetColore = racine.getChild("formePool").getChildren("forme");
+		Iterator<Element> i = listObjetColore.iterator();
 		while(i.hasNext()) {
-		      Element courant = (Element)i.next();
-		      ObjetColore o;
-			try {
-				o = new ObjetColore((Couleur.values()[Integer.parseInt(courant.getChild("couleur").getText())]), ImageIO.read(new File(Modele.DOSSIER_FORMES + courant.getChild("path").getText())));
-				this.reserveForme.add(o);
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-				System.err.println("Un probleme est survenu avec le format de l'image");
-			} catch (IOException e) {
-				e.printStackTrace();
-				System.err.println("Un probleme est survenu lors du chargement de l'image");
-			}
+			Element courant = i.next();
+		    ObjetColore o = new ObjetColore((Couleur.values()[Integer.parseInt(courant.getChild("couleur").getText())]), new File(Modele.DOSSIER_FORMES + courant.getChild("path").getText()));
+			this.reserveForme.add(o);
+		}
+	}
+	
+	public void saveReserveConfig() {
+		Element formes = racine.getChild("formePool");
+		formes.removeChildren("forme");
+		for (ObjetColore oc : reserveForme) {
+			Element forme = new Element("forme");
+			
+			Element path = new Element("path");
+			path.setText(oc.getOrigineFile().getName());
+			
+			Element couleur = new Element("couleur");
+			couleur.setText(Integer.toString(oc.getCouleur().ordinal()));
+			
+			forme.addContent(path);
+			forme.addContent(couleur);
+			
+			formes.addContent(forme);
 		}
 	}
 	
@@ -151,7 +161,7 @@ public class Modele {
 	}
 
 	public void setCouleursConfig(List<Couleur> couleursConfig) {
-		if (!(this.couleursConfig.size() == couleursConfig.size())) {	
+		if (this.couleursConfig.size() != couleursConfig.size()) {	
 			this.couleursConfig = couleursConfig;
 			setEstModifie(true);
 			notifier();
@@ -167,17 +177,29 @@ public class Modele {
 	}
 
 	public void setReserveForme(List<ObjetColore> reserveForme) {
-		this.reserveForme = reserveForme;
-		setEstModifie(true);
-		notifier();
+		if (this.reserveForme.size() != reserveForme.size()) {
+			this.reserveForme = reserveForme;
+			setEstModifie(true);
+			notifier();
+		}
 	}
 
 	public void setFormesConfig(List<File> formesConfig) {
-		if (!(this.formesConfig.size() == formesConfig.size())) {
+		if (this.formesConfig.size() != formesConfig.size()) {
 			this.formesConfig = formesConfig;
 			setEstModifie(true);
 			notifier();
 		}
+	}
+	
+	public void deleteObjetsColoresByImage(File image) {
+		List<ObjetColore> listObjet = new ArrayList<ObjetColore>(reserveForme);
+		for (ObjetColore oc : reserveForme) {
+			if (oc.getOrigineFile().equals(image)) {
+				listObjet.remove(oc);
+			}
+		}
+		this.setReserveForme(listObjet);
 	}
 
 	public boolean isEstModifie() {
@@ -187,6 +209,7 @@ public class Modele {
 	public void setEstModifie(boolean estModifie) {
 		this.estModifie = estModifie;
 	}
+
 	
 	
 }
