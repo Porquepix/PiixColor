@@ -28,7 +28,7 @@ public class Modele {
 	private List<ObjetColore> reserveForme = new ArrayList<ObjetColore>();
 	
 	public static final int IMG_SIZE = 100;
-	public static final int MAX_SELECTED_FORMES = 3;
+	public static final int MAX_SELECTED_FORMES = 4;
 	public static final int MAX_SELECTED_COULEURS = 4;
 	public static final String DOSSIER_FORMES = "images/";
 	public static final String DOSSIER_ASSETS = DOSSIER_FORMES + "assets/";
