@@ -33,6 +33,8 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 
 	public VuePlateau(Fenetre f, PlateauControleur controleur) {
 		super(f, controleur);
+		
+		setLayout(new BorderLayout());
 
 		// Utilisation du JLayeredPane
 		Dimension dimensionVue = new Dimension(fenetre.getWidth(), fenetre.getHeight());
