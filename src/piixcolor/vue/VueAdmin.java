@@ -32,6 +32,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.border.Border;
 
 import piixcolor.controleur.AdminControleur;
@@ -57,7 +58,7 @@ public class VueAdmin extends Vue {
 	
 	//taille des panels
 	private static final int PANEL_WIDTH = Fenetre.FRAME_WIDTH / ATP_NB_PANEL - (ATP_NB_PANEL - 1) * ADMIN_MARGIN;
-	private static final int PANEL_HEIGHT = Fenetre.FRAME_HEIGHT / NB_ADMIN_PART - NB_ADMIN_PART * ADMIN_MARGIN - 30;
+	private static final int PANEL_HEIGHT = (int)(Fenetre.FRAME_HEIGHT * 0.8);
 	private static final int FORME_FRAME_HEIGHT = Fenetre.FRAME_HEIGHT / 10 + 40;
 	
 	//nom des panels
@@ -126,15 +127,15 @@ public class VueAdmin extends Vue {
 		panels.get(ADMIN_BOT_PANEL).add(panels.get(ABP_FORMES_PANEL), ATP_FORMES_PANEL_POS);
 		panels.get(ADMIN_BOT_PANEL).add(panels.get(ABP_FORMES_POOL_PANEL), ATP_FORMES_SELECT_PANEL_POS);
 		
-		//gridbag du panel principal
+		//cardlayout du panel principal
+		JTabbedPane tabbedPane = new JTabbedPane();
+		tabbedPane.addTab("Paramétrer la matrice", panels.get(ADMIN_TOP_PANEL));
+		tabbedPane.addTab("Paramétrer la réserve de formes", panels.get(ADMIN_BOT_PANEL));
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 1;
 		c.gridy = 0;
-		panels.get(PANEL_PRINCIPALE).add(panels.get(ADMIN_TOP_PANEL), c);
-		c.gridy = 1;
-		c.insets = new Insets(ADMIN_MARGIN,0,0,0);
-		panels.get(PANEL_PRINCIPALE).add(panels.get(ADMIN_BOT_PANEL), c);
+		panels.get(PANEL_PRINCIPALE).add(tabbedPane, c);
 		c.gridy = 2;
 		c.anchor = GridBagConstraints.PAGE_START;
 		c.insets = new Insets(ADMIN_MARGIN,0,0,0);
@@ -204,7 +205,7 @@ public class VueAdmin extends Vue {
 		JPanel colorsTable = new JPanel();
 		colorsTable.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT - 30));
 		colorsTable.setBackground(Color.WHITE);
-		colorsTable.setLayout(new GridLayout(5, 2));
+		colorsTable.setLayout(new GridLayout((int)(Couleur.values().length / 2), 2));
 		return colorsTable;
 	}
 	
@@ -457,7 +458,7 @@ public class VueAdmin extends Vue {
 				for (ObjetColore oc : getControleur().getModele().getReserveForme()) {
 					obj.add(oc);
 				}
-				obj.add(new ObjetColore(selectedCouleur, new File(Modele.DOSSIER_FORMES + selectedForme)));
+				obj.add(0, new ObjetColore(selectedCouleur, new File(Modele.DOSSIER_FORMES + selectedForme)));
 				getControleur().getModele().setReserveForme(obj);
 				
 				abpCouleursCheckBoxes.get(selectedCouleur).setSelected(false);

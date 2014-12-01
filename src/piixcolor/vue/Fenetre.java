@@ -1,4 +1,6 @@
 package piixcolor.vue;
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -25,8 +27,8 @@ public class Fenetre extends JFrame {
 		});
 		
 		setTitle(FRAME_TITLE);
-		setVisible(true);
 		pack();
+		setVisible(true);
 		setSize((int)getToolkit().getScreenSize().getWidth(), ((int)getToolkit().getScreenSize().getHeight() - 40));
 		
 		FRAME_WIDTH = this.getWidth();
