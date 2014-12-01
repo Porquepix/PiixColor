@@ -18,10 +18,9 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
 
-import piixcolor.controleur.Controleur;
 import piixcolor.controleur.PlateauControleur;
-import piixcolor.modele.Modele;
 
 public class VuePlateau extends Vue implements MouseListener, MouseMotionListener {
 	JLayeredPane layeredPane;
@@ -36,18 +35,17 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 		super(f, controleur);
 
 		// Utilisation du JLayeredPane
-		Dimension dimensionVue = new Dimension(fenetre.FRAME_WIDTH, fenetre.FRAME_HEIGHT);
+		Dimension dimensionVue = new Dimension(fenetre.getWidth(), fenetre.getHeight());
 		layeredPane = new JLayeredPane();
 		this.add(layeredPane);
 		layeredPane.setPreferredSize(dimensionVue);
-
 		layeredPane.addMouseListener(this);
 		layeredPane.addMouseMotionListener(this);
 
 		// Ajout de la matrice
 		matrice = new JPanel();
 		layeredPane.add(matrice, JLayeredPane.DEFAULT_LAYER);
-		matrice.setPreferredSize(new Dimension(dimensionVue.width, dimensionVue.height));
+		matrice.setPreferredSize(dimensionVue);
 		matrice.setLayout(new GridLayout((controleur.getNbCouleur()*2) + 1, controleur.getNbForme() + 1));
 		matrice.setBounds(0, 0, dimensionVue.width, dimensionVue.height);
 		
@@ -150,10 +148,10 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 				return;
 			formeCourante.setVisible(false);
 			Component c = matrice.findComponentAt(e.getX(), e.getY());
-			if (c instanceof JLabel || c == null) {
+			Container parent = (Container) c;
+			if (c instanceof JLabel || c == null || parent.getComponentCount() > 0) {
 				caseFormeCourante.add(formeCourante);
 			} else {
-				Container parent = (Container) c;
 				parent.add(formeCourante);
 			}
 			formeCourante.setVisible(true);

@@ -7,6 +7,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 import piixcolor.modele.Modele;
 
@@ -31,6 +32,8 @@ public class Fenetre extends JFrame {
 		setVisible(true);
 		setSize((int)getToolkit().getScreenSize().getWidth(), ((int)getToolkit().getScreenSize().getHeight() - 40));
 		
+		setSize((int)getToolkit().getScreenSize().getWidth(), ((int)getToolkit().getScreenSize().getHeight()));
+
 		FRAME_WIDTH = this.getWidth();
 		FRAME_HEIGHT = this.getHeight();
 		
@@ -59,6 +62,7 @@ public class Fenetre extends JFrame {
 
 	public void switchPanel(JPanel p) {
 		this.getContentPane().removeAll();
+		p.setBorder(new EmptyBorder(-6, 0, 0, 0) );
 		this.setContentPane(p);
 		this.getContentPane().revalidate();
 	}
