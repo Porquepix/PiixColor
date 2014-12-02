@@ -129,8 +129,8 @@ public class VueAdmin extends Vue {
 		
 		//cardlayout du panel principal
 		JTabbedPane tabbedPane = new JTabbedPane();
-		tabbedPane.addTab("Paramétrer la matrice", panels.get(ADMIN_TOP_PANEL));
-		tabbedPane.addTab("Paramétrer la réserve de formes", panels.get(ADMIN_BOT_PANEL));
+		tabbedPane.addTab("Paramï¿½trer la matrice", panels.get(ADMIN_TOP_PANEL));
+		tabbedPane.addTab("Paramï¿½trer la rï¿½serve de formes", panels.get(ADMIN_BOT_PANEL));
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 1;
@@ -146,7 +146,7 @@ public class VueAdmin extends Vue {
 	}
 	
 	/**
-	 * Créer un conteneur de taille fixe (PANEL_WIDTH, PANEL_HEIGHT), avec un fond blanc et une bordure noir.
+	 * Crï¿½er un conteneur de taille fixe (PANEL_WIDTH, PANEL_HEIGHT), avec un fond blanc et une bordure noir.
 	 * 
 	 * @return Le conteneur (JPanel)
 	 */
@@ -162,9 +162,9 @@ public class VueAdmin extends Vue {
 	}
 	
 	/**
-	 * Créer un panel scrollable a  partir d'une box.
+	 * Crï¿½er un panel scrollable a  partir d'une box.
 	 * 
-	 * @param box Box contenant les elements a scrollé
+	 * @param box Box contenant les elements a scrollï¿½
 	 * @return Le panel scrollable (JScrollPane)
 	 */
 	private JScrollPane createScrollPane(Box box) {
@@ -177,11 +177,11 @@ public class VueAdmin extends Vue {
 	}
 	
 	/**
-	 * Créer un panel avec un message à l'interrieur.
-	 * Le fond du panel est blanc et la couleur du texte est passé en paramêtre.
+	 * Crï¿½er un panel avec un message ï¿½ l'interrieur.
+	 * Le fond du panel est blanc et la couleur du texte est passï¿½ en paramï¿½tre.
 	 * 
 	 * @param message Message a afficher dans le panel
-	 * @pâram color Couleur du message
+	 * @pï¿½ram color Couleur du message
 	 * @return Le panel (JPanel) avec le message a l'interrieur
 	 */
 	private JPanel createMessagePane(String message, Color color) {
@@ -197,7 +197,7 @@ public class VueAdmin extends Vue {
 	}
 	
 	/**
-	 * Créer la structure du tableau pour les panels des couleurs.
+	 * Crï¿½er la structure du tableau pour les panels des couleurs.
 	 * 
 	 * @return Le tableau (JPanel)
 	 */
@@ -210,13 +210,13 @@ public class VueAdmin extends Vue {
 	}
 	
 	/**
-	 * Créer un cadre (JPanel) pour une couleur.
+	 * Crï¿½er un cadre (JPanel) pour une couleur.
 	 * Ce cadre est blanc. Il se compose d'un rectangle montrant la couleur et d'une checkbox.
-	 * La checkbox est ajouté à la liste passé en paramêtre pour qu'elle puisse être utilisé.
-	 * Un ActionListener est aussi ajouté si une action doit être réalisé.
+	 * La checkbox est ajoutï¿½ ï¿½ la liste passï¿½ en paramï¿½tre pour qu'elle puisse ï¿½tre utilisï¿½.
+	 * Un ActionListener est aussi ajoutï¿½ si une action doit ï¿½tre rï¿½alisï¿½.
 	 * 
 	 * @param c Couleur correspont au cadre
-	 * @param whereSaveCheckBoxs Map ou doit etre sauvegarder la checkbox, la clé est la couleur
+	 * @param whereSaveCheckBoxs Map ou doit etre sauvegarder la checkbox, la clï¿½ est la couleur
 	 * @param ae ActionListener s'appliquant sur la chekcbox
 	 * @return Le cadre (JPanel) de la couleur
 	 */
@@ -241,7 +241,7 @@ public class VueAdmin extends Vue {
 	}
 	
 	/**
-	 * Créer un cadre (JPanel) pour une forme.
+	 * Crï¿½er un cadre (JPanel) pour une forme.
 	 * Ce cadre est blanc avec un contour noir. A sa gauche se trouve l'apercu de l'image et au centre le nom du cadre.
 	 * 
 	 * @param image Apercus de l'image
@@ -271,7 +271,7 @@ public class VueAdmin extends Vue {
 	}
 	
 	/**
-	 * Créer un cadre (JPanel) pour une forme à partir d'un fichier.
+	 * Crï¿½er un cadre (JPanel) pour une forme ï¿½ partir d'un fichier.
 	 * 
 	 * @param image Fichier represetant une image
 	 * @return Un cadre (JPanel) pour une forme
@@ -285,7 +285,7 @@ public class VueAdmin extends Vue {
 		try {
 			container = createFormeFrame(ImageIO.read(image), title);
 		} catch (IOException e) {
-			BoiteDialogue.createModalBox(JOptionPane.ERROR_MESSAGE, "Erreur", "Un problème est survenu lors du chargement des images.");
+			BoiteDialogue.createModalBox(JOptionPane.ERROR_MESSAGE, "Erreur", "Un problï¿½me est survenu lors du chargement des images.");
 			System.exit(-1);
 		}
 		
@@ -293,11 +293,11 @@ public class VueAdmin extends Vue {
 	}
 	
 	/**
-	 * Créer un cadre (JPanel) pour une forme à partir d'un fichier.
-	 * Ce cadre possède des actions (Possibilité de le cocher ou de le supprimer).
+	 * Crï¿½er un cadre (JPanel) pour une forme ï¿½ partir d'un fichier.
+	 * Ce cadre possï¿½de des actions (Possibilitï¿½ de le cocher ou de le supprimer).
 	 * 
 	 * @param image Fichier represetant une image
-	 * @param whereSaveCheckBoxs Map ou doit etre sauvegarder la checkbox, la clé est le nom de l'image
+	 * @param whereSaveCheckBoxs Map ou doit etre sauvegarder la checkbox, la clï¿½ est le nom de l'image
 	 * @param ae ActionListener s'appliquant sur la chekcbox
 	 * @param ml MouseListener s'appliquant sur le bouton supprimer
 	 * @return Un cadre (JPanel) pour une forme
@@ -315,11 +315,11 @@ public class VueAdmin extends Vue {
 	}
 	
 	/**
-	 * Créer un panel (JPanel) des action pour un cadre de forme.
+	 * Crï¿½er un panel (JPanel) des action pour un cadre de forme.
 	 * Deux actions sont possible : le selectioner via une checkbox, le supprimmer via un bouton.
 	 * 
-	 * @param image Fichier de l'image a supprimer si le bouton est cliqué
-	 * @param whereSaveCheckBoxs Map ou doit etre sauvegarder la checkbox, la clé est le nom de l'image
+	 * @param image Fichier de l'image a supprimer si le bouton est cliquï¿½
+	 * @param whereSaveCheckBoxs Map ou doit etre sauvegarder la checkbox, la clï¿½ est le nom de l'image
 	 * @param ae ActionListener s'appliquant sur la chekcbox
 	 * @param ml MouseListener s'appliquant sur le bouton supprimer
 	 * @return Un panel (JPanel) contenant les les actions
@@ -369,7 +369,7 @@ public class VueAdmin extends Vue {
 		container.add(Box.createRigidArea(new Dimension(10, 0)));
 		
 		//Boutton Apercu
-		JButton bouttonApercu = new JButton("Aperçu");
+		JButton bouttonApercu = new JButton("Aperï¿½u");
 		bouttonApercu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -705,7 +705,7 @@ public class VueAdmin extends Vue {
 
 	/**
 	 * Ouvre un explorateur de fichier qui prend en compte uniquement les images.
-	 * Si une image est selectioné l'enregistre en fesant appelle au controlleur.
+	 * Si une image est selectionï¿½ l'enregistre en fesant appelle au controlleur.
 	 * 
 	 * @see ImageFilter
 	 * @see AdminControleur#saveImage(File)
@@ -722,18 +722,18 @@ public class VueAdmin extends Vue {
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
 			boolean saveStatut = ((AdminControleur) getControleur()).saveImage(fc.getSelectedFile());
 			if (saveStatut) {
-				BoiteDialogue.createModalBox(JOptionPane.INFORMATION_MESSAGE, "Information", "Votre image a bien été enregistrée.");
+				BoiteDialogue.createModalBox(JOptionPane.INFORMATION_MESSAGE, "Information", "Votre image a bien ï¿½tï¿½ enregistrï¿½e.");
 				refreshAtpFormesPanel();
 				refreshAtpFormesCheckBoxes();
 				refreshAbpFormesPanel();
 			} else {
-				BoiteDialogue.createModalBox(JOptionPane.ERROR_MESSAGE, "Erreur", "Votre image n'a pas pu être enregistrée.");
+				BoiteDialogue.createModalBox(JOptionPane.ERROR_MESSAGE, "Erreur", "Votre image n'a pas pu ï¿½tre enregistrï¿½e.");
 			}
 		}
 	}
 	
 	/**
-	 * Actualise le panel des formes qui sert dans la création de la matrice.
+	 * Actualise le panel des formes qui sert dans la crï¿½ation de la matrice.
 	 */
 	private void refreshAtpFormesPanel() {
 		panels.get(ADMIN_TOP_PANEL).remove(panels.get(ATP_FORMES_PANEL));
@@ -743,7 +743,7 @@ public class VueAdmin extends Vue {
 	}
 	
 	/**
-	 * Actualise le panel des formes selectionnées.
+	 * Actualise le panel des formes selectionnï¿½es.
 	 */
 	private void refreshSelectedFormesPanel() {
 		panels.get(ADMIN_TOP_PANEL).remove(panels.get(ATP_FORMES_SELECT_PANEL));
@@ -753,7 +753,7 @@ public class VueAdmin extends Vue {
 	}
 	
 	/**
-	 * Actualise le panel des formes qui sert dans la création d'intrus.
+	 * Actualise le panel des formes qui sert dans la crï¿½ation d'intrus.
 	 */
 	private void refreshAbpFormesPanel() {
 		panels.get(ADMIN_BOT_PANEL).remove(panels.get(ABP_FORMES_PANEL));
@@ -763,7 +763,7 @@ public class VueAdmin extends Vue {
 	}
 	
 	/**
-	 * Actualise le panel des formes présentent dans la réserve.
+	 * Actualise le panel des formes prï¿½sentent dans la rï¿½serve.
 	 */
 	private void refreshFormesPoolPanel() {
 		panels.get(ADMIN_BOT_PANEL).remove(panels.get(ABP_FORMES_POOL_PANEL));
@@ -831,11 +831,11 @@ public class VueAdmin extends Vue {
 	
 		public void mouseClicked(MouseEvent e) {
 			String[] options = {"Oui", "Non"}; 
-			int retour = BoiteDialogue.createOptionBox(JOptionPane.YES_NO_OPTION, "Confirmation", "Voulez-vous vraiment supprimer cette image ? (Si oui, la configuration va être automatiquement sauvegardée)", options, 1);
+			int retour = BoiteDialogue.createOptionBox(JOptionPane.YES_NO_OPTION, "Confirmation", "Voulez-vous vraiment supprimer cette image ? (Si oui, la configuration va ï¿½tre automatiquement sauvegardï¿½e)", options, 1);
 			if (retour == JOptionPane.OK_OPTION) {
 				boolean deleteStatut = ((AdminControleur) getControleur()).deleteImage(image);
 				if (deleteStatut) {
-					BoiteDialogue.createModalBox(JOptionPane.INFORMATION_MESSAGE, "Information", "Votre image a bien été supprimée. La configuration va être automatiquement sauvegardée.");
+					BoiteDialogue.createModalBox(JOptionPane.INFORMATION_MESSAGE, "Information", "Votre image a bien ï¿½tï¿½ supprimï¿½e. La configuration va ï¿½tre automatiquement sauvegardï¿½e.");
 					
 					atpFormesCheckBoxes.remove(image.getName());
 					abpFormesCheckBoxes.remove(image.getName());
@@ -848,10 +848,16 @@ public class VueAdmin extends Vue {
 					
 					BoiteDialogue.enregistrerConfig(Modele.FICHIER_CONFIG);
 				} else {
-					BoiteDialogue.createModalBox(JOptionPane.ERROR_MESSAGE, "Erreur", "Votre image n'a pas pu être supprimée.");
+					BoiteDialogue.createModalBox(JOptionPane.ERROR_MESSAGE, "Erreur", "Votre image n'a pas pu ï¿½tre supprimï¿½e.");
 				}
 			}	
 		}
+		
+	}
+
+	@Override
+	public void actualise(List l) {
+		// TODO Auto-generated method stub
 		
 	}
 

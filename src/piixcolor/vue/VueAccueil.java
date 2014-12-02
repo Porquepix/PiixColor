@@ -2,6 +2,7 @@ package piixcolor.vue;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JButton;
 
@@ -22,7 +23,7 @@ public class VueAccueil extends Vue {
 			public void actionPerformed(ActionEvent e) {
 				Modele m = Modele.getInstance();
 				PlateauControleur pc = new PlateauControleur(m);
-				fenetre.switchPanel(new VuePlateau(fenetre, pc));
+				fenetre.switchPanel(new VuePlateau(fenetre, pc, false));
 			}
 		});
 		
@@ -39,7 +40,7 @@ public class VueAccueil extends Vue {
 	}
 
 	@Override
-	public void actualise() {
+	public void actualise(List l) {
 		// TODO Auto-generated method stub
 		
 	}

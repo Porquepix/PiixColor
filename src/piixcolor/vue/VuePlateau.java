@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -31,9 +32,10 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 	Container caseFormeCourante;
 	int ajustementX;
 	int ajustementY;
+	Dimension dimension;
 
 
-	public VuePlateau(Fenetre f, PlateauControleur controleur) {
+	public VuePlateau(Fenetre f, PlateauControleur controleur, boolean isApercu) {
 		super(f, controleur);
 		
 		setLayout(new BorderLayout());
@@ -43,9 +45,10 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 		layeredPane = new JLayeredPane();
 		this.add(layeredPane);
 		layeredPane.setPreferredSize(dimensionVue);
-		layeredPane.addMouseListener(this);
-		layeredPane.addMouseMotionListener(this);
-
+		if(!isApercu) {	
+			layeredPane.addMouseListener(this);
+			layeredPane.addMouseMotionListener(this);
+		}
 		// Ajout de la matrice
 		matrice = new JPanel();
 		layeredPane.add(matrice, JLayeredPane.DEFAULT_LAYER);
@@ -62,38 +65,41 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 			}
 		}
 
-		//###############Ajout des formes et couleurs de la matrice##############################
-		
-		JLabel image = new JLabel(new ImageIcon(IMAGE_RETURN));
-		image.addMouseListener(new MouseListener() {
-			public void mouseClicked(MouseEvent e) {
-				fenetre.switchPanel(new VueAccueil(fenetre));
-			}
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+		JLabel image;
+		JPanel panel;
+		if(!isApercu) {
+			image = new JLabel(new ImageIcon(IMAGE_RETURN));
+			image.addMouseListener(new MouseListener() {
+				public void mouseClicked(MouseEvent e) {
+					fenetre.switchPanel(new VueAccueil(fenetre));
+				}
+				public void mouseEntered(MouseEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+	
+				@Override
+				public void mouseExited(MouseEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+	
+				@Override
+				public void mousePressed(MouseEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+	
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
+			panel =  (JPanel) matrice.getComponent(0);
+			panel.add(image);
+		}
 
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-		JPanel panel =  (JPanel) matrice.getComponent(0);
-		panel.add(image);
 		
 		//Ajout Formes :
 		for(int i = 1; i <= controleur.getNbForme(); i++){
@@ -192,8 +198,7 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 
 	public void handleAction(ActionEvent e) {}
 
-	@Override
-	public void actualise() {
+	public void actualise(List l) {
 		// TODO Auto-generated method stub
 		
 	}
