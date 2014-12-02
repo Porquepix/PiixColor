@@ -1,6 +1,10 @@
 package piixcolor.controleur;
 
+import java.awt.Point;
+
 import piixcolor.modele.Modele;
+
+import com.sun.xml.internal.ws.api.server.Container;
 
 public class PlateauControleur extends Controleur{
 
@@ -26,6 +30,4 @@ public class PlateauControleur extends Controleur{
 		// TODO Auto-generated method stub
 		
 	}
-	
-	
 }

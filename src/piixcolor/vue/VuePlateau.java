@@ -18,11 +18,13 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import javax.swing.border.EmptyBorder;
 
 import piixcolor.controleur.PlateauControleur;
+import piixcolor.modele.Modele;
 
 public class VuePlateau extends Vue implements MouseListener, MouseMotionListener {
+	private static final String IMAGE_RETURN = Modele.DOSSIER_ASSETS + "returnArrow.gif";
+	
 	JLayeredPane layeredPane;
 	JPanel matrice;
 	JLabel formeCourante;
@@ -62,8 +64,35 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 
 		//###############Ajout des formes et couleurs de la matrice##############################
 		
-		JLabel image = new JLabel();
-		JPanel panel = (JPanel) matrice.getComponent(0);
+		JLabel image = new JLabel(new ImageIcon(IMAGE_RETURN));
+		image.addMouseListener(new MouseListener() {
+			public void mouseClicked(MouseEvent e) {
+				fenetre.switchPanel(new VueAccueil(fenetre));
+			}
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		JPanel panel =  (JPanel) matrice.getComponent(0);
 		panel.add(image);
 		
 		//Ajout Formes :
@@ -83,14 +112,15 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 			k++;
 		}
 		
-		//###############Ajout des formes colorés à "formes"##############################
+		//Ajout des formes colorés à "formes"
 		int l = ((controleur.getNbCouleur()+1)*(controleur.getNbForme()+1));
 		for(int i = 0; i < controleur.getNbObjetColore(); i++){
 			JLabel objetColore = new JLabel(new ImageIcon(controleur.getModele().getReserveForme().get(i).getImage()));
 			panel =  (JPanel) matrice.getComponent(l);
 			l++;
 			panel.add(objetColore);
-		}		
+		}
+		
 	}
 
 
@@ -112,7 +142,7 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent arg0) {
+	public void mouseEntered(MouseEvent me) {
 		// TODO Auto-generated method stub
 
 	}
