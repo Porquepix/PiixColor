@@ -16,4 +16,16 @@ public abstract class Controleur implements Observateur {
 		return this.modele;
 	}
 
+	public int getNbForme(){
+		return getModele().getFormesConfig().size();
+	}
+	
+	public int getNbObjetColore() {
+		return getModele().getReserveForme().size();
+	}
+	
+	public int getNbCouleur(){
+		return getModele().getCouleursConfig().size();
+	}
+
 }

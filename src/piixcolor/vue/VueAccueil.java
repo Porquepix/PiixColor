@@ -1,4 +1,5 @@
 package piixcolor.vue;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,7 +24,7 @@ public class VueAccueil extends Vue {
 			public void actionPerformed(ActionEvent e) {
 				Modele m = Modele.getInstance();
 				PlateauControleur pc = new PlateauControleur(m);
-				fenetre.switchPanel(new VuePlateau(fenetre, pc, false));
+				fenetre.switchPanel(new VuePlateau(fenetre, pc));
 			}
 		});
 		

@@ -209,7 +209,4 @@ public class Modele {
 	public void setEstModifie(boolean estModifie) {
 		this.estModifie = estModifie;
 	}
-
-	
-	
 }
