@@ -1,7 +1,9 @@
 package piixcolor.vue;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JButton;
 
@@ -39,7 +41,7 @@ public class VueAccueil extends Vue {
 	}
 
 	@Override
-	public void actualise() {
+	public void actualise(List l) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -1,10 +1,8 @@
 package piixcolor.controleur;
 
-import java.awt.Point;
+import java.util.List;
 
 import piixcolor.modele.Modele;
-
-import com.sun.xml.internal.ws.api.server.Container;
 
 public class PlateauControleur extends Controleur{
 
@@ -13,20 +11,8 @@ public class PlateauControleur extends Controleur{
 	public PlateauControleur(Modele m){
 		super(m);
 	}
-
-	public int getNbCouleur(){
-		return getModele().getCouleursConfig().size();
-	}
-	
-	public int getNbForme(){
-		return getModele().getFormesConfig().size();
-	}
-	
-	public int getNbObjetColore() {
-		return getModele().getReserveForme().size();
-	}
-	
-	public void actualise() {
+		
+	public void actualise(List l) {
 		// TODO Auto-generated method stub
 		
 	}

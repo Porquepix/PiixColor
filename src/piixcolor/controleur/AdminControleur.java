@@ -5,6 +5,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -17,19 +18,19 @@ public class AdminControleur extends Controleur {
 	}
 	
 	/**
-	 * Enregistre une image à l'interieur de l'application.
-	 * L'image est préalablement redimensionnée pour gagner de l'espace disque.
-	 * La méthode possède une sécurité pour éviter l'écrasement d'image (dans le cas où le nom de l'image importée est déjà présent). 
+	 * Enregistre une image ï¿½ l'interieur de l'application.
+	 * L'image est prï¿½alablement redimensionnï¿½e pour gagner de l'espace disque.
+	 * La mï¿½thode possï¿½de une sï¿½curitï¿½ pour ï¿½viter l'ï¿½crasement d'image (dans le cas oï¿½ le nom de l'image importï¿½e est dï¿½jï¿½ prï¿½sent). 
 	 * 
-	 * @param image image a enregisté
-	 * @return true si l'image a pu être enregistré, false sinon
+	 * @param image image a enregistï¿½
+	 * @return true si l'image a pu ï¿½tre enregistrï¿½, false sinon
 	 */
 	public boolean saveImage(File image) {
 		try {
 			BufferedImage i = ImageIO.read(image);
 			String imageName = image.getName().split("\\.")[0];
 			
-			//sécurité pour empécher l'écrasement d'image
+			//sï¿½curitï¿½ pour empï¿½cher l'ï¿½crasement d'image
 			File f = new File(Modele.DOSSIER_FORMES + imageName + "." + Modele.FORMAT_IMAGE_SAVE);
 			int j = 1;
 			while (f.exists()) {
@@ -57,10 +58,10 @@ public class AdminControleur extends Controleur {
 	/**
 	 * Redimensionne une image.
 	 * 
-	 * @param image image a redimensionné
-	 * @param newWidth largeur de l'image redimensionné
-	 * @param newHeight hauteur de l'image redimensionné
-	 * @return  image correctement redimensionné
+	 * @param image image a redimensionnï¿½
+	 * @param newWidth largeur de l'image redimensionnï¿½
+	 * @param newHeight hauteur de l'image redimensionnï¿½
+	 * @return  image correctement redimensionnï¿½
 	 */
 	private BufferedImage resizeImage(BufferedImage image, int newWidth, int newHeight) {
 		return imageToBufferedImage(image.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH));
@@ -80,7 +81,7 @@ public class AdminControleur extends Controleur {
 		return bi;
 	}
 
-	public void actualise() {
+	public void actualise(List l) {
 		
 	}
 

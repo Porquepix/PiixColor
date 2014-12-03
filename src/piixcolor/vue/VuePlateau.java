@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -19,6 +20,7 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import piixcolor.controleur.Controleur;
 import piixcolor.controleur.PlateauControleur;
 import piixcolor.modele.Modele;
 
@@ -31,13 +33,24 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 	Container caseFormeCourante;
 	int ajustementX;
 	int ajustementY;
+	Dimension dimension;
 
-
-	public VuePlateau(Fenetre f, PlateauControleur controleur) {
-		super(f, controleur);
+	
+/**
+ * Constructeur classique d'une vue de plateau de jeu. On crée un LayeredPane pour le drag and drop, on crée un Panel représentant la matrice que l'on divise en grille de sous pannels carrés.
+ * On crée un bouton pour retourner à l'accueil. Enfin on initialise la vue en appelant initVue().
+ * 
+ * @param f 
+ * 		Fenetre dans laquelle se trouve la vue du plateau
+ * @param c
+ * 		Controleur de la vue du plateau
+ * @see initVue
+ */
+	public VuePlateau(Fenetre f, Controleur c) {
+		super(f, c);
 		
 		setLayout(new BorderLayout());
-
+		
 		// Utilisation du JLayeredPane
 		Dimension dimensionVue = new Dimension(fenetre.getWidth(), fenetre.getHeight());
 		layeredPane = new JLayeredPane();
@@ -45,7 +58,7 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 		layeredPane.setPreferredSize(dimensionVue);
 		layeredPane.addMouseListener(this);
 		layeredPane.addMouseMotionListener(this);
-
+		
 		// Ajout de la matrice
 		matrice = new JPanel();
 		layeredPane.add(matrice, JLayeredPane.DEFAULT_LAYER);
@@ -62,9 +75,10 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 			}
 		}
 
-		//###############Ajout des formes et couleurs de la matrice##############################
-		
-		JLabel image = new JLabel(new ImageIcon(IMAGE_RETURN));
+		// Création du bouton de retour à l'accueil
+		JLabel image;
+		JPanel panel;
+		image = new JLabel(new ImageIcon(IMAGE_RETURN));
 		image.addMouseListener(new MouseListener() {
 			public void mouseClicked(MouseEvent e) {
 				fenetre.switchPanel(new VueAccueil(fenetre));
@@ -73,27 +87,70 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 				// TODO Auto-generated method stub
 				
 			}
-
-			@Override
+					@Override
 			public void mouseExited(MouseEvent e) {
 				// TODO Auto-generated method stub
 				
 			}
-
-			@Override
+					@Override
 			public void mousePressed(MouseEvent e) {
 				// TODO Auto-generated method stub
 				
 			}
-
-			@Override
+					@Override
 			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
+				// TODO Auto-generated method stub	
 			}
 		});
-		JPanel panel =  (JPanel) matrice.getComponent(0);
+		panel =  (JPanel) matrice.getComponent(0);
 		panel.add(image);
+
+		initVue();
+	}
+	
+	/**
+	 * Constructeur permettant de créer une vue plateau complètment statique et dépourvu de bouton de retour.
+	 * Elle est néanmoins mise à jour automatiquement en fonction des modification du modèle grâce à son controleur. Constructeur servant à la génération d'aperçus.
+	 * 
+	 * @param f 
+	 * 		Fenetre dans laquelle se trouve la vue du plateau
+	 * @param c
+	 * 		Controleur de la vue du plateau
+	 * @param dimensionVue
+	 * 		Dimension voulue pour l'aperçu
+	 * @see VueAdmin
+	 */
+	public VuePlateau(Fenetre f, Controleur c, Dimension dimensionVue) {
+		super(f, c);
+		setLayout(new BorderLayout());
+
+		// Utilisation du JLayeredPane
+		layeredPane = new JLayeredPane();
+		this.add(layeredPane);
+		layeredPane.setPreferredSize(dimensionVue);
+		
+		// Ajout de la matrice
+		matrice = new JPanel();
+		layeredPane.add(matrice, JLayeredPane.DEFAULT_LAYER);
+		matrice.setPreferredSize(dimensionVue);
+		matrice.setLayout(new GridLayout((controleur.getNbCouleur()*2) + 1, controleur.getNbForme() + 1));
+		matrice.setBounds(0, 0, dimensionVue.width, dimensionVue.height);
+		
+		for (int i = 0; i < ((controleur.getNbCouleur()*2) + 1) * (controleur.getNbForme() + 1); i++) {
+			JPanel square = new JPanel(new BorderLayout());
+			matrice.add(square);
+			square.setBackground(Color.white);
+			if(i < (controleur.getNbCouleur()+1) * (controleur.getNbForme() +1)) {
+				square.setBorder(BorderFactory.createLineBorder(Color.black));
+			}
+		}
+
+		initVue();
+	}
+	
+	public void initVue(){
+		JLabel image;
+		JPanel panel;
 		
 		//Ajout Formes :
 		for(int i = 1; i <= controleur.getNbForme(); i++){
@@ -120,9 +177,16 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 			l++;
 			panel.add(objetColore);
 		}
-		
 	}
 
+	public void clearVue() {
+		JPanel panel = new JPanel();
+		for(int i = 1; i < matrice.getComponentCount(); i++) {
+			panel = (JPanel) matrice.getComponent(i);
+			panel.setBackground(Color.white);
+			panel.removeAll();
+		}
+	}
 
 	public void mouseDragged(MouseEvent me) {
 		if(SwingUtilities.isLeftMouseButton(me)) {
@@ -192,8 +256,7 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 
 	public void handleAction(ActionEvent e) {}
 
-	@Override
-	public void actualise() {
+	public void actualise(List l) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -150,9 +150,9 @@ public class Modele {
 		observateurs.remove(ob);
 	}
 	
-	public void notifier() {
+	public void notifier(List l) {
 		for (Observateur ob : observateurs) {
-			ob.actualise();
+			ob.actualise(l);
 		}
 	}
 
@@ -164,7 +164,7 @@ public class Modele {
 		if (this.couleursConfig.size() != couleursConfig.size()) {	
 			this.couleursConfig = couleursConfig;
 			setEstModifie(true);
-			notifier();
+			notifier(this.couleursConfig);
 		}
 	}
 
@@ -180,7 +180,7 @@ public class Modele {
 		if (this.reserveForme.size() != reserveForme.size()) {
 			this.reserveForme = reserveForme;
 			setEstModifie(true);
-			notifier();
+			notifier(this.reserveForme);
 		}
 	}
 
@@ -188,7 +188,7 @@ public class Modele {
 		if (this.formesConfig.size() != formesConfig.size()) {
 			this.formesConfig = formesConfig;
 			setEstModifie(true);
-			notifier();
+			notifier(this.formesConfig);
 		}
 	}
 	
@@ -209,7 +209,4 @@ public class Modele {
 	public void setEstModifie(boolean estModifie) {
 		this.estModifie = estModifie;
 	}
-
-	
-	
 }
