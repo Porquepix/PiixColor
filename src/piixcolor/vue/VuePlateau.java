@@ -46,7 +46,7 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
  * 		Controleur de la vue du plateau
  * @see initVue
  */
-	public VuePlateau(Fenetre f, Controleur c) {
+	public VuePlateau(Fenetre f, PlateauControleur c) {
 		super(f, c);
 		
 		setLayout(new BorderLayout());
@@ -120,7 +120,7 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 	 * 		Dimension voulue pour l'aperçu
 	 * @see VueAdmin
 	 */
-	public VuePlateau(Fenetre f, Controleur c, Dimension dimensionVue) {
+	public VuePlateau(Fenetre f, PlateauControleur c, Dimension dimensionVue) {
 		super(f, c);
 		setLayout(new BorderLayout());
 
@@ -136,7 +136,7 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 		matrice.setLayout(new GridLayout((controleur.getNbCouleur()*2) + 1, controleur.getNbForme() + 1));
 		matrice.setBounds(0, 0, dimensionVue.width, dimensionVue.height);
 		
-		for (int i = 0; i < ((controleur.getNbCouleur()*2) + 1) * (controleur.getNbForme() + 1); i++) {
+		for (int i = 0; i < c.nbCaseMatrice(); i++) {
 			JPanel square = new JPanel(new BorderLayout());
 			matrice.add(square);
 			square.setBackground(Color.white);
@@ -147,7 +147,10 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 
 		initVue();
 	}
-	
+	/**
+	 * Initialisation de la vue plateau :
+	 * Trois boucles qui parcourent les panels de la matrice pour y afficher les formes, couleurs et objets colorés correspondant à la configuration en cours
+	 */
 	public void initVue(){
 		JLabel image;
 		JPanel panel;
@@ -178,7 +181,11 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 			panel.add(objetColore);
 		}
 	}
-
+	
+	/**
+	 * Méthode de nettoyage de la vue plateau :
+	 * On retire tous les composants des panels de la matrice et on repeint leurs fonds en blanc.
+	 */
 	public void clearVue() {
 		JPanel panel = new JPanel();
 		for(int i = 1; i < matrice.getComponentCount(); i++) {
@@ -186,6 +193,17 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 			panel.setBackground(Color.white);
 			panel.removeAll();
 		}
+	}
+	
+	/**
+	 * Rafraichissement de la vue :
+	 * On nettoie la vue de tous ses anciens composants et on la réinitialise avec le modèle mis à jour
+	 * @see clearVue
+	 * @see initVue
+	 */
+	public void refreshVue() {
+		clearVue();
+		initVue();
 	}
 
 	public void mouseDragged(MouseEvent me) {
@@ -226,7 +244,10 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 			if (c instanceof JPanel)
 				return;
 			Point emplacementParent = c.getParent().getLocation();
-			if(emplacementParent.getY() >= (matrice.getComponent((((PlateauControleur)(controleur)).getNbCouleur()+1)*(((PlateauControleur)(controleur)).getNbForme()+1))).getLocation().getY()) {
+			//System.out.println(emplacementParent);
+			System.out.println(((PlateauControleur)controleur).coordObjet(emplacementParent));
+			if(emplacementParent.getY() >= (matrice.getComponent((controleur.getNbCouleur()+1)*(controleur.getNbForme()+1))).getLocation().getY()) {
+
 				ajustementX = emplacementParent.x - e.getX();
 				ajustementY = emplacementParent.y - e.getY();
 				formeCourante = (JLabel) c;
@@ -236,7 +257,6 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 			}
 		}
 	}
-
 
 	public void mouseReleased(MouseEvent e) {
 		if(SwingUtilities.isLeftMouseButton(e)) {
@@ -254,11 +274,8 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 		}
 	}
 
-	public void handleAction(ActionEvent e) {}
-
 	public void actualise(List l) {
-		// TODO Auto-generated method stub
-		
+		refreshVue();
 	}
 
 }
