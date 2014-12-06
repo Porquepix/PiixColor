@@ -14,7 +14,7 @@ public class Fenetre extends JFrame {
 	public static int FRAME_WIDTH = 1000;
 	public static int FRAME_HEIGHT = 600;
 	public static final String FRAME_TITLE = "PiixColor";
-	private static final String LOGO = Modele.DOSSIER_ASSETS + "logo.jpg";
+	private static final String LOGO = Modele.DOSSIER_ASSETS + "miniature.png";
 	
 	private static Fenetre instance = null;
 

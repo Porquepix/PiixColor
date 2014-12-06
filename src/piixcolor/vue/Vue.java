@@ -19,5 +19,9 @@ public abstract class Vue extends JPanel implements Observateur {
 	public Controleur getControleur() {
 		return this.controleur;
 	}
+	
+	public Vue getView() {
+		return this;
+	}
 
 }
