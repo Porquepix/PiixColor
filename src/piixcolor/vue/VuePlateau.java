@@ -59,45 +59,11 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 		layeredPane.addMouseListener(this);
 		layeredPane.addMouseMotionListener(this);
 		
-		// Ajout de la matrice
-		matrice = new JPanel();
-		layeredPane.add(matrice, JLayeredPane.DEFAULT_LAYER);
-		matrice.setPreferredSize(dimensionMatrice);
-		matrice.setBounds(0, 0, dimensionMatrice.width, dimensionMatrice.height);
-		
 		// Initialisation de la vue
 		initVue();
 		
-		// Création du bouton de retour à l'accueil avec son propre mouseListener
-		JLabel image;
-		JPanel panel;
-		image = new JLabel(new ImageIcon(IMAGE_RETURN));
-		image.addMouseListener(new MouseListener() {
-			public void mouseClicked(MouseEvent e) {
-				fenetre.switchPanel(new VueAccueil(fenetre));
-			}
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-					@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-					@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-					@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub	
-			}
-		});
-		panel =  (JPanel) matrice.getComponent(0);
-		panel.add(image);
-		
+		// Création du bouton de retour à l'accueil
+		ajoutBoutonRetour();		
 	}
 	
 	/**
@@ -184,13 +150,6 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 	 */
 	public void clearVue() {
 		layeredPane.remove(matrice);
-		/*JPanel panel = new JPanel();
-		for(int i = 1; i < matrice.getComponentCount(); i++) {
-			panel = (JPanel) matrice.getComponent(i);
-			panel.setBackground(Color.white);
-			panel.setBorder(null);
-			panel.removeAll();
-		}*/
 	}
 	
 	/**
@@ -204,6 +163,37 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 		initVue();
 	}
 
+	public void ajoutBoutonRetour(){
+		JLabel image;
+		JPanel panel;
+		image = new JLabel(new ImageIcon(IMAGE_RETURN));
+		image.addMouseListener(new MouseListener() {
+			public void mouseClicked(MouseEvent e) {
+				fenetre.switchPanel(new VueAccueil(fenetre));
+			}
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+					@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+					@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+					@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub	
+			}
+		});
+		panel =  (JPanel) matrice.getComponent(0);
+		panel.add(image);
+	}
+	
 	public void mouseDragged(MouseEvent me) {
 		if(SwingUtilities.isLeftMouseButton(me)) {
 			if (formeCourante == null)
@@ -242,8 +232,7 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 			if (c instanceof JPanel)
 				return;
 			Point emplacementParent = c.getParent().getLocation();
-			//System.out.println(emplacementParent);
-			System.out.println(((PlateauControleur)controleur).coordObjet(emplacementParent));
+			((PlateauControleur)controleur).setCoordObjetCourant(emplacementParent);
 			if(emplacementParent.getY() >= (matrice.getComponent((controleur.getNbCouleur()+1)*(controleur.getNbForme()+1))).getLocation().getY()) {
 
 				ajustementX = emplacementParent.x - e.getX();
@@ -263,7 +252,7 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 			formeCourante.setVisible(false);
 			Component c = matrice.findComponentAt(e.getX(), e.getY());
 			Container parent = (Container) c;
-			if (c instanceof JLabel || c == null || parent.getComponentCount() > 0) {
+			if (c instanceof JLabel || c == null || parent.getComponentCount() > 0 || !((PlateauControleur)controleur).positionCorrecte(new Point(e.getX(), e.getY()))) {
 				caseFormeCourante.add(formeCourante);
 			} else {
 				parent.add(formeCourante);
