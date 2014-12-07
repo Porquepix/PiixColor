@@ -1,13 +1,11 @@
 package piixcolor.vue;
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 
 import piixcolor.modele.Modele;
 
@@ -16,6 +14,7 @@ public class Fenetre extends JFrame {
 	public static int FRAME_WIDTH = 1000;
 	public static int FRAME_HEIGHT = 600;
 	public static final String FRAME_TITLE = "PiixColor";
+	private static final String LOGO = Modele.DOSSIER_ASSETS + "miniature.png";
 	
 	private static Fenetre instance = null;
 
@@ -26,6 +25,8 @@ public class Fenetre extends JFrame {
             	closeOperation();
             }
 		});
+		
+		setIconImage(new ImageIcon(LOGO).getImage());
 		
 		setTitle(FRAME_TITLE);
 		pack();

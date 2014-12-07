@@ -27,7 +27,9 @@ public class PlateauControleur extends Controleur{
 	 * 			Coordonnées dans la matrice de l'objet Ex : la case (1,0) représente la case de la première forme incolore dans la première ligne de la matrice.
 	 */
 	public Point coordObjet(Point coordPhys) {
-		Point p = new Point((int)coordPhys.getX()/((Fenetre.getInstance().getWidth())/(getNbForme() + 1)), (int)coordPhys.getY()/((Fenetre.getInstance().getHeight()-2)/(getNbCouleur() + 1)));
+		int x = (int)coordPhys.getX() / (Fenetre.FRAME_WIDTH / (getNbForme() + 1));
+		int y = (int)coordPhys.getY() / (Fenetre.FRAME_HEIGHT / (getNbCouleur() * 2 + 1));
+		Point p = new Point(x, y);
 		return p;
 	}
 	
