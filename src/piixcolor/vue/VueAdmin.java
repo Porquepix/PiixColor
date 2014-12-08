@@ -196,12 +196,12 @@ public class VueAdmin extends Vue {
 	}
 
 	/**
-	 * Créer un panel avec un message é l'interrieur. Le fond du panel est blanc
+	 * Créer un panel avec un message à l'interrieur. Le fond du panel est blanc
 	 * et la couleur du texte est passé en paramétre.
 	 * 
 	 * @param message
 	 *            Message a afficher dans le panel
-	 * @péram color Couleur du message
+	 * @param color Couleur du message
 	 * @return Le panel (JPanel) avec le message a l'interrieur
 	 */
 	private JPanel createMessagePane(String message, Color color) {
@@ -583,7 +583,7 @@ public class VueAdmin extends Vue {
 				if (selectedForme == null) {
 					return;
 				}
-				
+
 				abpCouleursCheckBoxes.get(selectedCouleur).setSelected(false);
 				abpFormesCheckBoxes.get(selectedForme).setSelected(false);
 
@@ -657,7 +657,7 @@ public class VueAdmin extends Vue {
 	}
 
 	private void refreshAtpColorsCheckBoxs() {
-		int nbCouleur = getControleur().getModele().getCouleursConfig().size();
+		int nbCouleur = getControleur().getNbCouleur();
 		for (Map.Entry<Couleur, JCheckBox> value : atpCouleursCheckBoxes
 				.entrySet()) {
 			if (nbCouleur < Modele.MAX_SELECTED_COULEURS) {
@@ -683,10 +683,9 @@ public class VueAdmin extends Vue {
 	}
 
 	private void refreshAtpFormesCheckBoxes() {
-		int nbForme = getControleur().getModele().getFormesConfig().size();
+		int nbForme = getControleur().getNbForme();
 
-		for (Entry<String, JCheckBox> value : atpFormesCheckBoxes
-				.entrySet()) {
+		for (Entry<String, JCheckBox> value : atpFormesCheckBoxes.entrySet()) {
 			if (nbForme < Modele.MAX_SELECTED_FORMES) {
 				value.getValue().setEnabled(true);
 			} else {
@@ -709,12 +708,16 @@ public class VueAdmin extends Vue {
 
 	private void refreshAbpColorsCheckBoxs() {
 		int nbSelectedCouleurs = 0;
-		for (Map.Entry<Couleur, JCheckBox> value : abpCouleursCheckBoxes
-				.entrySet()) {
-			value.getValue().setEnabled(true);
-			if (value.getValue().isSelected()) {
-				nbSelectedCouleurs++;
-				break;
+		if (getControleur().getNbObjetColore() > Modele.MAX_RESERVE_FORMES) {
+			nbSelectedCouleurs = 1;
+		} else {
+			for (Map.Entry<Couleur, JCheckBox> value : abpCouleursCheckBoxes
+					.entrySet()) {
+				value.getValue().setEnabled(true);
+				if (value.getValue().isSelected()) {
+					nbSelectedCouleurs++;
+					break;
+				}
 			}
 		}
 		if (nbSelectedCouleurs > 0) {
@@ -729,12 +732,16 @@ public class VueAdmin extends Vue {
 
 	private void refreshAbpFormesCheckBoxs() {
 		int nbSelectedFormes = 0;
-		for (Map.Entry<String, JCheckBox> value : abpFormesCheckBoxes
-				.entrySet()) {
-			value.getValue().setEnabled(true);
-			if (value.getValue().isSelected()) {
-				nbSelectedFormes++;
-				break;
+		if (getControleur().getNbObjetColore() > Modele.MAX_RESERVE_FORMES) {
+			nbSelectedFormes = 1;
+		} else {
+			for (Map.Entry<String, JCheckBox> value : abpFormesCheckBoxes
+					.entrySet()) {
+				value.getValue().setEnabled(true);
+				if (value.getValue().isSelected()) {
+					nbSelectedFormes++;
+					break;
+				}
 			}
 		}
 		if (nbSelectedFormes > 0) {
@@ -853,9 +860,9 @@ public class VueAdmin extends Vue {
 	}
 
 	class AtpFormeListener implements ActionListener {
-		
+
 		private File image;
-		
+
 		public AtpFormeListener(File image) {
 			this.image = image;
 		}
@@ -980,7 +987,7 @@ public class VueAdmin extends Vue {
 		if (sig == Observateur.SIG_IMAGE_DELETE) {
 			refreshAbpFormesPanel();
 		}
-		
+
 		if (sig == Observateur.SIG_IMAGE_SAVE) {
 			refreshAtpFormesPanel();
 			refreshAtpFormesCheckBoxes();
