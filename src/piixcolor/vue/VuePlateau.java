@@ -33,7 +33,7 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 	Container caseFormeCourante;
 	int ajustementX;
 	int ajustementY;
-	Dimension dimension;
+	Dimension dimensionMatrice;
 
 	
 /**
@@ -52,60 +52,18 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 		setLayout(new BorderLayout());
 		
 		// Utilisation du JLayeredPane
-		Dimension dimensionVue = new Dimension(fenetre.getWidth(), fenetre.getHeight());
+		dimensionMatrice = new Dimension(fenetre.getWidth(), fenetre.getHeight());
 		layeredPane = new JLayeredPane();
 		this.add(layeredPane);
-		layeredPane.setPreferredSize(dimensionVue);
+		layeredPane.setPreferredSize(dimensionMatrice);
 		layeredPane.addMouseListener(this);
 		layeredPane.addMouseMotionListener(this);
 		
-		// Ajout de la matrice
-		matrice = new JPanel();
-		layeredPane.add(matrice, JLayeredPane.DEFAULT_LAYER);
-		matrice.setPreferredSize(dimensionVue);
-		matrice.setLayout(new GridLayout((controleur.getNbCouleur()*2) + 1, controleur.getNbForme() + 1));
-		matrice.setBounds(0, 0, dimensionVue.width, dimensionVue.height);
-		
-		for (int i = 0; i < ((controleur.getNbCouleur()*2) + 1) * (controleur.getNbForme() + 1); i++) {
-			JPanel square = new JPanel(new BorderLayout());
-			matrice.add(square);
-			square.setBackground(Color.white);
-			if(i < (controleur.getNbCouleur()+1) * (controleur.getNbForme() +1)) {
-				square.setBorder(BorderFactory.createLineBorder(Color.black));
-			}
-		}
-
-		// Création du bouton de retour à l'accueil
-		JLabel image;
-		JPanel panel;
-		image = new JLabel(new ImageIcon(IMAGE_RETURN));
-		image.addMouseListener(new MouseListener() {
-			public void mouseClicked(MouseEvent e) {
-				fenetre.switchPanel(new VueAccueil(fenetre));
-			}
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-					@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-					@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-					@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub	
-			}
-		});
-		panel =  (JPanel) matrice.getComponent(0);
-		panel.add(image);
-
+		// Initialisation de la vue
 		initVue();
+		
+		// Création du bouton de retour à l'accueil
+		ajoutBoutonRetour();		
 	}
 	
 	/**
@@ -120,23 +78,37 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 	 * 		Dimension voulue pour l'aperçu
 	 * @see VueAdmin
 	 */
-	public VuePlateau(Fenetre f, PlateauControleur c, Dimension dimensionVue) {
+	public VuePlateau(Fenetre f, PlateauControleur c, Dimension dimension) {
 		super(f, c);
 		setLayout(new BorderLayout());
 
+		dimensionMatrice = dimension;
+		
 		// Utilisation du JLayeredPane
 		layeredPane = new JLayeredPane();
 		this.add(layeredPane);
-		layeredPane.setPreferredSize(dimensionVue);
+		layeredPane.setPreferredSize(dimensionMatrice);
+
+		initVue();
+	}
+	/**
+	 * Initialisation de la vue plateau :
+	 * Création d'un GridLayout correspondant on nombre de case actuel puis parcours de la matrice pour y ajouter ses composantes et son quadrillage.
+	 * Ensuite trois boucles qui parcourent les panels de la matrice pour y afficher les formes, couleurs et objets colorés correspondant à la configuration en cours.
+	 */
+	public void initVue(){
+		JLabel image;
+		JPanel panel;
 		
 		// Ajout de la matrice
 		matrice = new JPanel();
 		layeredPane.add(matrice, JLayeredPane.DEFAULT_LAYER);
-		matrice.setPreferredSize(dimensionVue);
-		matrice.setLayout(new GridLayout((controleur.getNbCouleur()*2) + 1, controleur.getNbForme() + 1));
-		matrice.setBounds(0, 0, dimensionVue.width, dimensionVue.height);
+		matrice.setPreferredSize(dimensionMatrice);
+		matrice.setBounds(0, 0, dimensionMatrice.width, dimensionMatrice.height);
 		
-		for (int i = 0; i < c.nbCaseMatrice(); i++) {
+		matrice.setLayout(new GridLayout((controleur.getNbCouleur()*2) + 1, controleur.getNbForme() + 1));
+		
+		for (int i = 0; i < ((controleur.getNbCouleur()*2) + 1) * (controleur.getNbForme() + 1); i++) {
 			JPanel square = new JPanel(new BorderLayout());
 			matrice.add(square);
 			square.setBackground(Color.white);
@@ -144,16 +116,6 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 				square.setBorder(BorderFactory.createLineBorder(Color.black));
 			}
 		}
-
-		initVue();
-	}
-	/**
-	 * Initialisation de la vue plateau :
-	 * Trois boucles qui parcourent les panels de la matrice pour y afficher les formes, couleurs et objets colorés correspondant à la configuration en cours
-	 */
-	public void initVue(){
-		JLabel image;
-		JPanel panel;
 		
 		//Ajout Formes :
 		for(int i = 1; i <= controleur.getNbForme(); i++){
@@ -187,12 +149,7 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 	 * On retire tous les composants des panels de la matrice et on repeint leurs fonds en blanc.
 	 */
 	public void clearVue() {
-		JPanel panel = new JPanel();
-		for(int i = 1; i < matrice.getComponentCount(); i++) {
-			panel = (JPanel) matrice.getComponent(i);
-			panel.setBackground(Color.white);
-			panel.removeAll();
-		}
+		layeredPane.remove(matrice);
 	}
 	
 	/**
@@ -206,6 +163,37 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 		initVue();
 	}
 
+	public void ajoutBoutonRetour(){
+		JLabel image;
+		JPanel panel;
+		image = new JLabel(new ImageIcon(IMAGE_RETURN));
+		image.addMouseListener(new MouseListener() {
+			public void mouseClicked(MouseEvent e) {
+				fenetre.switchPanel(new VueAccueil(fenetre));
+			}
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+					@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+					@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+					@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub	
+			}
+		});
+		panel =  (JPanel) matrice.getComponent(0);
+		panel.add(image);
+	}
+	
 	public void mouseDragged(MouseEvent me) {
 		if(SwingUtilities.isLeftMouseButton(me)) {
 			if (formeCourante == null)
@@ -244,8 +232,7 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 			if (c instanceof JPanel)
 				return;
 			Point emplacementParent = c.getParent().getLocation();
-			//System.out.println(emplacementParent);
-			System.out.println(((PlateauControleur)controleur).coordObjet(emplacementParent));
+			((PlateauControleur)controleur).setCoordObjetCourant(emplacementParent);
 			if(emplacementParent.getY() >= (matrice.getComponent((controleur.getNbCouleur()+1)*(controleur.getNbForme()+1))).getLocation().getY()) {
 
 				ajustementX = emplacementParent.x - e.getX();
@@ -265,7 +252,7 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 			formeCourante.setVisible(false);
 			Component c = matrice.findComponentAt(e.getX(), e.getY());
 			Container parent = (Container) c;
-			if (c instanceof JLabel || c == null || parent.getComponentCount() > 0) {
+			if (c instanceof JLabel || c == null || parent.getComponentCount() > 0 || !((PlateauControleur)controleur).positionCorrecte(new Point(e.getX(), e.getY()))) {
 				caseFormeCourante.add(formeCourante);
 			} else {
 				parent.add(formeCourante);
