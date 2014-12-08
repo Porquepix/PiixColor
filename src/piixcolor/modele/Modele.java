@@ -30,6 +30,7 @@ public class Modele {
 	public static final int IMG_SIZE = 100;
 	public static final int MAX_SELECTED_FORMES = 4;
 	public static final int MAX_SELECTED_COULEURS = 4;
+	public static final int MAX_RESERVE_FORMES = 20;
 	public static final String DOSSIER_FORMES = "images/";
 	public static final String DOSSIER_ASSETS = DOSSIER_FORMES + "assets/";
 	public static final String FORMAT_IMAGE_SAVE = "png";
@@ -150,9 +151,9 @@ public class Modele {
 		observateurs.remove(ob);
 	}
 	
-	public void notifier(List l) {
+	public void notifier(int sig) {
 		for (Observateur ob : observateurs) {
-			ob.actualise(l);
+			ob.actualise(sig);
 		}
 	}
 
@@ -164,32 +165,44 @@ public class Modele {
 		if (this.couleursConfig.size() != couleursConfig.size()) {	
 			this.couleursConfig = couleursConfig;
 			setEstModifie(true);
-			notifier(this.couleursConfig);
+			notifier(Observateur.SIG_COLORS_UPDATE);
 		}
 	}
+	
+	public void addCouleur(Couleur couleur) {
+		getCouleursConfig().add(0, couleur);
+		setEstModifie(true);
+		notifier(Observateur.SIG_COLORS_UPDATE);
+	}
 
-	public List<File> getFormesConfig() {
-		return formesConfig;
+	public void removeCouleur(Couleur couleur) {
+		getCouleursConfig().remove(couleur);
+		setEstModifie(true);
+		notifier(Observateur.SIG_COLORS_UPDATE);
 	}
 
 	public List<ObjetColore> getReserveForme() {
 		return reserveForme;
 	}
-
+	
 	public void setReserveForme(List<ObjetColore> reserveForme) {
 		if (this.reserveForme.size() != reserveForme.size()) {
 			this.reserveForme = reserveForme;
 			setEstModifie(true);
-			notifier(this.reserveForme);
+			notifier(Observateur.SIG_RESERVE_UPDATE);
 		}
 	}
 
-	public void setFormesConfig(List<File> formesConfig) {
-		if (this.formesConfig.size() != formesConfig.size()) {
-			this.formesConfig = formesConfig;
-			setEstModifie(true);
-			notifier(this.formesConfig);
-		}
+	public void addObjetColore(ObjetColore image) {
+		getReserveForme().add(0, image);
+		setEstModifie(true);
+		notifier(Observateur.SIG_RESERVE_UPDATE);
+	}
+
+	public void removeObjetColore(ObjetColore image) {
+		getReserveForme().remove(image);
+		setEstModifie(true);
+		notifier(Observateur.SIG_RESERVE_UPDATE);
 	}
 	
 	public void deleteObjetsColoresByImage(File image) {
@@ -200,6 +213,31 @@ public class Modele {
 			}
 		}
 		this.setReserveForme(listObjet);
+		notifier(Observateur.SIG_IMAGE_DELETE);
+	}
+	
+	public List<File> getFormesConfig() {
+		return formesConfig;
+	}
+
+	public void setFormesConfig(List<File> formesConfig) {
+		if (this.formesConfig.size() != formesConfig.size()) {
+			this.formesConfig = formesConfig;
+			setEstModifie(true);
+			notifier(Observateur.SIG_FORMES_UPDATE);
+		}
+	}
+	
+	public void addForme(File image) {
+		getFormesConfig().add(0, image);
+		setEstModifie(true);
+		notifier(Observateur.SIG_FORMES_UPDATE);
+	}
+	
+	public void removeForme(File image) {
+		getFormesConfig().remove(image);
+		setEstModifie(true);
+		notifier(Observateur.SIG_FORMES_UPDATE);
 	}
 
 	public boolean isEstModifie() {

@@ -41,7 +41,7 @@ public class VueAccueil extends Vue {
 	}
 
 	@Override
-	public void actualise(List l) {
+	public void actualise(int sig) {
 		// TODO Auto-generated method stub
 		
 	}

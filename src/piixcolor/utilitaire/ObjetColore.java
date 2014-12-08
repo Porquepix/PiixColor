@@ -18,10 +18,10 @@ public class ObjetColore  {
 		this.origineFile = image;
 		try {
 			this.image = ImageIO.read(image);
+			this.filtreImage(couleur);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		this.filtreImage(couleur);
 	}
 	
 	public void filtreImage(Couleur c) {

@@ -261,7 +261,7 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 		}
 	}
 
-	public void actualise(List l) {
+	public void actualise(int sig) {
 		refreshVue();
 	}
 

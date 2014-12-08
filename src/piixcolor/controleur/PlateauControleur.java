@@ -46,7 +46,7 @@ public class PlateauControleur extends Controleur{
 		}
 	}
 	
-	public void actualise(List l) {
+	public void actualise(int sig) {
 		// TODO Auto-generated method stub
 		
 	}
