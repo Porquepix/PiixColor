@@ -37,7 +37,12 @@ public class ObjetColore  {
 			int g = (pixels[i] & 0xFF00) >> 8;
 			int b = (pixels[i] & 0xFF);
 			
-			pixels[i] = ((int) (r + g + b) / 3) < 200 ? a << 24 | c.getCouleur().getRGB() : 0x00FFFFFF;
+			int percent = ((r + g + b) / 3) * 100 / 255;
+			if (percent < 10) {
+				pixels[i] =  (a << 24) | (c.getCouleur().getRGB() & 0x00FFFFFF);
+			} else {
+				pixels[i] = 0x00FFFFFF;
+			}
 		}
 		
 		image.setRGB(0, 0, w, h, pixels, 0, w);

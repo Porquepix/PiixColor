@@ -35,7 +35,7 @@ public class AdminControleur extends Controleur {
 			File f = new File(Modele.DOSSIER_FORMES + imageName + "." + Modele.FORMAT_IMAGE_SAVE);
 			int j = 1;
 			while (f.exists()) {
-				f = new File(Modele.DOSSIER_FORMES + imageName + j + "." + Modele.FORMAT_IMAGE_SAVE);
+				f = new File(Modele.DOSSIER_FORMES + imageName + " (" + j + ")." + Modele.FORMAT_IMAGE_SAVE);
 				j++;
 			}
 			
@@ -77,7 +77,7 @@ public class AdminControleur extends Controleur {
 	 * @return image convertie
 	 */
 	private BufferedImage imageToBufferedImage(Image image) {
-		BufferedImage bi = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_RGB);
+		BufferedImage bi = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 		Graphics g = bi.getGraphics();
 		g.drawImage(image, 0, 0, null);
 		g.dispose();
