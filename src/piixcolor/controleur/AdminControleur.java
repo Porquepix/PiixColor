@@ -58,32 +58,6 @@ public class AdminControleur extends Controleur {
 		return false;
 	}
 
-	/**
-	 * Redimensionne une image.
-	 * 
-	 * @param image image a redimensionn�
-	 * @param newWidth largeur de l'image redimensionn�
-	 * @param newHeight hauteur de l'image redimensionn�
-	 * @return  image correctement redimensionn�
-	 */
-	private BufferedImage resizeImage(BufferedImage image, int newWidth, int newHeight) {
-		return imageToBufferedImage(image.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH));
-	}
-
-	/**
-	 * Convertie une image de la class Image en image de la class BufferedImage.
-	 * 
-	 * @param image image a convertir
-	 * @return image convertie
-	 */
-	private BufferedImage imageToBufferedImage(Image image) {
-		BufferedImage bi = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-		Graphics g = bi.getGraphics();
-		g.drawImage(image, 0, 0, null);
-		g.dispose();
-		return bi;
-	}
-
 	public void actualise(int sig) {
 		
 	}
