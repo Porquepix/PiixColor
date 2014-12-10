@@ -16,12 +16,12 @@ public class PlateauControleur extends Controleur{
 	}
 	
 	/**
-	 * A l'aide des coordonnées physique d'un objet sélectionné, on détermine les coordonnée dans la matrice d'un objet
+	 * A l'aide des coordonnÃ©es physique d'un objet sÃ©lectionnÃ©, on dÃ©termine les coordonnÃ©e dans la matrice d'un objet
 	 * 
 	 * @param coordPhys
-	 * 			Coordonnées physique d'un objet, elle dépand de la taille de la fenêtre et donc de la résolution de l'écran de l'utilisateur
+	 * 			CoordonnÃ©es physique d'un objet, elle dÃ©pand de la taille de la fenÃªtre et donc de la rÃ©solution de l'Ã©cran de l'utilisateur
 	 * @return
-	 * 			Coordonnées dans la matrice de l'objet Ex : la case (0,1) représente la case de la première couleur.
+	 * 			CoordonnÃ©es dans la matrice de l'objet Ex : la case (0,1) reprÃ©sente la case de la premiÃ¨re couleur.
 	 */
 	public Point coordMatrice(Point coordPhys) {
 		int x = (int)coordPhys.getX() / (Fenetre.FRAME_WIDTH / (getNbForme() + 1));
@@ -37,7 +37,7 @@ public class PlateauControleur extends Controleur{
 	
 	public boolean positionCorrecte (Point coordPhys) {
 		Point coord = coordMatrice(coordPhys);
-		if (coord.getY() > getNbForme()){
+		if (coord.getY() > getNbCouleur()){
 			return false;
 		} else {
 			ObjetColore objetCorrect = new ObjetColore(getModele().getCouleursConfig().get((int)coord.getY()-1), getModele().getFormesConfig().get((int)coord.getX()-1));
