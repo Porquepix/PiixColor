@@ -25,7 +25,7 @@ public class PlateauControleur extends Controleur{
 	 */
 	public Point coordMatrice(Point coordPhys) {
 		int x = (int)coordPhys.getX() / (Fenetre.FRAME_WIDTH / (getNbForme() + 1));
-		int y = (int)coordPhys.getY() / (Fenetre.FRAME_HEIGHT / (getNbCouleur() * 2 + 1));
+		int y = (int)coordPhys.getY() / getCaseHeight();
 		Point p = new Point(x, y);
 		return p;
 	}
@@ -46,7 +46,7 @@ public class PlateauControleur extends Controleur{
 		}
 	}
 	
-	public void actualise(List l) {
+	public void actualise(int sig) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -57,5 +57,9 @@ public class PlateauControleur extends Controleur{
 
 	public void setCoordObjetCourant(Point coordPhys) {
 		this.coordObjetCourant = coordMatrice(coordPhys);
+	}
+	
+	public int getCaseHeight() {
+		return (Fenetre.FRAME_HEIGHT / (getNbCouleur() * 2 + 1));
 	}
 }

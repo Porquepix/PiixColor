@@ -10,6 +10,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import piixcolor.modele.Modele;
+import piixcolor.utilitaire.Observateur;
 
 public class AdminControleur extends Controleur {
 
@@ -34,11 +35,13 @@ public class AdminControleur extends Controleur {
 			File f = new File(Modele.DOSSIER_FORMES + imageName + "." + Modele.FORMAT_IMAGE_SAVE);
 			int j = 1;
 			while (f.exists()) {
-				f = new File(Modele.DOSSIER_FORMES + imageName + j + "." + Modele.FORMAT_IMAGE_SAVE);
+				f = new File(Modele.DOSSIER_FORMES + imageName + " (" + j + ")." + Modele.FORMAT_IMAGE_SAVE);
 				j++;
 			}
 			
 			ImageIO.write(resizeImage(i, Modele.IMG_SIZE, Modele.IMG_SIZE), Modele.FORMAT_IMAGE_SAVE, f);
+			
+			getModele().notifier(Observateur.SIG_IMAGE_SAVE);
 			
 			return true;
 		} catch (IOException e) {
@@ -55,33 +58,7 @@ public class AdminControleur extends Controleur {
 		return false;
 	}
 
-	/**
-	 * Redimensionne une image.
-	 * 
-	 * @param image image a redimensionn�
-	 * @param newWidth largeur de l'image redimensionn�
-	 * @param newHeight hauteur de l'image redimensionn�
-	 * @return  image correctement redimensionn�
-	 */
-	private BufferedImage resizeImage(BufferedImage image, int newWidth, int newHeight) {
-		return imageToBufferedImage(image.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH));
-	}
-
-	/**
-	 * Convertie une image de la class Image en image de la class BufferedImage.
-	 * 
-	 * @param image image a convertir
-	 * @return image convertie
-	 */
-	private BufferedImage imageToBufferedImage(Image image) {
-		BufferedImage bi = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_RGB);
-		Graphics g = bi.getGraphics();
-		g.drawImage(image, 0, 0, null);
-		g.dispose();
-		return bi;
-	}
-
-	public void actualise(List l) {
+	public void actualise(int sig) {
 		
 	}
 

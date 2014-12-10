@@ -14,11 +14,10 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -43,6 +42,7 @@ import piixcolor.utilitaire.Couleur;
 import piixcolor.utilitaire.ImageFilter;
 import piixcolor.utilitaire.Listing;
 import piixcolor.utilitaire.ObjetColore;
+import piixcolor.utilitaire.Observateur;
 
 public class VueAdmin extends Vue {
 
@@ -84,8 +84,10 @@ public class VueAdmin extends Vue {
 			+ "corbeille.jpg";
 	private static final String IMAGE_TRASH_HOVER = Modele.DOSSIER_ASSETS
 			+ "corbeille-hover.jpg";
-	private static final String IMAGE_CLOSE = Modele.DOSSIER_ASSETS + "close.jpg";
-	private static final String IMAGE_CLOSE_HOVER = Modele.DOSSIER_ASSETS + "close-hover.jpg";
+	private static final String IMAGE_CLOSE = Modele.DOSSIER_ASSETS
+			+ "close.jpg";
+	private static final String IMAGE_CLOSE_HOVER = Modele.DOSSIER_ASSETS
+			+ "close-hover.jpg";
 
 	// liste de tous les panels
 	private Map<String, JPanel> panels;
@@ -140,12 +142,10 @@ public class VueAdmin extends Vue {
 
 		// cardlayout du panel principal
 		JTabbedPane tabbedPane = new JTabbedPane();
-		tabbedPane.addTab("Paramétrer le plateau",
-				panels.get(ADMIN_TOP_PANEL));
+		tabbedPane.addTab("Paramétrer le plateau", panels.get(ADMIN_TOP_PANEL));
 		tabbedPane.addTab("Paramétrer la réserve de formes",
 				panels.get(ADMIN_BOT_PANEL));
-		tabbedPane.addTab("Aperçus",
-				panels.get(ADMIN_APERCUS_PANEL));
+		tabbedPane.addTab("Aperçus", panels.get(ADMIN_APERCUS_PANEL));
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 1;
@@ -158,11 +158,6 @@ public class VueAdmin extends Vue {
 
 		// display panel
 		commit();
-	}
-
-	private JPanel initApercusPanel() {
-		JPanel container = new VuePlateau(fenetre, new PlateauControleur(getControleur().getModele()), new Dimension((int)(Fenetre.FRAME_WIDTH * 0.96), PANEL_HEIGHT));
-		return container;
 	}
 
 	/**
@@ -201,12 +196,12 @@ public class VueAdmin extends Vue {
 	}
 
 	/**
-	 * Créer un panel avec un message é l'interrieur. Le fond du panel est
-	 * blanc et la couleur du texte est passé en paramétre.
+	 * Créer un panel avec un message à l'interrieur. Le fond du panel est blanc
+	 * et la couleur du texte est passé en paramétre.
 	 * 
 	 * @param message
 	 *            Message a afficher dans le panel
-	 * @péram color Couleur du message
+	 * @param color Couleur du message
 	 * @return Le panel (JPanel) avec le message a l'interrieur
 	 */
 	private JPanel createMessagePane(String message, Color color) {
@@ -239,9 +234,9 @@ public class VueAdmin extends Vue {
 	/**
 	 * Créer un cadre (JPanel) pour une couleur. Ce cadre est blanc. Il se
 	 * compose d'un rectangle montrant la couleur et d'une checkbox. La checkbox
-	 * est ajouté é la liste passé en paramétre pour qu'elle puisse
-	 * étre utilisé. Un ActionListener est aussi ajouté si une action doit
-	 * étre réalisé.
+	 * est ajouté é la liste passé en paramétre pour qu'elle puisse étre
+	 * utilisé. Un ActionListener est aussi ajouté si une action doit étre
+	 * réalisé.
 	 * 
 	 * @param c
 	 *            Couleur correspont au cadre
@@ -334,15 +329,14 @@ public class VueAdmin extends Vue {
 	}
 
 	/**
-	 * Créer un cadre (JPanel) pour une forme é partir d'un fichier. Ce
-	 * cadre posséde des actions (Possibilité de le cocher ou de le
-	 * supprimer).
+	 * Créer un cadre (JPanel) pour une forme é partir d'un fichier. Ce cadre
+	 * posséde des actions (Possibilité de le cocher ou de le supprimer).
 	 * 
 	 * @param image
 	 *            Fichier represetant une image
 	 * @param whereSaveCheckBoxs
-	 *            Map ou doit etre sauvegarder la checkbox, la clé est le nom
-	 *            de l'image
+	 *            Map ou doit etre sauvegarder la checkbox, la clé est le nom de
+	 *            l'image
 	 * @param ae
 	 *            ActionListener s'appliquant sur la chekcbox
 	 * @param ml
@@ -357,15 +351,16 @@ public class VueAdmin extends Vue {
 			MouseListener ml) {
 		JPanel container = createFormeFrame(image);
 
-		JPanel actionPane = createFormesActionPane(image, whereSaveCheckBoxs, ae, ml);
+		JPanel actionPane = createFormesActionPane(image, whereSaveCheckBoxs,
+				ae, ml);
 		container.add(actionPane, BorderLayout.LINE_END);
 
 		return container;
 	}
-	
+
 	private JPanel createFormeFrame(ObjetColore obj, String title) {
 		JPanel container = createFormeFrame(obj.getImage(), title);
-		
+
 		MouseListener ml = new DeleteFormeColoreeMouseListener(obj);
 		JPanel actionPane = createFormesColoreesActionPane(ml);
 		container.add(actionPane, BorderLayout.LINE_END);
@@ -381,13 +376,13 @@ public class VueAdmin extends Vue {
 	 * @param image
 	 *            Fichier de l'image a supprimer si le bouton est cliqué
 	 * @param whereSaveCheckBoxs
-	 *            Map ou doit etre sauvegarder la checkbox, la clé est le nom
-	 *            de l'image
+	 *            Map ou doit etre sauvegarder la checkbox, la clé est le nom de
+	 *            l'image
 	 * @param ae
 	 *            ActionListener s'appliquant sur la chekcbox
 	 * @param ml
 	 *            MouseListener s'appliquant sur le bouton supprimer
-	 * @return Un panel (JPanel) contenant les les actions
+	 * @return Un panel (JPanel) contenant les actions
 	 * 
 	 * @see VueAdmin#createFormeFrame(File, Map)
 	 */
@@ -419,7 +414,15 @@ public class VueAdmin extends Vue {
 
 		return actionPane;
 	}
-	
+
+	/**
+	 * Créer un panel (JPanel) des action pour un cadre de forme colorée. Une
+	 * seul action est possible : la supprimmer via un bouton.
+	 * 
+	 * @param ml
+	 *            MouseListener s'appliquant sur le bouton supprimer
+	 * @return Un panel (JPanel) contenant l'actions
+	 */
 	private JPanel createFormesColoreesActionPane(MouseListener ml) {
 		JPanel actionPane = new JPanel(new BorderLayout());
 		actionPane.setBackground(Color.WHITE);
@@ -433,7 +436,7 @@ public class VueAdmin extends Vue {
 
 		return actionPane;
 	}
-	
+
 	private JPanel createFormePoolFrame(ObjetColore obj) {
 		String title = obj.getOrigineFile().getName().toUpperCase()
 				.split("\\.")[0]
@@ -446,12 +449,10 @@ public class VueAdmin extends Vue {
 		JPanel container = createContainer();
 		JPanel colorsTable = createColorsTable();
 
-		ActionListener ae = new AtpCouleurListener();
+		ActionListener ae = null;
 		for (Couleur c : Couleur.values()) {
+			ae = new AtpCouleurListener(c);
 			colorsTable.add(createColorFrame(c, atpCouleursCheckBoxes, ae));
-			if (controleur.getModele().getCouleursConfig().contains(c)) {
-				atpCouleursCheckBoxes.get(c).setSelected(true);
-			}
 		}
 
 		JPanel messagePanel = createMessagePane(
@@ -465,18 +466,17 @@ public class VueAdmin extends Vue {
 
 		return container;
 	}
-	
+
 	private JPanel initAtpFormesPanel() {
 		Box box = Box.createVerticalBox();
 
 		File[] images = Listing.listeImages(Modele.DOSSIER_FORMES);
-		ActionListener ae = new AtpFormeListener();
+		ActionListener ae = null;
+		MouseListener ml = null;
 		for (File image : images) {
-			MouseListener ml = new DeleteFormeMouseListener(image);
+			ae = new AtpFormeListener(image);
+			ml = new DeleteFormeMouseListener(image);
 			box.add(createFormeFrame(image, atpFormesCheckBoxes, ae, ml));
-			if (getControleur().getModele().getFormesConfig().contains(image)) {
-				atpFormesCheckBoxes.get(image.getName()).setSelected(true);
-			}
 		}
 
 		JScrollPane jsp = createScrollPane(box);
@@ -498,7 +498,7 @@ public class VueAdmin extends Vue {
 
 		return container;
 	}
-	
+
 	private JPanel initSelectedFormesPanel() {
 		Box box = Box.createVerticalBox();
 
@@ -542,7 +542,7 @@ public class VueAdmin extends Vue {
 
 		return container;
 	}
-	
+
 	private JPanel initAbpFormesPanel() {
 		Box box = Box.createVerticalBox();
 
@@ -584,17 +584,14 @@ public class VueAdmin extends Vue {
 					return;
 				}
 
-				getControleur().addObjetColore(new ObjetColore(selectedCouleur, new File(
-						Modele.DOSSIER_FORMES + selectedForme)));
-
 				abpCouleursCheckBoxes.get(selectedCouleur).setSelected(false);
 				abpFormesCheckBoxes.get(selectedForme).setSelected(false);
-				refreshAbpColorsCheckBoxs();
-				refreshAbpFormesCheckBoxs();
-				refreshFormesPoolPanel();
+
+				getControleur().getModele().addObjetColore(
+						new ObjetColore(selectedCouleur, new File(
+								Modele.DOSSIER_FORMES + selectedForme)));
 			}
 		});
-
 
 		JPanel container = createContainer();
 		container.setBackground(null);
@@ -606,7 +603,7 @@ public class VueAdmin extends Vue {
 
 		return container;
 	}
-	
+
 	private JPanel initFormesPoolPanel() {
 		Box box = Box.createVerticalBox();
 
@@ -652,66 +649,75 @@ public class VueAdmin extends Vue {
 		return container;
 	}
 
+	private JPanel initApercusPanel() {
+		JPanel container = new VuePlateau(fenetre, new PlateauControleur(
+				getControleur().getModele()), new Dimension(
+				(int) (Fenetre.FRAME_WIDTH * 0.96), PANEL_HEIGHT));
+		return container;
+	}
+
 	private void refreshAtpColorsCheckBoxs() {
-		List<Couleur> selectedCouleurs = new ArrayList<Couleur>();
+		int nbCouleur = getControleur().getNbCouleur();
 		for (Map.Entry<Couleur, JCheckBox> value : atpCouleursCheckBoxes
 				.entrySet()) {
-			if (value.getValue().isSelected()) {
-				selectedCouleurs.add(value.getKey());
+			if (nbCouleur < Modele.MAX_SELECTED_COULEURS) {
+				value.getValue().setEnabled(true);
+			} else {
+				value.getValue().setEnabled(false);
 			}
-			value.getValue().setEnabled(true);
 		}
-		getControleur().getModele().setCouleursConfig(selectedCouleurs);
+
+		for (Couleur c : getControleur().getModele().getCouleursConfig()) {
+			atpCouleursCheckBoxes.get(c).setSelected(true);
+			atpCouleursCheckBoxes.get(c).setEnabled(true);
+		}
 
 		JPanel messagePanel = panels.get(ATP_MESSAGE_COULEURS_PANEL);
-		if (getControleur().getModele().getCouleursConfig().size() < Modele.MAX_SELECTED_COULEURS) {
+		if (nbCouleur < Modele.MAX_SELECTED_COULEURS) {
 			messagePanel.setVisible(false);
 		} else {
-			for (Map.Entry<Couleur, JCheckBox> value : atpCouleursCheckBoxes
-					.entrySet()) {
-				if (!value.getValue().isSelected()) {
-					value.getValue().setEnabled(false);
-				}
-			}
 			messagePanel.setVisible(true);
 		}
+
 		commit();
 	}
-	
+
 	private void refreshAtpFormesCheckBoxes() {
-		List<File> selectedFormes = new ArrayList<File>();
-		for (Map.Entry<String, JCheckBox> value : atpFormesCheckBoxes
-				.entrySet()) {
-			if (value.getValue().isSelected()) {
-				selectedFormes.add(new File(Modele.DOSSIER_FORMES
-						+ value.getKey()));
+		int nbForme = getControleur().getNbForme();
+
+		for (Entry<String, JCheckBox> value : atpFormesCheckBoxes.entrySet()) {
+			if (nbForme < Modele.MAX_SELECTED_FORMES) {
+				value.getValue().setEnabled(true);
+			} else {
+				value.getValue().setEnabled(false);
 			}
-			value.getValue().setEnabled(true);
 		}
-		getControleur().getModele().setFormesConfig(selectedFormes);
+
+		for (File f : getControleur().getModele().getFormesConfig()) {
+			atpFormesCheckBoxes.get(f.getName()).setSelected(true);
+			atpFormesCheckBoxes.get(f.getName()).setEnabled(true);
+		}
 
 		JPanel messagePanel = panels.get(ATP_MESSAGE_FORMES_PANEL);
-		if (getControleur().getModele().getFormesConfig().size() < Modele.MAX_SELECTED_FORMES) {
+		if (nbForme < Modele.MAX_SELECTED_FORMES) {
 			messagePanel.setVisible(false);
 		} else {
-			for (Map.Entry<String, JCheckBox> value : atpFormesCheckBoxes
-					.entrySet()) {
-				if (!value.getValue().isSelected()) {
-					value.getValue().setEnabled(false);
-				}
-			}
 			messagePanel.setVisible(true);
 		}
 	}
-	
+
 	private void refreshAbpColorsCheckBoxs() {
 		int nbSelectedCouleurs = 0;
-		for (Map.Entry<Couleur, JCheckBox> value : abpCouleursCheckBoxes
-				.entrySet()) {
-			value.getValue().setEnabled(true);
-			if (value.getValue().isSelected()) {
-				nbSelectedCouleurs++;
-				break;
+		if (getControleur().getNbObjetColore() > Modele.MAX_RESERVE_FORMES) {
+			nbSelectedCouleurs = 1;
+		} else {
+			for (Map.Entry<Couleur, JCheckBox> value : abpCouleursCheckBoxes
+					.entrySet()) {
+				value.getValue().setEnabled(true);
+				if (value.getValue().isSelected()) {
+					nbSelectedCouleurs++;
+					break;
+				}
 			}
 		}
 		if (nbSelectedCouleurs > 0) {
@@ -726,12 +732,16 @@ public class VueAdmin extends Vue {
 
 	private void refreshAbpFormesCheckBoxs() {
 		int nbSelectedFormes = 0;
-		for (Map.Entry<String, JCheckBox> value : abpFormesCheckBoxes
-				.entrySet()) {
-			value.getValue().setEnabled(true);
-			if (value.getValue().isSelected()) {
-				nbSelectedFormes++;
-				break;
+		if (getControleur().getNbObjetColore() > Modele.MAX_RESERVE_FORMES) {
+			nbSelectedFormes = 1;
+		} else {
+			for (Map.Entry<String, JCheckBox> value : abpFormesCheckBoxes
+					.entrySet()) {
+				value.getValue().setEnabled(true);
+				if (value.getValue().isSelected()) {
+					nbSelectedFormes++;
+					break;
+				}
 			}
 		}
 		if (nbSelectedFormes > 0) {
@@ -766,15 +776,10 @@ public class VueAdmin extends Vue {
 					.saveImage(fc.getSelectedFile());
 			if (saveStatut) {
 				BoiteDialogue.createModalBox(JOptionPane.INFORMATION_MESSAGE,
-						"Information",
-						"Votre image a bien été enregistrée.");
-				refreshAtpFormesPanel();
-				refreshAtpFormesCheckBoxes();
-				refreshAbpFormesPanel();
+						"Information", "Votre image a bien été enregistrée.");
 			} else {
 				BoiteDialogue.createModalBox(JOptionPane.ERROR_MESSAGE,
-						"Erreur",
-						"Votre image n'a pas pu étre enregistrée.");
+						"Erreur", "Votre image n'a pas pu étre enregistrée.");
 			}
 		}
 	}
@@ -832,8 +837,19 @@ public class VueAdmin extends Vue {
 	}
 
 	class AtpCouleurListener implements ActionListener {
+
+		private Couleur c;
+
+		public AtpCouleurListener(Couleur c) {
+			this.c = c;
+		}
+
 		public void actionPerformed(ActionEvent e) {
-			refreshAtpColorsCheckBoxs();
+			if (((JCheckBox) e.getSource()).isSelected()) {
+				getControleur().getModele().addCouleur(c);
+			} else {
+				getControleur().getModele().removeCouleur(c);
+			}
 		}
 	}
 
@@ -844,9 +860,19 @@ public class VueAdmin extends Vue {
 	}
 
 	class AtpFormeListener implements ActionListener {
+
+		private File image;
+
+		public AtpFormeListener(File image) {
+			this.image = image;
+		}
+
 		public void actionPerformed(ActionEvent e) {
-			refreshAtpFormesCheckBoxes();
-			refreshSelectedFormesPanel();
+			if (((JCheckBox) e.getSource()).isSelected()) {
+				getControleur().getModele().addForme(image);
+			} else {
+				getControleur().getModele().removeForme(image);
+			}
 		}
 	}
 
@@ -900,23 +926,17 @@ public class VueAdmin extends Vue {
 					abpFormesCheckBoxes.remove(image.getName());
 					getControleur().getModele().deleteObjetsColoresByImage(
 							image);
-					refreshAtpFormesPanel();
-					refreshAtpFormesCheckBoxes();
-					refreshSelectedFormesPanel();
-					refreshAbpFormesPanel();
-					refreshFormesPoolPanel();
-
+					getControleur().getModele().removeForme(image);
 					BoiteDialogue.enregistrerConfig(Modele.FICHIER_CONFIG);
 				} else {
 					BoiteDialogue.createModalBox(JOptionPane.ERROR_MESSAGE,
-							"Erreur",
-							"Votre image n'a pas pu étre supprimée.");
+							"Erreur", "Votre image n'a pas pu étre supprimée.");
 				}
 			}
 		}
 
 	}
-	
+
 	class DeleteFormeColoreeMouseListener implements MouseListener {
 
 		private ObjetColore image;
@@ -940,17 +960,40 @@ public class VueAdmin extends Vue {
 		}
 
 		public void mouseClicked(MouseEvent e) {
-			getControleur().removeObjetColore(this.image);
+			getControleur().getModele().removeObjetColore(this.image);
+		}
+
+	}
+
+	public void actualise(int sig) {
+		((VuePlateau) panels.get(ADMIN_APERCUS_PANEL)).refreshVue();
+
+		if (sig == Observateur.SIG_COLORS_UPDATE) {
+			refreshAtpColorsCheckBoxs();
+		}
+
+		if (sig == Observateur.SIG_FORMES_UPDATE) {
+			refreshAtpFormesPanel();
+			refreshAtpFormesCheckBoxes();
+			refreshSelectedFormesPanel();
+		}
+
+		if (sig == Observateur.SIG_RESERVE_UPDATE) {
 			refreshAbpColorsCheckBoxs();
 			refreshAbpFormesCheckBoxs();
 			refreshFormesPoolPanel();
 		}
 
-	}
+		if (sig == Observateur.SIG_IMAGE_DELETE) {
+			refreshAbpFormesPanel();
+		}
 
-	public void actualise(List l) {
-		((VuePlateau) panels.get(ADMIN_APERCUS_PANEL)).refreshVue();
-		//A FAIRE
+		if (sig == Observateur.SIG_IMAGE_SAVE) {
+			refreshAtpFormesPanel();
+			refreshAtpFormesCheckBoxes();
+			refreshAbpFormesPanel();
+		}
+
 	}
 
 }

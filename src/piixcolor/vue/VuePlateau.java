@@ -7,12 +7,14 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.List;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -20,7 +22,6 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import piixcolor.controleur.Controleur;
 import piixcolor.controleur.PlateauControleur;
 import piixcolor.modele.Modele;
 
@@ -119,7 +120,13 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 		
 		//Ajout Formes :
 		for(int i = 1; i <= controleur.getNbForme(); i++){
-			image = new JLabel(new ImageIcon(controleur.getModele().getFormesConfig().get(i-1).getAbsolutePath()));
+			BufferedImage image1 = null;
+			try {
+				image1 = ImageIO.read(new File(getControleur().getModele().getFormesConfig().get(i-1).getAbsolutePath()));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			image = new JLabel(new ImageIcon(getControleur().resizeImage(image1, ((PlateauControleur) getControleur()).getCaseHeight(), ((PlateauControleur) getControleur()).getCaseHeight())));
 			panel = (JPanel) matrice.getComponent(i);
 			panel.add(image);
 		}
@@ -136,8 +143,9 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 		
 		//Ajout des formes colorés à "formes"
 		int l = ((controleur.getNbCouleur()+1)*(controleur.getNbForme()+1));
-		for(int i = 0; i < controleur.getNbObjetColore(); i++){
-			JLabel objetColore = new JLabel(new ImageIcon(controleur.getModele().getReserveForme().get(i).getImage()));
+		for (int i = 0; i < controleur.getNbObjetColore(); i++) {
+			BufferedImage image1 = getControleur().getModele().getReserveForme().get(i).getImage();
+			JLabel objetColore = new JLabel(new ImageIcon(getControleur().resizeImage(image1, ((PlateauControleur) getControleur()).getCaseHeight(), ((PlateauControleur) getControleur()).getCaseHeight())));
 			panel =  (JPanel) matrice.getComponent(l);
 			l++;
 			panel.add(objetColore);
@@ -261,7 +269,7 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 		}
 	}
 
-	public void actualise(List l) {
+	public void actualise(int sig) {
 		refreshVue();
 	}
 

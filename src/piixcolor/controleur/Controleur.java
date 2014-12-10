@@ -1,11 +1,10 @@
 package piixcolor.controleur;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 
 import piixcolor.modele.Modele;
-import piixcolor.utilitaire.ObjetColore;
 import piixcolor.utilitaire.Observateur;
 
 
@@ -33,16 +32,30 @@ public abstract class Controleur implements Observateur {
 		return getModele().getCouleursConfig().size();
 	}
 	
-	public void addObjetColore(ObjetColore image) {
-		List<ObjetColore> obj = new ArrayList<ObjetColore>(getModele().getReserveForme());
-		obj.add(0, image);
-		getModele().setReserveForme(obj);
+	/**
+	 * Redimensionne une image.
+	 * 
+	 * @param image image a redimensionné
+	 * @param newWidth largeur de l'image redimensionné
+	 * @param newHeight hauteur de l'image redimensionné
+	 * @return  image correctement redimensionné
+	 */
+	public BufferedImage resizeImage(BufferedImage image, int newWidth, int newHeight) {
+		return imageToBufferedImage(image.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH));
 	}
 
-	public void removeObjetColore(ObjetColore image) {
-		List<ObjetColore> obj = new ArrayList<ObjetColore>(getModele().getReserveForme());
-		obj.remove(image);
-		getModele().setReserveForme(obj);
+	/**
+	 * Convertie une image de la class Image en image de la class BufferedImage.
+	 * 
+	 * @param image image a convertir
+	 * @return image convertie
+	 */
+	protected BufferedImage imageToBufferedImage(Image image) {
+		BufferedImage bi = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+		Graphics g = bi.getGraphics();
+		g.drawImage(image, 0, 0, null);
+		g.dispose();
+		return bi;
 	}
 
 }
