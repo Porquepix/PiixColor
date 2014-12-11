@@ -1,7 +1,6 @@
 package piixcolor.controleur;
 
 import java.awt.Point;
-import java.util.List;
 
 import piixcolor.modele.Modele;
 import piixcolor.utilitaire.ObjetColore;

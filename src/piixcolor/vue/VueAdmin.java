@@ -77,6 +77,8 @@ public class VueAdmin extends Vue {
 	private static final String ABP_COULEURS_PANEL = "abpCouleursPanel";
 	private static final String ABP_FORMES_PANEL = "abpFormesPanel";
 	private static final String ABP_FORMES_POOL_PANEL = "abpSelectedFormesPanel";
+	private static final String ABP_MESSAGE_FORMES_PANEL = "abpMessageFormesPanel";
+	
 	private static final String ADMIN_APERCUS_PANEL = "adminApercusPanel";
 	private static final String ADMIN_ACTION_PANEL = "adminActionPanel";
 
@@ -119,8 +121,8 @@ public class VueAdmin extends Vue {
 		panels.put(ATP_COULEURS_PANEL, initAtpCouleursPanel());
 		panels.put(ADMIN_BOT_PANEL, new JPanel(new GridLayout(1, ABP_NB_PANEL,
 				ADMIN_MARGIN, 0)));
-		panels.put(ABP_FORMES_PANEL, initAbpFormesPanel());
 		panels.put(ABP_FORMES_POOL_PANEL, initFormesPoolPanel());
+		panels.put(ABP_FORMES_PANEL, initAbpFormesPanel());
 		panels.put(ABP_COULEURS_PANEL, initAbpCouleursPanel());
 		panels.put(ADMIN_APERCUS_PANEL, initApercusPanel());
 		panels.put(ADMIN_ACTION_PANEL, initActionsPanel());
@@ -584,9 +586,6 @@ public class VueAdmin extends Vue {
 					return;
 				}
 
-				abpCouleursCheckBoxes.get(selectedCouleur).setSelected(false);
-				abpFormesCheckBoxes.get(selectedForme).setSelected(false);
-
 				getControleur().getModele().addObjetColore(
 						new ObjetColore(selectedCouleur, new File(
 								Modele.DOSSIER_FORMES + selectedForme)));
@@ -613,8 +612,16 @@ public class VueAdmin extends Vue {
 
 		JScrollPane jsp = createScrollPane(box);
 
+		JPanel messagePanel = createMessagePane(
+				"Nombre maximum de formes dans la réserve atteint.", Color.RED);
+		messagePanel.setBorder(BorderFactory.createLineBorder(Color.black));
+		panels.put(ABP_MESSAGE_FORMES_PANEL, messagePanel);
+		
 		JPanel container = createContainer();
-		container.add(jsp);
+		container.add(jsp, BorderLayout.CENTER);
+		container.add(messagePanel, BorderLayout.PAGE_END);
+		
+		refreshAbpFormesCheckBoxs();
 
 		return container;
 	}
@@ -708,7 +715,7 @@ public class VueAdmin extends Vue {
 
 	private void refreshAbpColorsCheckBoxs() {
 		int nbSelectedCouleurs = 0;
-		if (getControleur().getNbObjetColore() > Modele.MAX_RESERVE_FORMES) {
+		if (getControleur().getNbObjetColore() >= Modele.MAX_RESERVE_FORMES) {
 			nbSelectedCouleurs = 1;
 		} else {
 			for (Map.Entry<Couleur, JCheckBox> value : abpCouleursCheckBoxes
@@ -732,8 +739,9 @@ public class VueAdmin extends Vue {
 
 	private void refreshAbpFormesCheckBoxs() {
 		int nbSelectedFormes = 0;
-		if (getControleur().getNbObjetColore() > Modele.MAX_RESERVE_FORMES) {
+		if (getControleur().getNbObjetColore() >= Modele.MAX_RESERVE_FORMES) {
 			nbSelectedFormes = 1;
+			panels.get(ABP_MESSAGE_FORMES_PANEL).setVisible(true);
 		} else {
 			for (Map.Entry<String, JCheckBox> value : abpFormesCheckBoxes
 					.entrySet()) {
@@ -743,6 +751,7 @@ public class VueAdmin extends Vue {
 					break;
 				}
 			}
+			panels.get(ABP_MESSAGE_FORMES_PANEL).setVisible(false);
 		}
 		if (nbSelectedFormes > 0) {
 			for (Map.Entry<String, JCheckBox> value : abpFormesCheckBoxes
