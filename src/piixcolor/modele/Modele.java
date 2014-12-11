@@ -170,6 +170,9 @@ public class Modele {
 	}
 	
 	public void addCouleur(Couleur couleur) {
+		if (getCouleursConfig().size() >= Modele.MAX_SELECTED_COULEURS) {
+			return;
+		}
 		getCouleursConfig().add(0, couleur);
 		setEstModifie(true);
 		notifier(Observateur.SIG_COLORS_UPDATE);
@@ -194,6 +197,9 @@ public class Modele {
 	}
 
 	public void addObjetColore(ObjetColore image) {
+		if (getReserveForme().size() >= Modele.MAX_RESERVE_FORMES) {
+			return;
+		}
 		getReserveForme().add(0, image);
 		setEstModifie(true);
 		notifier(Observateur.SIG_RESERVE_UPDATE);
@@ -229,6 +235,9 @@ public class Modele {
 	}
 	
 	public void addForme(File image) {
+		if (getFormesConfig().size() >= Modele.MAX_SELECTED_FORMES) {
+			return;
+		}
 		getFormesConfig().add(0, image);
 		setEstModifie(true);
 		notifier(Observateur.SIG_FORMES_UPDATE);

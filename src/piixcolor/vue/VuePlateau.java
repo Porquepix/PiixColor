@@ -101,11 +101,21 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 		JLabel image;
 		JPanel panel;
 		
+		if (getControleur().getNbCouleur() == 0) {
+			//Ajouter message ici
+			return;
+		}
+		
+		if (getControleur().getNbForme() == 0) {
+			//Ajouter message ici
+			return;
+		}
+		
 		// Ajout de la matrice
 		matrice = new JPanel();
-		layeredPane.add(matrice, JLayeredPane.DEFAULT_LAYER);
 		matrice.setPreferredSize(dimensionMatrice);
 		matrice.setBounds(0, 0, dimensionMatrice.width, dimensionMatrice.height);
+		layeredPane.add(matrice, JLayeredPane.DEFAULT_LAYER);
 		
 		matrice.setLayout(new GridLayout((controleur.getNbCouleur()*2) + 1, controleur.getNbForme() + 1));
 		
@@ -120,15 +130,14 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 		
 		//Ajout Formes :
 		for(int i = 1; i <= controleur.getNbForme(); i++){
-			BufferedImage image1 = null;
 			try {
-				image1 = ImageIO.read(new File(getControleur().getModele().getFormesConfig().get(i-1).getAbsolutePath()));
+				BufferedImage image1 = ImageIO.read(new File(getControleur().getModele().getFormesConfig().get(i-1).getAbsolutePath()));
+				image = new JLabel(new ImageIcon(getControleur().resizeImage(image1, ((PlateauControleur) getControleur()).getCaseHeight(), ((PlateauControleur) getControleur()).getCaseHeight())));
+				panel = (JPanel) matrice.getComponent(i);
+				panel.add(image);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			image = new JLabel(new ImageIcon(getControleur().resizeImage(image1, ((PlateauControleur) getControleur()).getCaseHeight(), ((PlateauControleur) getControleur()).getCaseHeight())));
-			panel = (JPanel) matrice.getComponent(i);
-			panel.add(image);
 		}
 		
 		//Ajout Couleurs :

@@ -1,11 +1,8 @@
 package piixcolor.controleur;
 
-import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -39,7 +36,8 @@ public class AdminControleur extends Controleur {
 				j++;
 			}
 			
-			ImageIO.write(resizeImage(i, Modele.IMG_SIZE, Modele.IMG_SIZE), Modele.FORMAT_IMAGE_SAVE, f);
+			BufferedImage imageResize = resizeImage(i, Modele.IMG_SIZE, Modele.IMG_SIZE);
+			ImageIO.write(imageResize, Modele.FORMAT_IMAGE_SAVE, f);
 			
 			getModele().notifier(Observateur.SIG_IMAGE_SAVE);
 			
@@ -50,7 +48,7 @@ public class AdminControleur extends Controleur {
 			return false;
 		}
 	}
-	
+
 	public boolean deleteImage(File image) {
 		if (image.delete()) {
 			return true;
