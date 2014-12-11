@@ -32,6 +32,10 @@ public abstract class Controleur implements Observateur {
 		return getModele().getCouleursConfig().size();
 	}
 	
+	public int taillePlateau() {
+		return (getNbCouleur()*2 + 1) * (getNbForme() + 1);
+	}
+	
 	/**
 	 * Redimensionne une image.
 	 * 

@@ -31,7 +31,7 @@ public class Fenetre extends JFrame {
 		setTitle(FRAME_TITLE);
 		pack();
 		setVisible(true);
-		setSize((int)getToolkit().getScreenSize().getWidth(), ((int)getToolkit().getScreenSize().getHeight() - 40));
+		setSize((int)getToolkit().getScreenSize().getWidth(), ((int)getToolkit().getScreenSize().getHeight()));
 
 		FRAME_WIDTH = this.getWidth();
 		FRAME_HEIGHT = this.getHeight();
@@ -40,7 +40,7 @@ public class Fenetre extends JFrame {
 	}
 	
 	private void closeOperation() {
-    	if (Modele.getInstance().isEstModifie()) {
+    	if (Modele.getInstance().isModifie()) {
     		String[] options = {"Enregistrer", "Ne pas enregistrer", "Annuler"}; 
 			int retour = BoiteDialogue.createOptionBox(JOptionPane.YES_NO_CANCEL_OPTION, "Attention", "Attention ! Des modifications ont été aporté a la configuration sans être sauvegardé. Voulez-vous enregister ses modifications ?", options, 0);
 			if (retour == JOptionPane.OK_OPTION) {

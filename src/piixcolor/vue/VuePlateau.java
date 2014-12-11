@@ -117,19 +117,19 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 		matrice.setBounds(0, 0, dimensionMatrice.width, dimensionMatrice.height);
 		layeredPane.add(matrice, JLayeredPane.DEFAULT_LAYER);
 		
-		matrice.setLayout(new GridLayout((controleur.getNbCouleur()*2) + 1, controleur.getNbForme() + 1));
+		matrice.setLayout(new GridLayout((getControleur().getNbCouleur()*2) + 1, getControleur().getNbForme() + 1));
 		
-		for (int i = 0; i < ((controleur.getNbCouleur()*2) + 1) * (controleur.getNbForme() + 1); i++) {
+		for (int i = 0; i < getControleur().taillePlateau(); i++) {
 			JPanel square = new JPanel(new BorderLayout());
 			matrice.add(square);
 			square.setBackground(Color.white);
-			if(i < (controleur.getNbCouleur()+1) * (controleur.getNbForme() +1)) {
+			if(i < (getControleur().getNbCouleur()+1) * (getControleur().getNbForme() +1)) {
 				square.setBorder(BorderFactory.createLineBorder(Color.black));
 			}
 		}
 		
 		//Ajout Formes :
-		for(int i = 1; i <= controleur.getNbForme(); i++){
+		for(int i = 1; i <= getControleur().getNbForme(); i++){
 			try {
 				BufferedImage image1 = ImageIO.read(new File(getControleur().getModele().getFormesConfig().get(i-1).getAbsolutePath()));
 				image = new JLabel(new ImageIcon(getControleur().resizeImage(image1, ((PlateauControleur) getControleur()).getCaseHeight(), ((PlateauControleur) getControleur()).getCaseHeight())));
@@ -142,19 +142,23 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 		
 		//Ajout Couleurs :
 		int k = 0;
-		for(int i = controleur.getNbForme()+1; i <= (controleur.getNbCouleur()*(controleur.getNbForme()+1)); i = i + controleur.getNbForme() + 1){
+		for(int i = getControleur().getNbForme()+1; i <= (getControleur().getNbCouleur()*(getControleur().getNbForme()+1)); i = i + getControleur().getNbForme() + 1){
 			image = new JLabel(new ImageIcon());
 			panel =  (JPanel) matrice.getComponent(i);
-			panel.setBackground(controleur.getModele().getCouleursConfig().get(k).getCouleur());
+			panel.setBackground(getControleur().getModele().getCouleursConfig().get(k).getCouleur());
 			panel.add(image);
 			k++;
 		}
 		
 		//Ajout des formes colorés à "formes"
-		int l = ((controleur.getNbCouleur()+1)*(controleur.getNbForme()+1));
-		for (int i = 0; i < controleur.getNbObjetColore(); i++) {
+		int l = ((getControleur().getNbCouleur()+1)*(getControleur().getNbForme()+1));
+		for (int i = 0; i < getControleur().getNbObjetColore(); i++) {
 			BufferedImage image1 = getControleur().getModele().getReserveForme().get(i).getImage();
-			JLabel objetColore = new JLabel(new ImageIcon(getControleur().resizeImage(image1, ((PlateauControleur) getControleur()).getCaseHeight(), ((PlateauControleur) getControleur()).getCaseHeight())));
+			JLabel objetColore = new JLabel(new ImageIcon(getControleur().resizeImage(image1, ((PlateauControleur) getControleur()).getCaseHeight(), ((PlateauControleur) getControleur()).getCaseHeight())));	
+			//On empèche d'écrire au delà du plateau mais aussi sur le bouton de retour donc si on atteint taillePlateau() - 1 on arrête de dessiner des formes
+			if(l >= getControleur().taillePlateau() - 1) {
+				break;
+			}
 			panel =  (JPanel) matrice.getComponent(l);
 			l++;
 			panel.add(objetColore);
@@ -207,7 +211,7 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 				// TODO Auto-generated method stub	
 			}
 		});
-		panel =  (JPanel) matrice.getComponent(0);
+		panel =  (JPanel) matrice.getComponent(getControleur().taillePlateau() - 1);
 		panel.add(image);
 	}
 	
@@ -249,8 +253,8 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 			if (c instanceof JPanel)
 				return;
 			Point emplacementParent = c.getParent().getLocation();
-			((PlateauControleur)controleur).setCoordObjetCourant(emplacementParent);
-			if(emplacementParent.getY() >= (matrice.getComponent((controleur.getNbCouleur()+1)*(controleur.getNbForme()+1))).getLocation().getY()) {
+			((PlateauControleur)getControleur()).setCoordObjetCourant(emplacementParent);
+			if(emplacementParent.getY() >= (matrice.getComponent((getControleur().getNbCouleur()+1)*(getControleur().getNbForme()+1))).getLocation().getY()) {
 
 				ajustementX = emplacementParent.x - e.getX();
 				ajustementY = emplacementParent.y - e.getY();
@@ -269,7 +273,7 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 			formeCourante.setVisible(false);
 			Component c = matrice.findComponentAt(e.getX(), e.getY());
 			Container parent = (Container) c;
-			if (c instanceof JLabel || c == null || parent.getComponentCount() > 0 || !((PlateauControleur)controleur).positionCorrecte(new Point(e.getX(), e.getY()))) {
+			if (c instanceof JLabel || c == null || parent.getComponentCount() > 0 || !((PlateauControleur)getControleur()).positionCorrecte(new Point(e.getX(), e.getY()))) {
 				caseFormeCourante.add(formeCourante);
 			} else {
 				parent.add(formeCourante);
