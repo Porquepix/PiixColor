@@ -40,7 +40,7 @@ public class Modele {
 	private static Modele instance = null;
 	private Element racine;
 	private Document document;
-	private boolean estModifie;
+	private boolean modifie;
 	
 	private Modele(String path) {
 		SAXBuilder builder = new SAXBuilder();
@@ -57,7 +57,7 @@ public class Modele {
 			System.err.println("Impossible de lire le fichier de configuration.");
 			e.printStackTrace();
 		}
-		setEstModifie(false);
+		setModifie(false);
 	}
 	
 	public static Modele getInstance() {
@@ -72,7 +72,7 @@ public class Modele {
 		
 		XMLOutputter sortie = new XMLOutputter(Format.getPrettyFormat());
         sortie.output(document, new FileOutputStream(path));
-        setEstModifie(false);
+        setModifie(false);
 	}
 	
 	public void loadCouleurConfig() {
@@ -164,7 +164,7 @@ public class Modele {
 	public void setCouleursConfig(List<Couleur> couleursConfig) {
 		if (this.couleursConfig.size() != couleursConfig.size()) {	
 			this.couleursConfig = couleursConfig;
-			setEstModifie(true);
+			setModifie(true);
 			notifier(Observateur.SIG_COLORS_UPDATE);
 		}
 	}
@@ -174,13 +174,13 @@ public class Modele {
 			return;
 		}
 		getCouleursConfig().add(0, couleur);
-		setEstModifie(true);
+		setModifie(true);
 		notifier(Observateur.SIG_COLORS_UPDATE);
 	}
 
 	public void removeCouleur(Couleur couleur) {
 		getCouleursConfig().remove(couleur);
-		setEstModifie(true);
+		setModifie(true);
 		notifier(Observateur.SIG_COLORS_UPDATE);
 	}
 
@@ -191,7 +191,7 @@ public class Modele {
 	public void setReserveForme(List<ObjetColore> reserveForme) {
 		if (this.reserveForme.size() != reserveForme.size()) {
 			this.reserveForme = reserveForme;
-			setEstModifie(true);
+			setModifie(true);
 			notifier(Observateur.SIG_RESERVE_UPDATE);
 		}
 	}
@@ -201,13 +201,13 @@ public class Modele {
 			return;
 		}
 		getReserveForme().add(0, image);
-		setEstModifie(true);
+		setModifie(true);
 		notifier(Observateur.SIG_RESERVE_UPDATE);
 	}
 
 	public void removeObjetColore(ObjetColore image) {
 		getReserveForme().remove(image);
-		setEstModifie(true);
+		setModifie(true);
 		notifier(Observateur.SIG_RESERVE_UPDATE);
 	}
 	
@@ -229,7 +229,7 @@ public class Modele {
 	public void setFormesConfig(List<File> formesConfig) {
 		if (this.formesConfig.size() != formesConfig.size()) {
 			this.formesConfig = formesConfig;
-			setEstModifie(true);
+			setModifie(true);
 			notifier(Observateur.SIG_FORMES_UPDATE);
 		}
 	}
@@ -239,21 +239,21 @@ public class Modele {
 			return;
 		}
 		getFormesConfig().add(0, image);
-		setEstModifie(true);
+		setModifie(true);
 		notifier(Observateur.SIG_FORMES_UPDATE);
 	}
 	
 	public void removeForme(File image) {
 		getFormesConfig().remove(image);
-		setEstModifie(true);
+		setModifie(true);
 		notifier(Observateur.SIG_FORMES_UPDATE);
 	}
 
-	public boolean isEstModifie() {
-		return estModifie;
+	public boolean isModifie() {
+		return modifie;
 	}
 
-	public void setEstModifie(boolean estModifie) {
-		this.estModifie = estModifie;
+	public void setModifie(boolean estModifie) {
+		this.modifie = estModifie;
 	}
 }

@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 
 import piixcolor.controleur.AdminControleur;
 import piixcolor.controleur.PlateauControleur;
@@ -23,8 +24,13 @@ public class VueAccueil extends Vue {
 		playButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Modele m = Modele.getInstance();
-				PlateauControleur pc = new PlateauControleur(m);
-				fenetre.switchPanel(new VuePlateau(fenetre, pc));
+				if(m.getCouleursConfig().size() == 0 || m.getFormesConfig().size() == 0) {
+					BoiteDialogue.createModalBox(JOptionPane.CANCEL_OPTION, "Attention", "Attention ! Il n'y a aucune image ou couleurs dans la configuration actuelle !");
+				} else {
+					PlateauControleur pc = new PlateauControleur(m);
+					fenetre.switchPanel(new VuePlateau(fenetre, pc));
+				}
+
 			}
 		});
 		
