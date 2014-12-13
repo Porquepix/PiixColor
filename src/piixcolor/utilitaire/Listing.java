@@ -8,7 +8,7 @@ import java.util.Comparator;
 import javax.swing.JOptionPane;
 
 import piixcolor.modele.Modele;
-import piixcolor.vue.Fenetre;
+import piixcolor.vue.BoiteDialogue;
 
 public class Listing {
 
@@ -16,7 +16,7 @@ public class Listing {
 		File f = new File(path);
 		
 		if (!f.exists()) {
-			JOptionPane.showMessageDialog(Fenetre.getInstance(), "Impossible d'ouvrir le dossier : '" + f.getAbsolutePath() + "'", "Erreur", JOptionPane.ERROR_MESSAGE);
+			BoiteDialogue.createModalBox(JOptionPane.ERROR_MESSAGE, "Erreur", "Impossible d'ouvrir le dossier : '" + f.getAbsolutePath() + "'.");
 			System.exit(-1);
 		}
 

@@ -5,6 +5,7 @@ import piixcolor.controleur.Controleur;
 import piixcolor.utilitaire.Observateur;
 
 
+@SuppressWarnings("serial")
 public abstract class Vue extends JPanel implements Observateur {
 	
 	protected Fenetre fenetre;

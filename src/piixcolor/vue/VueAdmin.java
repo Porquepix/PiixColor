@@ -2,6 +2,7 @@ package piixcolor.vue;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -34,6 +35,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.border.Border;
 
+import piixcolor.controleur.AccueilController;
 import piixcolor.controleur.AdminControleur;
 import piixcolor.controleur.Controleur;
 import piixcolor.controleur.PlateauControleur;
@@ -44,109 +46,303 @@ import piixcolor.utilitaire.Listing;
 import piixcolor.utilitaire.ObjetColore;
 import piixcolor.utilitaire.Observateur;
 
+@SuppressWarnings("serial")
 public class VueAdmin extends Vue {
 
-	// positions des panels
-	private static final int ATP_COULEURS_PANEL_POS = 0;
-	private static final int ATP_FORMES_PANEL_POS = 1;
-	private static final int ATP_FORMES_SELECT_PANEL_POS = 2;
+	/**
+	 * Position dans les GridLayout du panel des couleurs.
+	 */
+	private static final int COULEURS_PANEL_POS = 0;
 
-	// divers informations
+	/**
+	 * Position dans les GridLayout du panel des formes.
+	 */
+	private static final int FORMES_PANEL_POS = 1;
+
+	/**
+	 * Position dans les GridLayout du panel des formes selectionées (ou des
+	 * formes colorées).
+	 */
+	private static final int FORMES_SELECT_PANEL_POS = 2;
+
+	/**
+	 * Marge (en px) entre les differents panels.
+	 */
 	private static final int ADMIN_MARGIN = 15;
-	private static final int ATP_NB_PANEL = 3;
-	private static final int ABP_NB_PANEL = 3;
-	private static final int NB_ADMIN_PART = 2;
 
-	// taille des panels
-	private static final int PANEL_WIDTH = Fenetre.FRAME_WIDTH / ATP_NB_PANEL
-			- (ATP_NB_PANEL - 1) * ADMIN_MARGIN;
+	/**
+	 * Nombre de panels pour la partie d'administration
+	 * "Configuration du plateau".
+	 */
+	private static final int PLATEAU_NB_PANEL = 3;
+
+	/**
+	 * Nombre de panels pour la partie d'administration
+	 * "Configuration de la réserve".
+	 */
+	private static final int RESERVE_NB_PANEL = 3;
+
+	/**
+	 * Largeur d'un sous panel.
+	 */
+	private static final int PANEL_WIDTH = Fenetre.FRAME_WIDTH
+			/ PLATEAU_NB_PANEL - (PLATEAU_NB_PANEL - 1) * ADMIN_MARGIN;
+
+	/**
+	 * Hauteur d'un sous panel.
+	 */
 	private static final int PANEL_HEIGHT = (int) (Fenetre.FRAME_HEIGHT * 0.8);
+
+	/**
+	 * Hauteur des boites contenant les formes.
+	 */
 	private static final int FORME_FRAME_HEIGHT = Fenetre.FRAME_HEIGHT / 10 + 40;
 
-	// nom des panels
+	/**
+	 * Nom, dans la Map reférencant tous les panels, du panel principal.
+	 * 
+	 * @see VueAdmin#panels
+	 */
 	private static final String PANEL_PRINCIPALE = "mainPanel";
-	// atp (Admin Top Panel)
-	private static final String ADMIN_TOP_PANEL = "adminTopPanel";
-	private static final String ATP_FORMES_PANEL = "atpFormesPanel";
-	private static final String ATP_COULEURS_PANEL = "atpCouleursPanel";
-	private static final String ATP_FORMES_SELECT_PANEL = "atpSelectedFormesPanel";
-	private static final String ATP_MESSAGE_COULEURS_PANEL = "atpMessageCouleursPanel";
-	private static final String ATP_MESSAGE_FORMES_PANEL = "atpMessageFormesPanel";
-	// abp (Admin Bottom Panel)
-	private static final String ADMIN_BOT_PANEL = "adminBotPanel";
-	private static final String ABP_COULEURS_PANEL = "abpCouleursPanel";
-	private static final String ABP_FORMES_PANEL = "abpFormesPanel";
-	private static final String ABP_FORMES_POOL_PANEL = "abpSelectedFormesPanel";
-	private static final String ABP_MESSAGE_FORMES_PANEL = "abpMessageFormesPanel";
-	
+
+	/**
+	 * Nom, dans la Map reférencant tous les panels, du panel contenant la
+	 * partie d'administration "Configuration du plateau". Tous les panels qu'il
+	 * contient commencent par 'AP_'.
+	 * 
+	 * @see VueAdmin#panels
+	 */
+	private static final String ADMIN_PLATEAU_PANEL = "adminPlateauPanel";
+
+	/**
+	 * Nom, dans la Map reférencant tous les panels, du panel des formes de la
+	 * partie "Configuration du plateau".
+	 * 
+	 * @see VueAdmin#panels
+	 * @see VueAdmin#ADMIN_PLATEAU_PANEL
+	 */
+	private static final String AP_FORMES_PANEL = "apFormesPanel";
+
+	/**
+	 * Nom, dans la Map reférencant tous les panels, du panel des couleurs de la
+	 * partie "Configuration du plateau".
+	 * 
+	 * @see VueAdmin#panels
+	 * @see VueAdmin#ADMIN_PLATEAU_PANEL
+	 */
+	private static final String AP_COULEURS_PANEL = "apCouleursPanel";
+
+	/**
+	 * Nom, dans la Map reférencant tous les panels, du panel des formes
+	 * sélectionées de la partie "Configuration du plateau".
+	 * 
+	 * @see VueAdmin#panels
+	 * @see VueAdmin#ADMIN_PLATEAU_PANEL
+	 */
+	private static final String AP_FORMES_SELECT_PANEL = "apSelectedFormesPanel";
+
+	/**
+	 * Nom, dans la Map reférencant tous les panels, du panel contenant les
+	 * messages d'erreur du panel couleurs de la partie
+	 * "Configuration du plateau".
+	 * 
+	 * @see VueAdmin#panels
+	 * @see VueAdmin#ADMIN_PLATEAU_PANEL
+	 */
+	private static final String AP_MESSAGE_COULEURS_PANEL = "apMessageCouleursPanel";
+
+	/**
+	 * Nom, dans la Map reférencant tous les panels, du panel contenant les
+	 * messages d'erreur du panel formes de la partie
+	 * "Configuration du plateau".
+	 * 
+	 * @see VueAdmin#panels
+	 * @see VueAdmin#ADMIN_PLATEAU_PANEL
+	 */
+	private static final String AP_MESSAGE_FORMES_PANEL = "apMessageFormesPanel";
+
+	/**
+	 * Nom, dans la Map reférencant tous les panels, du panel contenant la
+	 * partie d'administration "Configuration de la réserve". Tous les panels
+	 * qu'il contient commencent par 'AR_'.
+	 * 
+	 * @see VueAdmin#panels
+	 */
+	private static final String ADMIN_RESERVE_PANEL = "adminReservePanel";
+
+	/**
+	 * Nom, dans la Map reférencant tous les panels, du panel des couleurs de la
+	 * partie "Configuration de la réserve".
+	 * 
+	 * @see VueAdmin#panels
+	 * @see VueAdmin#ADMIN_RESERVE_PANEL
+	 */
+	private static final String AR_COULEURS_PANEL = "arCouleursPanel";
+
+	/**
+	 * Nom, dans la Map reférencant tous les panels, du panel des formes de la
+	 * partie "Configuration de la réserve".
+	 * 
+	 * @see VueAdmin#panels
+	 * @see VueAdmin#ADMIN_RESERVE_PANEL
+	 */
+	private static final String AR_FORMES_PANEL = "arFormesPanel";
+
+	/**
+	 * Nom, dans la Map reférencant tous les panels, du panel des objets
+	 * colorées de la partie "Configuration de la réserve".
+	 * 
+	 * @see VueAdmin#panels
+	 * @see VueAdmin#ADMIN_RESERVE_PANEL
+	 */
+	private static final String AR_FORMES_POOL_PANEL = "arSelectedFormesPanel";
+
+	/**
+	 * Nom, dans la Map reférencant tous les panels, du panel contenants les
+	 * messages d'erreur du panel objets colorées de la partie
+	 * "Configuration de la réserve".
+	 * 
+	 * @see VueAdmin#panels
+	 * @see VueAdmin#ADMIN_RESERVE_PANEL
+	 */
+	private static final String AR_MESSAGE_FORMES_PANEL = "arMessageFormesPanel";
+
+	/**
+	 * Nom, dans la Map reférencant tous les panels, du panel de l'aperçus.
+	 * 
+	 * @see VueAdmin#panels
+	 */
 	private static final String ADMIN_APERCUS_PANEL = "adminApercusPanel";
+
+	/**
+	 * Nom, dans la Map reférencant tous les panels, du panel contenant les
+	 * bouttons d'action de l'administration.
+	 * 
+	 * @see VueAdmin#panels
+	 */
 	private static final String ADMIN_ACTION_PANEL = "adminActionPanel";
 
+	/**
+	 * Chemin vers l'icone de la corbeille
+	 */
 	private static final String IMAGE_TRASH = Modele.DOSSIER_ASSETS
 			+ "corbeille.jpg";
+
+	/**
+	 * Chemin vers l'icone de la corbeille quand la souris passe dessus
+	 */
 	private static final String IMAGE_TRASH_HOVER = Modele.DOSSIER_ASSETS
 			+ "corbeille-hover.jpg";
+
+	/**
+	 * Chemin vers l'icone de la croix
+	 */
 	private static final String IMAGE_CLOSE = Modele.DOSSIER_ASSETS
 			+ "close.jpg";
+
+	/**
+	 * Chemin vers l'icone de la croix quand la souris passe dessus
+	 */
 	private static final String IMAGE_CLOSE_HOVER = Modele.DOSSIER_ASSETS
 			+ "close-hover.jpg";
 
-	// liste de tous les panels
+	/**
+	 * Liste contenant tous les panels de l'administration. Sert pour rafraichir
+	 * les bons panels lors d'actions de l'utilisateur. La clef est une
+	 * constante defini par cette classe.
+	 */
 	private Map<String, JPanel> panels;
 
-	// liste de toutes les checkbox des formes
-	private Map<String, JCheckBox> atpFormesCheckBoxes;
-	private Map<Couleur, JCheckBox> atpCouleursCheckBoxes;
-	private Map<String, JCheckBox> abpFormesCheckBoxes;
-	private Map<Couleur, JCheckBox> abpCouleursCheckBoxes;
+	/**
+	 * Liste des checkboxs de la liste des formes de la partie
+	 * "Configuration du plateau". La clef est le nom du fichier
+	 * (File#getName()) associé à la checkbox.
+	 */
+	private Map<String, JCheckBox> apFormesCheckBoxes;
 
+	/**
+	 * Liste des checkboxs de la liste des couleurs de la partie
+	 * "Configuration du plateau". La clef est la couleur (Couleur) associé à la
+	 * checkbox.
+	 * 
+	 * @see Couleur
+	 */
+	private Map<Couleur, JCheckBox> apCouleursCheckBoxes;
+
+	/**
+	 * Liste des checkboxs de la liste des formes de la partie
+	 * "Configuration de la réserve". La clef est le nom du fichier
+	 * (File#getName()) associé à la checkbox.
+	 */
+	private Map<String, JCheckBox> arFormesCheckBoxes;
+
+	/**
+	 * Liste des checkboxs de la liste des couleurs de la partie
+	 * "Configuration de la réserve". La clef est la couleur (Couleur) associé à
+	 * la checkbox.
+	 * 
+	 * @see Couleur
+	 */
+	private Map<Couleur, JCheckBox> arCouleursCheckBoxes;
+
+	/**
+	 * Construit la partie graphique de l'administration. Le constructeur
+	 * initialise tout l'aspect graphique de la vue. L'initialisation repose sur
+	 * des fonctions qui initialisent des plus petits bouts.
+	 * 
+	 * @param fenetre
+	 *            Fenetre associée à la vue.
+	 * @param controleur
+	 *            Controlleur de la vue.
+	 */
 	public VueAdmin(Fenetre fenetre, Controleur controleur) {
 		super(fenetre, controleur);
 
 		getControleur().getModele().ajoutObservateur(this);
 
-		// init lists check box
-		atpFormesCheckBoxes = new LinkedHashMap<String, JCheckBox>();
-		atpCouleursCheckBoxes = new HashMap<Couleur, JCheckBox>();
-		abpFormesCheckBoxes = new HashMap<String, JCheckBox>();
-		abpCouleursCheckBoxes = new HashMap<Couleur, JCheckBox>();
+		// Initialisation des listes des checkboxs
+		apFormesCheckBoxes = new LinkedHashMap<String, JCheckBox>();
+		apCouleursCheckBoxes = new HashMap<Couleur, JCheckBox>();
+		arFormesCheckBoxes = new HashMap<String, JCheckBox>();
+		arCouleursCheckBoxes = new HashMap<Couleur, JCheckBox>();
 
-		// init hashmap + madel
+		// Initialisation des composants de la vue
 		panels = new HashMap<String, JPanel>();
 		panels.put(PANEL_PRINCIPALE, new JPanel(new GridBagLayout()));
-		panels.put(ADMIN_TOP_PANEL, new JPanel(new GridLayout(1, ATP_NB_PANEL,
-				ADMIN_MARGIN, 0)));
-		panels.put(ATP_FORMES_PANEL, initAtpFormesPanel());
-		panels.put(ATP_FORMES_SELECT_PANEL, initSelectedFormesPanel());
-		panels.put(ATP_COULEURS_PANEL, initAtpCouleursPanel());
-		panels.put(ADMIN_BOT_PANEL, new JPanel(new GridLayout(1, ABP_NB_PANEL,
-				ADMIN_MARGIN, 0)));
-		panels.put(ABP_FORMES_POOL_PANEL, initFormesPoolPanel());
-		panels.put(ABP_FORMES_PANEL, initAbpFormesPanel());
-		panels.put(ABP_COULEURS_PANEL, initAbpCouleursPanel());
+		panels.put(ADMIN_PLATEAU_PANEL, new JPanel(new GridLayout(1,
+				PLATEAU_NB_PANEL, ADMIN_MARGIN, 0)));
+		panels.put(AP_FORMES_PANEL, initApFormesPanel());
+		panels.put(AP_FORMES_SELECT_PANEL, initSelectedFormesPanel());
+		panels.put(AP_COULEURS_PANEL, initApCouleursPanel());
+		panels.put(ADMIN_RESERVE_PANEL, new JPanel(new GridLayout(1,
+				RESERVE_NB_PANEL, ADMIN_MARGIN, 0)));
+		panels.put(AR_FORMES_POOL_PANEL, initFormesPoolPanel());
+		panels.put(AR_FORMES_PANEL, initArFormesPanel());
+		panels.put(AR_COULEURS_PANEL, initArCouleursPanel());
 		panels.put(ADMIN_APERCUS_PANEL, initApercusPanel());
 		panels.put(ADMIN_ACTION_PANEL, initActionsPanel());
 
-		// connection panel
+		// Connexion des panels entre eux
 		add(panels.get(PANEL_PRINCIPALE));
-		panels.get(ADMIN_TOP_PANEL).add(panels.get(ATP_COULEURS_PANEL),
-				ATP_COULEURS_PANEL_POS);
-		panels.get(ADMIN_TOP_PANEL).add(panels.get(ATP_FORMES_PANEL),
-				ATP_FORMES_PANEL_POS);
-		panels.get(ADMIN_TOP_PANEL).add(panels.get(ATP_FORMES_SELECT_PANEL),
-				ATP_FORMES_SELECT_PANEL_POS);
-		panels.get(ADMIN_BOT_PANEL).add(panels.get(ABP_COULEURS_PANEL),
-				ATP_COULEURS_PANEL_POS);
-		panels.get(ADMIN_BOT_PANEL).add(panels.get(ABP_FORMES_PANEL),
-				ATP_FORMES_PANEL_POS);
-		panels.get(ADMIN_BOT_PANEL).add(panels.get(ABP_FORMES_POOL_PANEL),
-				ATP_FORMES_SELECT_PANEL_POS);
+		panels.get(ADMIN_PLATEAU_PANEL).add(panels.get(AP_COULEURS_PANEL),
+				COULEURS_PANEL_POS);
+		panels.get(ADMIN_PLATEAU_PANEL).add(panels.get(AP_FORMES_PANEL),
+				FORMES_PANEL_POS);
+		panels.get(ADMIN_PLATEAU_PANEL).add(panels.get(AP_FORMES_SELECT_PANEL),
+				FORMES_SELECT_PANEL_POS);
+		panels.get(ADMIN_RESERVE_PANEL).add(panels.get(AR_COULEURS_PANEL),
+				COULEURS_PANEL_POS);
+		panels.get(ADMIN_RESERVE_PANEL).add(panels.get(AR_FORMES_PANEL),
+				FORMES_PANEL_POS);
+		panels.get(ADMIN_RESERVE_PANEL).add(panels.get(AR_FORMES_POOL_PANEL),
+				FORMES_SELECT_PANEL_POS);
 
-		// cardlayout du panel principal
+		// Initialisation du panel principal
 		JTabbedPane tabbedPane = new JTabbedPane();
-		tabbedPane.addTab("Paramétrer le plateau", panels.get(ADMIN_TOP_PANEL));
+		tabbedPane.addTab("Paramétrer le plateau",
+				panels.get(ADMIN_PLATEAU_PANEL));
 		tabbedPane.addTab("Paramétrer la réserve de formes",
-				panels.get(ADMIN_BOT_PANEL));
+				panels.get(ADMIN_RESERVE_PANEL));
 		tabbedPane.addTab("Aperçus", panels.get(ADMIN_APERCUS_PANEL));
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -158,7 +354,7 @@ public class VueAdmin extends Vue {
 		c.insets = new Insets(ADMIN_MARGIN, 0, 0, 0);
 		panels.get(PANEL_PRINCIPALE).add(panels.get(ADMIN_ACTION_PANEL), c);
 
-		// display panel
+		// Valide les changements de la vue et l'affiche
 		commit();
 	}
 
@@ -203,7 +399,8 @@ public class VueAdmin extends Vue {
 	 * 
 	 * @param message
 	 *            Message a afficher dans le panel
-	 * @param color Couleur du message
+	 * @param color
+	 *            Couleur du message
 	 * @return Le panel (JPanel) avec le message a l'interrieur
 	 */
 	private JPanel createMessagePane(String message, Color color) {
@@ -236,7 +433,7 @@ public class VueAdmin extends Vue {
 	/**
 	 * Créer un cadre (JPanel) pour une couleur. Ce cadre est blanc. Il se
 	 * compose d'un rectangle montrant la couleur et d'une checkbox. La checkbox
-	 * est ajouté é la liste passé en paramétre pour qu'elle puisse étre
+	 * est ajouté à la liste passé en paramétre pour qu'elle puisse étre
 	 * utilisé. Un ActionListener est aussi ajouté si une action doit étre
 	 * réalisé.
 	 * 
@@ -307,7 +504,7 @@ public class VueAdmin extends Vue {
 	}
 
 	/**
-	 * Créer un cadre (JPanel) pour une forme é partir d'un fichier.
+	 * Créer un cadre (JPanel) pour une forme à partir d'un fichier.
 	 * 
 	 * @param image
 	 *            Fichier represetant une image
@@ -331,7 +528,7 @@ public class VueAdmin extends Vue {
 	}
 
 	/**
-	 * Créer un cadre (JPanel) pour une forme é partir d'un fichier. Ce cadre
+	 * Créer un cadre (JPanel) pour une forme à partir d'un fichier. Ce cadre
 	 * posséde des actions (Possibilité de le cocher ou de le supprimer).
 	 * 
 	 * @param image
@@ -360,6 +557,19 @@ public class VueAdmin extends Vue {
 		return container;
 	}
 
+	/**
+	 * Créer un cadre (JPanel) pour une forme à partir d'un ObjetColore. Ce
+	 * cadre posséde une actions (Possibilité de le supprimer).
+	 * 
+	 * @param obj
+	 *            ObjetColore servant pour l'image du cadre
+	 * @param title
+	 *            Nom du cadre
+	 * @return Un cadre (JPanel) pour une forme
+	 * 
+	 * @see VueAdmin#createFormeFrame(BufferedImage, String)
+	 * @see ObjetColore
+	 */
 	private JPanel createFormeFrame(ObjetColore obj, String title) {
 		JPanel container = createFormeFrame(obj.getImage(), title);
 
@@ -411,6 +621,7 @@ public class VueAdmin extends Vue {
 		delete.setPreferredSize(new Dimension(60, 30));
 		delete.setHorizontalAlignment(JLabel.CENTER);
 		delete.addMouseListener(ml);
+		delete.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
 		actionPane.add(delete, BorderLayout.CENTER);
 
@@ -433,12 +644,24 @@ public class VueAdmin extends Vue {
 		delete.setPreferredSize(new Dimension(60, 30));
 		delete.setHorizontalAlignment(JLabel.CENTER);
 		delete.addMouseListener(ml);
+		delete.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
 		actionPane.add(delete, BorderLayout.CENTER);
 
 		return actionPane;
 	}
 
+	/**
+	 * Créer un cadre (JPanel) pour une forme colorée à partir d'un ObjetColore.
+	 * Ce cadre posséde une actions (Possibilité de le supprimer).
+	 * 
+	 * @param obj
+	 *            ObjetColore servant pour l'image du cadre
+	 * @return Un cadre (JPanel) pour une forme
+	 * 
+	 * @see VueAdmin#createFormeFrame(ObjetColore, String)
+	 * @see ObjetColore
+	 */
 	private JPanel createFormePoolFrame(ObjetColore obj) {
 		String title = obj.getOrigineFile().getName().toUpperCase()
 				.split("\\.")[0]
@@ -447,29 +670,39 @@ public class VueAdmin extends Vue {
 		return container;
 	}
 
-	private JPanel initAtpCouleursPanel() {
+	/**
+	 * Initialisation du panel des couleurs de la partie "Configuration du plateau".
+	 * 
+	 * @return Le panel (JPanel)
+	 */
+	private JPanel initApCouleursPanel() {
 		JPanel container = createContainer();
 		JPanel colorsTable = createColorsTable();
 
 		ActionListener ae = null;
 		for (Couleur c : Couleur.values()) {
 			ae = new AtpCouleurListener(c);
-			colorsTable.add(createColorFrame(c, atpCouleursCheckBoxes, ae));
+			colorsTable.add(createColorFrame(c, apCouleursCheckBoxes, ae));
 		}
 
 		JPanel messagePanel = createMessagePane(
 				"Nombre maximum de couleurs atteint.", Color.RED);
-		panels.put(ATP_MESSAGE_COULEURS_PANEL, messagePanel);
+		panels.put(AP_MESSAGE_COULEURS_PANEL, messagePanel);
 
 		container.add(colorsTable, BorderLayout.PAGE_START);
 		container.add(messagePanel, BorderLayout.PAGE_END);
 
-		refreshAtpColorsCheckBoxs();
+		refreshApColorsCheckBoxs();
 
 		return container;
 	}
 
-	private JPanel initAtpFormesPanel() {
+	/**
+	 * Initialisation du panel des formes de la partie "Configuration du plateau".
+	 * 
+	 * @return Le panel (JPanel)
+	 */
+	private JPanel initApFormesPanel() {
 		Box box = Box.createVerticalBox();
 
 		File[] images = Listing.listeImages(Modele.DOSSIER_FORMES);
@@ -478,7 +711,7 @@ public class VueAdmin extends Vue {
 		for (File image : images) {
 			ae = new AtpFormeListener(image);
 			ml = new DeleteFormeMouseListener(image);
-			box.add(createFormeFrame(image, atpFormesCheckBoxes, ae, ml));
+			box.add(createFormeFrame(image, apFormesCheckBoxes, ae, ml));
 		}
 
 		JScrollPane jsp = createScrollPane(box);
@@ -501,6 +734,11 @@ public class VueAdmin extends Vue {
 		return container;
 	}
 
+	/**
+	 * Initialisation du panel des formes sélectionnées de la partie "Configuration du plateau".
+	 * 
+	 * @return Le panel (JPanel)
+	 */
 	private JPanel initSelectedFormesPanel() {
 		Box box = Box.createVerticalBox();
 
@@ -513,7 +751,7 @@ public class VueAdmin extends Vue {
 		JPanel messagePanel = createMessagePane(
 				"Nombre maximum de formes atteint.", Color.RED);
 		messagePanel.setBorder(BorderFactory.createLineBorder(Color.black));
-		panels.put(ATP_MESSAGE_FORMES_PANEL, messagePanel);
+		panels.put(AP_MESSAGE_FORMES_PANEL, messagePanel);
 
 		JPanel container = createContainer();
 		container.add(jsp, BorderLayout.CENTER);
@@ -526,18 +764,23 @@ public class VueAdmin extends Vue {
 			container.add(messagePanel, BorderLayout.CENTER);
 		}
 
-		refreshAtpFormesCheckBoxes();
+		refreshApFormesCheckBoxes();
 
 		return container;
 	}
 
-	private JPanel initAbpCouleursPanel() {
+	/**
+	 * Initialisation du panel des couleurs de la partie "Configuration de la réserve".
+	 * 
+	 * @return Le panel (JPanel)
+	 */
+	private JPanel initArCouleursPanel() {
 		JPanel container = createContainer();
 		JPanel colorsTable = createColorsTable();
 
 		ActionListener ae = new AbpCouleurListener();
 		for (Couleur c : Couleur.values()) {
-			colorsTable.add(createColorFrame(c, abpCouleursCheckBoxes, ae));
+			colorsTable.add(createColorFrame(c, arCouleursCheckBoxes, ae));
 		}
 
 		container.add(colorsTable, BorderLayout.PAGE_START);
@@ -545,14 +788,19 @@ public class VueAdmin extends Vue {
 		return container;
 	}
 
-	private JPanel initAbpFormesPanel() {
+	/**
+	 * Initialisation du panel des formes de la partie "Configuration de la réserve".
+	 * 
+	 * @return Le panel (JPanel)
+	 */
+	private JPanel initArFormesPanel() {
 		Box box = Box.createVerticalBox();
 
 		ActionListener ae = new AbpFormeListener();
 		File[] images = Listing.listeImages(Modele.DOSSIER_FORMES);
 		for (File image : images) {
 			MouseListener ml = new DeleteFormeMouseListener(image);
-			box.add(createFormeFrame(image, abpFormesCheckBoxes, ae, ml));
+			box.add(createFormeFrame(image, arFormesCheckBoxes, ae, ml));
 		}
 
 		JScrollPane jsp = createScrollPane(box);
@@ -563,7 +811,7 @@ public class VueAdmin extends Vue {
 		ajouterButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Couleur selectedCouleur = null;
-				for (Map.Entry<Couleur, JCheckBox> value : abpCouleursCheckBoxes
+				for (Map.Entry<Couleur, JCheckBox> value : arCouleursCheckBoxes
 						.entrySet()) {
 					if (value.getValue().isSelected()) {
 						selectedCouleur = value.getKey();
@@ -575,7 +823,7 @@ public class VueAdmin extends Vue {
 				}
 
 				String selectedForme = null;
-				for (Map.Entry<String, JCheckBox> value : abpFormesCheckBoxes
+				for (Map.Entry<String, JCheckBox> value : arFormesCheckBoxes
 						.entrySet()) {
 					if (value.getValue().isSelected()) {
 						selectedForme = value.getKey();
@@ -598,11 +846,16 @@ public class VueAdmin extends Vue {
 		container.add(jsp, BorderLayout.NORTH);
 		container.add(ajouterButton, BorderLayout.SOUTH);
 
-		refreshAbpFormesCheckBoxs();
+		refreshArFormesCheckBoxs();
 
 		return container;
 	}
 
+	/**
+	 * Initialisation du panel des objets colorées de la partie "Configuration de la réserve".
+	 * 
+	 * @return Le panel (JPanel)
+	 */
 	private JPanel initFormesPoolPanel() {
 		Box box = Box.createVerticalBox();
 
@@ -615,17 +868,22 @@ public class VueAdmin extends Vue {
 		JPanel messagePanel = createMessagePane(
 				"Nombre maximum de formes dans la réserve atteint.", Color.RED);
 		messagePanel.setBorder(BorderFactory.createLineBorder(Color.black));
-		panels.put(ABP_MESSAGE_FORMES_PANEL, messagePanel);
-		
+		panels.put(AR_MESSAGE_FORMES_PANEL, messagePanel);
+
 		JPanel container = createContainer();
 		container.add(jsp, BorderLayout.CENTER);
 		container.add(messagePanel, BorderLayout.PAGE_END);
-		
-		refreshAbpFormesCheckBoxs();
+
+		refreshArFormesCheckBoxs();
 
 		return container;
 	}
 
+	/**
+	 * Initialisation du panel contenant les actions possible dans l'administration (Sauvegarder et Retour accueil)
+	 * 
+	 * @return Le panel (JPanel)
+	 */
 	private JPanel initActionsPanel() {
 		JPanel container = new JPanel();
 		container.setLayout(new BoxLayout(container, BoxLayout.LINE_AXIS));
@@ -648,7 +906,8 @@ public class VueAdmin extends Vue {
 		bouttonRetour.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				getControleur().getModele().retireObservateur(getView());
-				fenetre.switchPanel(new VueAccueil(fenetre));
+				fenetre.switchPanel(new VueAccueil(fenetre,
+						new AccueilController(Modele.getInstance())));
 			}
 		});
 		container.add(bouttonRetour);
@@ -656,6 +915,11 @@ public class VueAdmin extends Vue {
 		return container;
 	}
 
+	/**
+	 * Initialisation du panel génerant l'aperçus de la configuration.
+	 * 
+	 * @return Le panel (JPanel)
+	 */
 	private JPanel initApercusPanel() {
 		JPanel container = new VuePlateau(fenetre, new PlateauControleur(
 				getControleur().getModele()), new Dimension(
@@ -663,9 +927,12 @@ public class VueAdmin extends Vue {
 		return container;
 	}
 
-	private void refreshAtpColorsCheckBoxs() {
+	/**
+	 * Actualise les checkboxs du panel des couleurs de la partie "Configuration du plateau".
+	 */
+	private void refreshApColorsCheckBoxs() {
 		int nbCouleur = getControleur().getNbCouleur();
-		for (Map.Entry<Couleur, JCheckBox> value : atpCouleursCheckBoxes
+		for (Map.Entry<Couleur, JCheckBox> value : apCouleursCheckBoxes
 				.entrySet()) {
 			if (nbCouleur < Modele.MAX_SELECTED_COULEURS) {
 				value.getValue().setEnabled(true);
@@ -675,24 +942,25 @@ public class VueAdmin extends Vue {
 		}
 
 		for (Couleur c : getControleur().getModele().getCouleursConfig()) {
-			atpCouleursCheckBoxes.get(c).setSelected(true);
-			atpCouleursCheckBoxes.get(c).setEnabled(true);
+			apCouleursCheckBoxes.get(c).setSelected(true);
+			apCouleursCheckBoxes.get(c).setEnabled(true);
 		}
 
-		JPanel messagePanel = panels.get(ATP_MESSAGE_COULEURS_PANEL);
+		JPanel messagePanel = panels.get(AP_MESSAGE_COULEURS_PANEL);
 		if (nbCouleur < Modele.MAX_SELECTED_COULEURS) {
 			messagePanel.setVisible(false);
 		} else {
 			messagePanel.setVisible(true);
 		}
-
-		commit();
 	}
 
-	private void refreshAtpFormesCheckBoxes() {
+	/**
+	 * Actualise les checkboxs du panel des formes de la partie "Configuration du plateau".
+	 */
+	private void refreshApFormesCheckBoxes() {
 		int nbForme = getControleur().getNbForme();
 
-		for (Entry<String, JCheckBox> value : atpFormesCheckBoxes.entrySet()) {
+		for (Entry<String, JCheckBox> value : apFormesCheckBoxes.entrySet()) {
 			if (nbForme < Modele.MAX_SELECTED_FORMES) {
 				value.getValue().setEnabled(true);
 			} else {
@@ -701,11 +969,11 @@ public class VueAdmin extends Vue {
 		}
 
 		for (File f : getControleur().getModele().getFormesConfig()) {
-			atpFormesCheckBoxes.get(f.getName()).setSelected(true);
-			atpFormesCheckBoxes.get(f.getName()).setEnabled(true);
+			apFormesCheckBoxes.get(f.getName()).setSelected(true);
+			apFormesCheckBoxes.get(f.getName()).setEnabled(true);
 		}
 
-		JPanel messagePanel = panels.get(ATP_MESSAGE_FORMES_PANEL);
+		JPanel messagePanel = panels.get(AP_MESSAGE_FORMES_PANEL);
 		if (nbForme < Modele.MAX_SELECTED_FORMES) {
 			messagePanel.setVisible(false);
 		} else {
@@ -713,12 +981,15 @@ public class VueAdmin extends Vue {
 		}
 	}
 
-	private void refreshAbpColorsCheckBoxs() {
+	/**
+	 * Actualise les checkboxs du panel des couleurs de la partie "Configuration due la réserve".
+	 */
+	private void refreshArColorsCheckBoxs() {
 		int nbSelectedCouleurs = 0;
 		if (getControleur().getNbObjetColore() >= Modele.MAX_RESERVE_FORMES) {
 			nbSelectedCouleurs = 1;
 		} else {
-			for (Map.Entry<Couleur, JCheckBox> value : abpCouleursCheckBoxes
+			for (Map.Entry<Couleur, JCheckBox> value : arCouleursCheckBoxes
 					.entrySet()) {
 				value.getValue().setEnabled(true);
 				if (value.getValue().isSelected()) {
@@ -728,7 +999,7 @@ public class VueAdmin extends Vue {
 			}
 		}
 		if (nbSelectedCouleurs > 0) {
-			for (Map.Entry<Couleur, JCheckBox> value : abpCouleursCheckBoxes
+			for (Map.Entry<Couleur, JCheckBox> value : arCouleursCheckBoxes
 					.entrySet()) {
 				if (!value.getValue().isSelected()) {
 					value.getValue().setEnabled(false);
@@ -737,13 +1008,16 @@ public class VueAdmin extends Vue {
 		}
 	}
 
-	private void refreshAbpFormesCheckBoxs() {
+	/**
+	 * Actualise les checkboxs du panel des formes de la partie "Configuration due la réserve".
+	 */
+	private void refreshArFormesCheckBoxs() {
 		int nbSelectedFormes = 0;
 		if (getControleur().getNbObjetColore() >= Modele.MAX_RESERVE_FORMES) {
 			nbSelectedFormes = 1;
-			panels.get(ABP_MESSAGE_FORMES_PANEL).setVisible(true);
+			panels.get(AR_MESSAGE_FORMES_PANEL).setVisible(true);
 		} else {
-			for (Map.Entry<String, JCheckBox> value : abpFormesCheckBoxes
+			for (Map.Entry<String, JCheckBox> value : arFormesCheckBoxes
 					.entrySet()) {
 				value.getValue().setEnabled(true);
 				if (value.getValue().isSelected()) {
@@ -751,10 +1025,10 @@ public class VueAdmin extends Vue {
 					break;
 				}
 			}
-			panels.get(ABP_MESSAGE_FORMES_PANEL).setVisible(false);
+			panels.get(AR_MESSAGE_FORMES_PANEL).setVisible(false);
 		}
 		if (nbSelectedFormes > 0) {
-			for (Map.Entry<String, JCheckBox> value : abpFormesCheckBoxes
+			for (Map.Entry<String, JCheckBox> value : arFormesCheckBoxes
 					.entrySet()) {
 				if (!value.getValue().isSelected()) {
 					value.getValue().setEnabled(false);
@@ -797,10 +1071,10 @@ public class VueAdmin extends Vue {
 	 * Actualise le panel des formes qui sert dans la création de la matrice.
 	 */
 	private void refreshAtpFormesPanel() {
-		panels.get(ADMIN_TOP_PANEL).remove(panels.get(ATP_FORMES_PANEL));
-		panels.put(ATP_FORMES_PANEL, initAtpFormesPanel());
-		panels.get(ADMIN_TOP_PANEL).add(panels.get(ATP_FORMES_PANEL),
-				ATP_FORMES_PANEL_POS);
+		panels.get(ADMIN_PLATEAU_PANEL).remove(panels.get(AP_FORMES_PANEL));
+		panels.put(AP_FORMES_PANEL, initApFormesPanel());
+		panels.get(ADMIN_PLATEAU_PANEL).add(panels.get(AP_FORMES_PANEL),
+				FORMES_PANEL_POS);
 		commit();
 	}
 
@@ -808,10 +1082,11 @@ public class VueAdmin extends Vue {
 	 * Actualise le panel des formes selectionnées.
 	 */
 	private void refreshSelectedFormesPanel() {
-		panels.get(ADMIN_TOP_PANEL).remove(panels.get(ATP_FORMES_SELECT_PANEL));
-		panels.put(ATP_FORMES_SELECT_PANEL, initSelectedFormesPanel());
-		panels.get(ADMIN_TOP_PANEL).add(panels.get(ATP_FORMES_SELECT_PANEL),
-				ATP_FORMES_SELECT_PANEL_POS);
+		panels.get(ADMIN_PLATEAU_PANEL).remove(
+				panels.get(AP_FORMES_SELECT_PANEL));
+		panels.put(AP_FORMES_SELECT_PANEL, initSelectedFormesPanel());
+		panels.get(ADMIN_PLATEAU_PANEL).add(panels.get(AP_FORMES_SELECT_PANEL),
+				FORMES_SELECT_PANEL_POS);
 		commit();
 	}
 
@@ -819,10 +1094,10 @@ public class VueAdmin extends Vue {
 	 * Actualise le panel des formes qui sert dans la création d'intrus.
 	 */
 	private void refreshAbpFormesPanel() {
-		panels.get(ADMIN_BOT_PANEL).remove(panels.get(ABP_FORMES_PANEL));
-		panels.put(ABP_FORMES_PANEL, initAbpFormesPanel());
-		panels.get(ADMIN_BOT_PANEL).add(panels.get(ABP_FORMES_PANEL),
-				ATP_FORMES_PANEL_POS);
+		panels.get(ADMIN_RESERVE_PANEL).remove(panels.get(AR_FORMES_PANEL));
+		panels.put(AR_FORMES_PANEL, initArFormesPanel());
+		panels.get(ADMIN_RESERVE_PANEL).add(panels.get(AR_FORMES_PANEL),
+				FORMES_PANEL_POS);
 		commit();
 	}
 
@@ -830,10 +1105,11 @@ public class VueAdmin extends Vue {
 	 * Actualise le panel des formes présentent dans la réserve.
 	 */
 	private void refreshFormesPoolPanel() {
-		panels.get(ADMIN_BOT_PANEL).remove(panels.get(ABP_FORMES_POOL_PANEL));
-		panels.put(ABP_FORMES_POOL_PANEL, initFormesPoolPanel());
-		panels.get(ADMIN_BOT_PANEL).add(panels.get(ABP_FORMES_POOL_PANEL),
-				ATP_FORMES_SELECT_PANEL_POS);
+		panels.get(ADMIN_RESERVE_PANEL)
+				.remove(panels.get(AR_FORMES_POOL_PANEL));
+		panels.put(AR_FORMES_POOL_PANEL, initFormesPoolPanel());
+		panels.get(ADMIN_RESERVE_PANEL).add(panels.get(AR_FORMES_POOL_PANEL),
+				FORMES_SELECT_PANEL_POS);
 		commit();
 	}
 
@@ -843,6 +1119,43 @@ public class VueAdmin extends Vue {
 	private void commit() {
 		panels.get(PANEL_PRINCIPALE).revalidate();
 		panels.get(PANEL_PRINCIPALE).repaint();
+	}
+	
+	/**
+	 * Acutalise la vue en fonction des evénements recus (signaux).
+	 * Fonction actualise du pattern Observer.
+	 * 
+	 * @see Observateur
+	 */
+	public void actualise(int sig) {
+		((VuePlateau) panels.get(ADMIN_APERCUS_PANEL)).refreshVue();
+
+		if (sig == Observateur.SIG_COLORS_UPDATE) {
+			refreshApColorsCheckBoxs();
+		}
+
+		if (sig == Observateur.SIG_FORMES_UPDATE) {
+			refreshAtpFormesPanel();
+			refreshApFormesCheckBoxes();
+			refreshSelectedFormesPanel();
+		}
+
+		if (sig == Observateur.SIG_RESERVE_UPDATE) {
+			refreshArColorsCheckBoxs();
+			refreshArFormesCheckBoxs();
+			refreshFormesPoolPanel();
+		}
+
+		if (sig == Observateur.SIG_IMAGE_DELETE) {
+			refreshAbpFormesPanel();
+		}
+
+		if (sig == Observateur.SIG_IMAGE_SAVE) {
+			refreshAtpFormesPanel();
+			refreshApFormesCheckBoxes();
+			refreshAbpFormesPanel();
+		}
+
 	}
 
 	class AtpCouleurListener implements ActionListener {
@@ -864,7 +1177,7 @@ public class VueAdmin extends Vue {
 
 	class AbpCouleurListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			refreshAbpColorsCheckBoxs();
+			refreshArColorsCheckBoxs();
 		}
 	}
 
@@ -887,7 +1200,7 @@ public class VueAdmin extends Vue {
 
 	class AbpFormeListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			refreshAbpFormesCheckBoxs();
+			refreshArFormesCheckBoxs();
 		}
 	}
 
@@ -931,8 +1244,8 @@ public class VueAdmin extends Vue {
 									"Information",
 									"Votre image a bien été supprimée. La configuration va étre automatiquement sauvegardée.");
 
-					atpFormesCheckBoxes.remove(image.getName());
-					abpFormesCheckBoxes.remove(image.getName());
+					apFormesCheckBoxes.remove(image.getName());
+					arFormesCheckBoxes.remove(image.getName());
 					getControleur().getModele().deleteObjetsColoresByImage(
 							image);
 					getControleur().getModele().removeForme(image);
@@ -973,36 +1286,5 @@ public class VueAdmin extends Vue {
 		}
 
 	}
-
-	public void actualise(int sig) {
-		((VuePlateau) panels.get(ADMIN_APERCUS_PANEL)).refreshVue();
-
-		if (sig == Observateur.SIG_COLORS_UPDATE) {
-			refreshAtpColorsCheckBoxs();
-		}
-
-		if (sig == Observateur.SIG_FORMES_UPDATE) {
-			refreshAtpFormesPanel();
-			refreshAtpFormesCheckBoxes();
-			refreshSelectedFormesPanel();
-		}
-
-		if (sig == Observateur.SIG_RESERVE_UPDATE) {
-			refreshAbpColorsCheckBoxs();
-			refreshAbpFormesCheckBoxs();
-			refreshFormesPoolPanel();
-		}
-
-		if (sig == Observateur.SIG_IMAGE_DELETE) {
-			refreshAbpFormesPanel();
-		}
-
-		if (sig == Observateur.SIG_IMAGE_SAVE) {
-			refreshAtpFormesPanel();
-			refreshAtpFormesCheckBoxes();
-			refreshAbpFormesPanel();
-		}
-
-	}
-
+	
 }

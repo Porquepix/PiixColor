@@ -22,11 +22,13 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import piixcolor.controleur.AccueilController;
 import piixcolor.controleur.PlateauControleur;
 import piixcolor.modele.Modele;
 
+@SuppressWarnings("serial")
 public class VuePlateau extends Vue implements MouseListener, MouseMotionListener {
-	private static final String IMAGE_RETURN = Modele.DOSSIER_ASSETS + "returnArrow.gif";
+	private static final String IMAGE_RETURN = Modele.DOSSIER_ASSETS + "exit.png";
 	
 	JLayeredPane layeredPane;
 	JPanel matrice;
@@ -102,12 +104,12 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 		JPanel panel;
 		
 		if (getControleur().getNbCouleur() == 0) {
-			//Ajouter message ici
+			setBackground(Color.WHITE);
 			return;
 		}
 		
 		if (getControleur().getNbForme() == 0) {
-			//Ajouter message ici
+			setBackground(Color.WHITE);
 			return;
 		}
 		
@@ -170,6 +172,7 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 	 * On retire tous les composants des panels de la matrice et on repeint leurs fonds en blanc.
 	 */
 	public void clearVue() {
+		if (matrice != null)
 		layeredPane.remove(matrice);
 	}
 	
@@ -190,7 +193,7 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 		image = new JLabel(new ImageIcon(IMAGE_RETURN));
 		image.addMouseListener(new MouseListener() {
 			public void mouseClicked(MouseEvent e) {
-				fenetre.switchPanel(new VueAccueil(fenetre));
+				fenetre.switchPanel(new VueAccueil(fenetre, new AccueilController(Modele.getInstance())));
 			}
 			public void mouseEntered(MouseEvent e) {
 				// TODO Auto-generated method stub

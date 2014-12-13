@@ -1,29 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <piixcolor>
   <matrice>
-    <couleurs>
-      <couleur>4</couleur>
-      <couleur>7</couleur>
-      <couleur>0</couleur>
-    </couleurs>
-    <formes>
-      <forme>triangle.png</forme>
-      <forme>cercle.png</forme>
-      <forme>carre.png</forme>
-    </formes>
+    <couleurs />
+    <formes />
   </matrice>
-  <formePool>
-    <forme>
-      <path>carre.png</path>
-      <couleur>0</couleur>
-    </forme>
-    <forme>
-      <path>triangle.png</path>
-      <couleur>8</couleur>
-    </forme>
-    <forme>
-      <path>triangle.png</path>
-      <couleur>7</couleur>
-    </forme>
-  </formePool>
+  <formePool />
 </piixcolor>

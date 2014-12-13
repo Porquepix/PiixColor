@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 
 import piixcolor.modele.Modele;
 
+@SuppressWarnings("serial")
 public class Fenetre extends JFrame {
 	
 	public static int FRAME_WIDTH = 1000;
@@ -31,6 +32,7 @@ public class Fenetre extends JFrame {
 		setTitle(FRAME_TITLE);
 		pack();
 		setVisible(true);
+		setResizable(false);
 		setSize((int)getToolkit().getScreenSize().getWidth(), ((int)getToolkit().getScreenSize().getHeight()));
 
 		FRAME_WIDTH = this.getWidth();
