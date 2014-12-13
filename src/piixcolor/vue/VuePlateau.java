@@ -22,7 +22,7 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import piixcolor.controleur.AccueilController;
+import piixcolor.controleur.AccueilControleur;
 import piixcolor.controleur.PlateauControleur;
 import piixcolor.modele.Modele;
 
@@ -51,6 +51,8 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
  */
 	public VuePlateau(Fenetre f, PlateauControleur c) {
 		super(f, c);
+		
+		getControleur().getModele().ajoutObservateur(this);
 		
 		setLayout(new BorderLayout());
 		
@@ -193,7 +195,8 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 		image = new JLabel(new ImageIcon(IMAGE_RETURN));
 		image.addMouseListener(new MouseListener() {
 			public void mouseClicked(MouseEvent e) {
-				fenetre.switchPanel(new VueAccueil(fenetre, new AccueilController(Modele.getInstance())));
+				getControleur().getModele().retireObservateur(getView());
+				fenetre.switchPanel(new VueAccueil(fenetre, new AccueilControleur(Modele.getInstance())));
 			}
 			public void mouseEntered(MouseEvent e) {
 				// TODO Auto-generated method stub
@@ -282,11 +285,16 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 				parent.add(formeCourante);
 			}
 			formeCourante.setVisible(true);
+			((PlateauControleur) getControleur()).estFini(matrice);
 		}
 	}
 
 	public void actualise(int sig) {
+		if (sig == SIG_PARTIE_FINIE) {
+			getControleur().getModele().retireObservateur(this);
+			fenetre.switchPanel(new VueFinPartie(fenetre));
+		}
+		
 		refreshVue();
 	}
-
 }

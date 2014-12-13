@@ -4,7 +4,7 @@ import java.io.File;
 
 import javax.swing.JOptionPane;
 
-import piixcolor.controleur.AccueilController;
+import piixcolor.controleur.AccueilControleur;
 import piixcolor.controleur.Controleur;
 import piixcolor.modele.Modele;
 import piixcolor.vue.BoiteDialogue;
@@ -17,7 +17,7 @@ public class Boot {
 		checkSetup(); //Verifie que tout est OK avant de lancer le programme
 		
 		Fenetre f = Fenetre.getInstance();
-		Controleur c = new AccueilController(Modele.getInstance());
+		Controleur c = new AccueilControleur(Modele.getInstance());
 		f.switchPanel(new VueAccueil(f, c));	
 	}
 

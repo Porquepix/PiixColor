@@ -82,5 +82,9 @@ public class ObjetColore {
 		return this.getOrigineFile().equals(oc.getOrigineFile())
 				&& this.getCouleur().equals(oc.getCouleur());
 	}
+	
+	public String toString() {
+		return origineFile.getName() + " " + couleur.toString();
+	}
 
 }

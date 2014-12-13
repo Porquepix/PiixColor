@@ -35,7 +35,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.border.Border;
 
-import piixcolor.controleur.AccueilController;
+import piixcolor.controleur.AccueilControleur;
 import piixcolor.controleur.AdminControleur;
 import piixcolor.controleur.Controleur;
 import piixcolor.controleur.PlateauControleur;
@@ -907,7 +907,7 @@ public class VueAdmin extends Vue {
 			public void actionPerformed(ActionEvent e) {
 				getControleur().getModele().retireObservateur(getView());
 				fenetre.switchPanel(new VueAccueil(fenetre,
-						new AccueilController(Modele.getInstance())));
+						new AccueilControleur(Modele.getInstance())));
 			}
 		});
 		container.add(bouttonRetour);
@@ -1130,27 +1130,27 @@ public class VueAdmin extends Vue {
 	public void actualise(int sig) {
 		((VuePlateau) panels.get(ADMIN_APERCUS_PANEL)).refreshVue();
 
-		if (sig == Observateur.SIG_COLORS_UPDATE) {
+		if (sig == SIG_COLORS_UPDATE) {
 			refreshApColorsCheckBoxs();
 		}
 
-		if (sig == Observateur.SIG_FORMES_UPDATE) {
+		if (sig == SIG_FORMES_UPDATE) {
 			refreshAtpFormesPanel();
 			refreshApFormesCheckBoxes();
 			refreshSelectedFormesPanel();
 		}
 
-		if (sig == Observateur.SIG_RESERVE_UPDATE) {
+		if (sig == SIG_RESERVE_UPDATE) {
 			refreshArColorsCheckBoxs();
 			refreshArFormesCheckBoxs();
 			refreshFormesPoolPanel();
 		}
 
-		if (sig == Observateur.SIG_IMAGE_DELETE) {
+		if (sig == SIG_IMAGE_DELETE) {
 			refreshAbpFormesPanel();
 		}
 
-		if (sig == Observateur.SIG_IMAGE_SAVE) {
+		if (sig == SIG_IMAGE_SAVE) {
 			refreshAtpFormesPanel();
 			refreshApFormesCheckBoxes();
 			refreshAbpFormesPanel();

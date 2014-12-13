@@ -2,9 +2,9 @@ package piixcolor.controleur;
 
 import piixcolor.modele.Modele;
 
-public class AccueilController extends Controleur {
+public class AccueilControleur extends Controleur {
 
-	public AccueilController(Modele m) {
+	public AccueilControleur(Modele m) {
 		super(m);
 	}
 

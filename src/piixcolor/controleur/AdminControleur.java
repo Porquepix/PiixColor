@@ -7,7 +7,6 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import piixcolor.modele.Modele;
-import piixcolor.utilitaire.Observateur;
 
 public class AdminControleur extends Controleur {
 
@@ -39,7 +38,7 @@ public class AdminControleur extends Controleur {
 			BufferedImage imageResize = resizeImage(i, Modele.IMG_SIZE, Modele.IMG_SIZE);
 			ImageIO.write(imageResize, Modele.FORMAT_IMAGE_SAVE, f);
 			
-			getModele().notifier(Observateur.SIG_IMAGE_SAVE);
+			getModele().notifier(SIG_IMAGE_SAVE);
 			
 			return true;
 		} catch (IOException e) {
