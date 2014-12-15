@@ -61,5 +61,10 @@ public abstract class Controleur implements Observateur {
 		g.dispose();
 		return bi;
 	}
+	
+	
+	public int getMaxObjColore() {
+		return (taillePlateau() - 1) - ((getNbCouleur() + 1) * (getNbForme() + 1));
+	}
 
 }

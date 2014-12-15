@@ -365,10 +365,14 @@ public class VueAdmin extends Vue {
 	 * @return Le conteneur (JPanel)
 	 */
 	private JPanel createContainer() {
+		return createContainer(PANEL_WIDTH, PANEL_HEIGHT);
+	}
+	
+	private JPanel createContainer(int width, int height) {
 		Border border = BorderFactory.createLineBorder(Color.black);
 
 		JPanel container = new JPanel(new BorderLayout());
-		container.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+		container.setPreferredSize(new Dimension(width, height));
 		container.setBackground(Color.WHITE);
 		container.setBorder(border);
 
@@ -676,7 +680,7 @@ public class VueAdmin extends Vue {
 	 * @return Le panel (JPanel)
 	 */
 	private JPanel initApCouleursPanel() {
-		JPanel container = createContainer();
+		JPanel colorsContainer = createContainer(PANEL_WIDTH, PANEL_HEIGHT - 25);
 		JPanel colorsTable = createColorsTable();
 
 		ActionListener ae = null;
@@ -688,9 +692,14 @@ public class VueAdmin extends Vue {
 		JPanel messagePanel = createMessagePane(
 				"Nombre maximum de couleurs atteint.", Color.RED);
 		panels.put(AP_MESSAGE_COULEURS_PANEL, messagePanel);
-
-		container.add(colorsTable, BorderLayout.PAGE_START);
-		container.add(messagePanel, BorderLayout.PAGE_END);
+		
+		colorsContainer.add(colorsTable, BorderLayout.PAGE_START);
+		colorsContainer.add(messagePanel, BorderLayout.PAGE_END);
+		
+		JPanel container = new JPanel();
+		container.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+		container.add(new JLabel("Couleurs dans le tableau"), BorderLayout.PAGE_START);
+		container.add(colorsContainer, BorderLayout.PAGE_END);
 
 		refreshApColorsCheckBoxs();
 
@@ -715,7 +724,7 @@ public class VueAdmin extends Vue {
 		}
 
 		JScrollPane jsp = createScrollPane(box);
-		jsp.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT - 30));
+		jsp.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT - 60));
 		jsp.setBorder(BorderFactory.createLineBorder(Color.black));
 
 		JButton b = new JButton("Ajouter une nouvelle image");
@@ -725,11 +734,16 @@ public class VueAdmin extends Vue {
 			}
 		});
 
-		JPanel container = createContainer();
-		container.setBackground(null);
-		container.setBorder(null);
-		container.add(jsp, BorderLayout.NORTH);
-		container.add(b, BorderLayout.SOUTH);
+		JPanel formesContainer = createContainer(PANEL_WIDTH, PANEL_HEIGHT - 30);
+		formesContainer.setBackground(null);
+		formesContainer.setBorder(null);
+		formesContainer.add(jsp, BorderLayout.NORTH);
+		formesContainer.add(b, BorderLayout.SOUTH);
+		
+		JPanel container = new JPanel();
+		container.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+		container.add(new JLabel("Formes dans le tableau"), BorderLayout.PAGE_START);
+		container.add(formesContainer, BorderLayout.PAGE_END);
 
 		return container;
 	}
@@ -747,25 +761,31 @@ public class VueAdmin extends Vue {
 		}
 
 		JScrollPane jsp = createScrollPane(box);
+		jsp.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT - 55));
 
 		JPanel messagePanel = createMessagePane(
 				"Nombre maximum de formes atteint.", Color.RED);
 		messagePanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		panels.put(AP_MESSAGE_FORMES_PANEL, messagePanel);
 
-		JPanel container = createContainer();
-		container.add(jsp, BorderLayout.CENTER);
-		container.add(messagePanel, BorderLayout.PAGE_END);
+		JPanel selectedFormesContainer = createContainer(PANEL_WIDTH, PANEL_HEIGHT - 25);
+		selectedFormesContainer.add(jsp, BorderLayout.NORTH);
+		selectedFormesContainer.add(messagePanel, BorderLayout.SOUTH);
 
 		if (getControleur().getModele().getFormesConfig().size() == 0) {
 			messagePanel = createMessagePane(
 					"Vous n'avez pas encore selectionez de formes.",
 					Color.BLACK);
-			container.add(messagePanel, BorderLayout.CENTER);
+			selectedFormesContainer.add(messagePanel, BorderLayout.CENTER);
 		}
+		
+		JPanel container = new JPanel();
+		container.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+		container.add(new JLabel("Récapitulatif des formes dans le tableau"), BorderLayout.PAGE_START);
+		container.add(selectedFormesContainer, BorderLayout.PAGE_END);
 
 		refreshApFormesCheckBoxes();
-
+		
 		return container;
 	}
 
@@ -775,7 +795,7 @@ public class VueAdmin extends Vue {
 	 * @return Le panel (JPanel)
 	 */
 	private JPanel initArCouleursPanel() {
-		JPanel container = createContainer();
+		JPanel colorsContainer = createContainer(PANEL_WIDTH, PANEL_HEIGHT - 25);
 		JPanel colorsTable = createColorsTable();
 
 		ActionListener ae = new AbpCouleurListener();
@@ -783,7 +803,12 @@ public class VueAdmin extends Vue {
 			colorsTable.add(createColorFrame(c, arCouleursCheckBoxes, ae));
 		}
 
-		container.add(colorsTable, BorderLayout.PAGE_START);
+		colorsContainer.add(colorsTable, BorderLayout.PAGE_START);
+		
+		JPanel container = new JPanel();
+		container.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+		container.add(new JLabel("Sélection de la couleur"), BorderLayout.PAGE_START);
+		container.add(colorsContainer, BorderLayout.PAGE_END);
 
 		return container;
 	}
@@ -804,10 +829,10 @@ public class VueAdmin extends Vue {
 		}
 
 		JScrollPane jsp = createScrollPane(box);
-		jsp.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT - 30));
+		jsp.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT - 60));
 		jsp.setBorder(BorderFactory.createLineBorder(Color.black));
 
-		JButton ajouterButton = new JButton("Ajouter la forme à la réserve");
+		JButton ajouterButton = new JButton("Ajouter la forme colorée à la réserve");
 		ajouterButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Couleur selectedCouleur = null;
@@ -833,6 +858,9 @@ public class VueAdmin extends Vue {
 				if (selectedForme == null) {
 					return;
 				}
+				
+				arCouleursCheckBoxes.get(selectedCouleur).setSelected(false);
+				arFormesCheckBoxes.get(selectedForme).setSelected(false);
 
 				getControleur().getModele().addObjetColore(
 						new ObjetColore(selectedCouleur, new File(
@@ -840,11 +868,16 @@ public class VueAdmin extends Vue {
 			}
 		});
 
-		JPanel container = createContainer();
-		container.setBackground(null);
-		container.setBorder(null);
-		container.add(jsp, BorderLayout.NORTH);
-		container.add(ajouterButton, BorderLayout.SOUTH);
+		JPanel formesContainer = createContainer(PANEL_WIDTH, PANEL_HEIGHT - 30);
+		formesContainer.setBackground(null);
+		formesContainer.setBorder(null);
+		formesContainer.add(jsp, BorderLayout.NORTH);
+		formesContainer.add(ajouterButton, BorderLayout.SOUTH);
+		
+		JPanel container = new JPanel();
+		container.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+		container.add(new JLabel("Sélection de la forme"), BorderLayout.PAGE_START);
+		container.add(formesContainer, BorderLayout.PAGE_END);
 
 		refreshArFormesCheckBoxs();
 
@@ -859,8 +892,16 @@ public class VueAdmin extends Vue {
 	private JPanel initFormesPoolPanel() {
 		Box box = Box.createVerticalBox();
 
+		int i = 0;
 		for (ObjetColore obj : getControleur().getModele().getReserveForme()) {
-			box.add(createFormePoolFrame(obj));
+			JPanel frame = createFormePoolFrame(obj);
+			box.add(frame);
+			if (i >= getControleur().getMaxObjColore()) {
+				JLabel message = new JLabel(" Objet non affichable");
+				message.setForeground(Color.RED);
+				frame.add(message, BorderLayout.PAGE_END);
+			}
+			i++;
 		}
 
 		JScrollPane jsp = createScrollPane(box);
@@ -870,9 +911,15 @@ public class VueAdmin extends Vue {
 		messagePanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		panels.put(AR_MESSAGE_FORMES_PANEL, messagePanel);
 
-		JPanel container = createContainer();
-		container.add(jsp, BorderLayout.CENTER);
-		container.add(messagePanel, BorderLayout.PAGE_END);
+		JPanel formesColoreesContainer = createContainer(PANEL_WIDTH, PANEL_HEIGHT - 25);
+		formesColoreesContainer.add(jsp, BorderLayout.CENTER);
+		formesColoreesContainer.add(messagePanel, BorderLayout.PAGE_END);
+		
+		
+		JPanel container = new JPanel();
+		container.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+		container.add(new JLabel("Formes colorées dans la réserve"), BorderLayout.PAGE_START);
+		container.add(formesColoreesContainer, BorderLayout.PAGE_END);
 
 		refreshArFormesCheckBoxs();
 
@@ -986,7 +1033,7 @@ public class VueAdmin extends Vue {
 	 */
 	private void refreshArColorsCheckBoxs() {
 		int nbSelectedCouleurs = 0;
-		if (getControleur().getNbObjetColore() >= Modele.MAX_RESERVE_FORMES) {
+		if (getControleur().getNbObjetColore() >= getControleur().getMaxObjColore()) {
 			nbSelectedCouleurs = 1;
 		} else {
 			for (Map.Entry<Couleur, JCheckBox> value : arCouleursCheckBoxes
@@ -1013,7 +1060,7 @@ public class VueAdmin extends Vue {
 	 */
 	private void refreshArFormesCheckBoxs() {
 		int nbSelectedFormes = 0;
-		if (getControleur().getNbObjetColore() >= Modele.MAX_RESERVE_FORMES) {
+		if (getControleur().getNbObjetColore() >= getControleur().getMaxObjColore()) {
 			nbSelectedFormes = 1;
 			panels.get(AR_MESSAGE_FORMES_PANEL).setVisible(true);
 		} else {
@@ -1070,7 +1117,7 @@ public class VueAdmin extends Vue {
 	/**
 	 * Actualise le panel des formes qui sert dans la création de la matrice.
 	 */
-	private void refreshAtpFormesPanel() {
+	private void refreshApFormesPanel() {
 		panels.get(ADMIN_PLATEAU_PANEL).remove(panels.get(AP_FORMES_PANEL));
 		panels.put(AP_FORMES_PANEL, initApFormesPanel());
 		panels.get(ADMIN_PLATEAU_PANEL).add(panels.get(AP_FORMES_PANEL),
@@ -1093,7 +1140,7 @@ public class VueAdmin extends Vue {
 	/**
 	 * Actualise le panel des formes qui sert dans la création d'intrus.
 	 */
-	private void refreshAbpFormesPanel() {
+	private void refreshArFormesPanel() {
 		panels.get(ADMIN_RESERVE_PANEL).remove(panels.get(AR_FORMES_PANEL));
 		panels.put(AR_FORMES_PANEL, initArFormesPanel());
 		panels.get(ADMIN_RESERVE_PANEL).add(panels.get(AR_FORMES_PANEL),
@@ -1135,25 +1182,25 @@ public class VueAdmin extends Vue {
 		}
 
 		if (sig == SIG_FORMES_UPDATE) {
-			refreshAtpFormesPanel();
+			refreshApFormesPanel();
 			refreshApFormesCheckBoxes();
 			refreshSelectedFormesPanel();
 		}
 
-		if (sig == SIG_RESERVE_UPDATE) {
+		if (sig == SIG_RESERVE_UPDATE || sig == SIG_FORMES_UPDATE || sig == SIG_COLORS_UPDATE) {
 			refreshArColorsCheckBoxs();
 			refreshArFormesCheckBoxs();
 			refreshFormesPoolPanel();
 		}
 
 		if (sig == SIG_IMAGE_DELETE) {
-			refreshAbpFormesPanel();
+			refreshArFormesPanel();
 		}
 
 		if (sig == SIG_IMAGE_SAVE) {
-			refreshAtpFormesPanel();
+			refreshApFormesPanel();
 			refreshApFormesCheckBoxes();
-			refreshAbpFormesPanel();
+			refreshArFormesPanel();
 		}
 
 	}
