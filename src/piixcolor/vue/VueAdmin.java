@@ -427,7 +427,7 @@ public class VueAdmin extends Vue {
 	private JPanel createColorsTable() {
 		JPanel colorsTable = new JPanel();
 		colorsTable.setPreferredSize(new Dimension(PANEL_WIDTH,
-				PANEL_HEIGHT - 30));
+				PANEL_HEIGHT - 55));
 		colorsTable.setBackground(Color.WHITE);
 		colorsTable.setLayout(new GridLayout(
 				(int) (Couleur.values().length / 2), 2));
@@ -761,7 +761,6 @@ public class VueAdmin extends Vue {
 		}
 
 		JScrollPane jsp = createScrollPane(box);
-		jsp.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT - 55));
 
 		JPanel messagePanel = createMessagePane(
 				"Nombre maximum de formes atteint.", Color.RED);
@@ -769,8 +768,8 @@ public class VueAdmin extends Vue {
 		panels.put(AP_MESSAGE_FORMES_PANEL, messagePanel);
 
 		JPanel selectedFormesContainer = createContainer(PANEL_WIDTH, PANEL_HEIGHT - 25);
-		selectedFormesContainer.add(jsp, BorderLayout.NORTH);
-		selectedFormesContainer.add(messagePanel, BorderLayout.SOUTH);
+		selectedFormesContainer.add(jsp, BorderLayout.CENTER);
+		selectedFormesContainer.add(messagePanel, BorderLayout.PAGE_END);
 
 		if (getControleur().getModele().getFormesConfig().size() == 0) {
 			messagePanel = createMessagePane(
