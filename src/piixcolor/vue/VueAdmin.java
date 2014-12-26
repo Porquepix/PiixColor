@@ -37,7 +37,6 @@ import javax.swing.border.Border;
 
 import piixcolor.controleur.AccueilControleur;
 import piixcolor.controleur.AdminControleur;
-import piixcolor.controleur.Controleur;
 import piixcolor.controleur.PlateauControleur;
 import piixcolor.modele.Modele;
 import piixcolor.utilitaire.Couleur;
@@ -295,7 +294,7 @@ public class VueAdmin extends Vue {
 	 * @param controleur
 	 *            Controlleur de la vue.
 	 */
-	public VueAdmin(Fenetre fenetre, Controleur controleur) {
+	public VueAdmin(Fenetre fenetre, AdminControleur controleur) {
 		super(fenetre, controleur);
 
 		getControleur().getModele().ajoutObservateur(this);
@@ -357,17 +356,15 @@ public class VueAdmin extends Vue {
 		// Valide les changements de la vue et l'affiche
 		commit();
 	}
-
+	
 	/**
-	 * Créer un conteneur de taille fixe (PANEL_WIDTH, PANEL_HEIGHT), avec un
+	 * Créer un conteneur de taille definie par les paramètres, avec un
 	 * fond blanc et une bordure noir.
 	 * 
+	 * @param width Largeur du conteneur
+	 * @param height Hauteur du conteneur
 	 * @return Le conteneur (JPanel)
 	 */
-	private JPanel createContainer() {
-		return createContainer(PANEL_WIDTH, PANEL_HEIGHT);
-	}
-	
 	private JPanel createContainer(int width, int height) {
 		Border border = BorderFactory.createLineBorder(Color.black);
 

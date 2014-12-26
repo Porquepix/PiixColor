@@ -17,8 +17,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import piixcolor.controleur.AccueilControleur;
 import piixcolor.controleur.AdminControleur;
-import piixcolor.controleur.Controleur;
 import piixcolor.controleur.PlateauControleur;
 import piixcolor.modele.Modele;
 
@@ -34,7 +34,7 @@ public class VueAccueil extends Vue {
 	
 	private BufferedImage image;
 
-	public VueAccueil(Fenetre f, Controleur controleur) {
+	public VueAccueil(Fenetre f, AccueilControleur controleur) {
 		super(f, controleur);
 		
 		JPanel container = new JPanel();
