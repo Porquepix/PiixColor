@@ -21,6 +21,10 @@ public class Boot {
 		f.switchPanel(new VueAccueil(f, c));	
 	}
 
+	/**
+	 * Fonction verifiants que tous les fichiers necessaires au fonctionnement de l'application sont prrésent.
+	 * Si ce n'eest pas le cas affiche une boite de dialogue et ferme l'application.
+	 */
 	private static void checkSetup() {
 		File f;
 		

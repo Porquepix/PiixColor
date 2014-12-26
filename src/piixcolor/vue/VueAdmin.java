@@ -806,7 +806,7 @@ public class VueAdmin extends Vue {
 		
 		JPanel container = new JPanel();
 		container.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
-		container.add(new JLabel("Sélection de la couleur"), BorderLayout.PAGE_START);
+		container.add(new JLabel("Sélectionnez une couleur"), BorderLayout.PAGE_START);
 		container.add(colorsContainer, BorderLayout.PAGE_END);
 
 		return container;
@@ -875,7 +875,7 @@ public class VueAdmin extends Vue {
 		
 		JPanel container = new JPanel();
 		container.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
-		container.add(new JLabel("Sélection de la forme"), BorderLayout.PAGE_START);
+		container.add(new JLabel("Sélectionnez une forme"), BorderLayout.PAGE_START);
 		container.add(formesContainer, BorderLayout.PAGE_END);
 
 		refreshArFormesCheckBoxs();

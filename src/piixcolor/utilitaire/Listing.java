@@ -12,12 +12,19 @@ import piixcolor.vue.BoiteDialogue;
 
 public class Listing {
 
+	/**
+	 * Liste les images (uniquement .png) présent dans le dossier passer en paramètre.
+	 * La liste est triés par ordre croissant de dernière modification.
+	 * 
+	 * @param path dossier ou chercher les images
+	 * @return liste des images dans le dossier (null si le dossier n'existe pas)
+	 */
 	public static File[] listeImages(String path) {
 		File f = new File(path);
 		
 		if (!f.exists()) {
 			BoiteDialogue.createModalBox(JOptionPane.ERROR_MESSAGE, "Erreur", "Impossible d'ouvrir le dossier : '" + f.getAbsolutePath() + "'.");
-			System.exit(-1);
+			return null;
 		}
 
 		FilenameFilter filtre = new FilenameFilter() {

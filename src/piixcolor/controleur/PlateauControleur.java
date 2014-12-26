@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 
 import piixcolor.modele.Modele;
 import piixcolor.utilitaire.ObjetColore;
+import piixcolor.utilitaire.Observateur;
 import piixcolor.vue.Fenetre;
 
 public class PlateauControleur extends Controleur{
@@ -84,13 +85,8 @@ public class PlateauControleur extends Controleur{
 			}
 		}
 		if (fini) {
-			getModele().notifier(SIG_PARTIE_FINIE);
+			getModele().notifier(Observateur.SIG_PARTIE_FINIE);
 		}
-	}
-	
-	public void actualise(int sig) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public Point getCoordObjetCourant() {
