@@ -12,13 +12,34 @@ import piixcolor.modele.Modele;
 @SuppressWarnings("serial")
 public class Fenetre extends JFrame {
 	
+	/**
+	 * Largeur de la fenetre avec un minimal de 1000 px.
+	 */
 	public static int FRAME_WIDTH = 1000;
+	
+	/**
+	 * Hauteur de la fenetre avec un minimal de 600 px.
+	 */
 	public static int FRAME_HEIGHT = 600;
+	
+	/**
+	 * Titre de la fenetre.
+	 */
 	public static final String FRAME_TITLE = "PiixColor";
+	
+	/**
+	 * Chemin vers la miniature / icone de la fenetre.
+	 */
 	private static final String LOGO = Modele.DOSSIER_ASSETS + "miniature.png";
 	
+	/**
+	 * Instance de la fenetre (pattern Singleton)
+	 */
 	private static Fenetre instance = null;
 
+	/**
+	 * Constructeur de la fenetre. Créer une fenetre en fesant apelle au méthode de JFrame.
+	 */
 	private Fenetre () {
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
@@ -41,6 +62,10 @@ public class Fenetre extends JFrame {
 		setLocationRelativeTo(null);
 	}
 	
+	/**
+	 * Méthode appellé lors de la fermeture de la fenetre.
+	 * Informe l'utilisateur si une configuration a été modifiée mais pas sauvegardée.
+	 */
 	private void closeOperation() {
     	if (Modele.getInstance().isModifie()) {
     		String[] options = {"Enregistrer", "Ne pas enregistrer", "Annuler"}; 
@@ -56,11 +81,21 @@ public class Fenetre extends JFrame {
     	}
 	}
 	
+	/**
+	 * Méthode permetant de recupérer la seule instance de la fenetre (pattern Singleton).
+	 * 
+	 * @return L'instance de la fenetre
+	 */
 	public static Fenetre getInstance() {
 		if (instance == null) instance = new Fenetre();
 		return instance;
 	}
 
+	/**
+	 * Remplace le content pane de la fentre par le panel passer en paramètre.
+	 * 
+	 * @param p Nouveau content pane
+	 */
 	public void switchPanel(JPanel p) {
 		this.getContentPane().removeAll();
 		this.setContentPane(p);
