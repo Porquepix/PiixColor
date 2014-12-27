@@ -22,11 +22,13 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import piixcolor.controleur.AccueilControleur;
 import piixcolor.controleur.PlateauControleur;
 import piixcolor.modele.Modele;
 
+@SuppressWarnings("serial")
 public class VuePlateau extends Vue implements MouseListener, MouseMotionListener {
-	private static final String IMAGE_RETURN = Modele.DOSSIER_ASSETS + "returnArrow.gif";
+	private static final String IMAGE_RETURN = Modele.DOSSIER_ASSETS + "exit.png";
 	
 	JLayeredPane layeredPane;
 	JPanel matrice;
@@ -49,6 +51,8 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
  */
 	public VuePlateau(Fenetre f, PlateauControleur c) {
 		super(f, c);
+		
+		getControleur().getModele().ajoutObservateur(this);
 		
 		setLayout(new BorderLayout());
 		
@@ -102,12 +106,12 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 		JPanel panel;
 		
 		if (getControleur().getNbCouleur() == 0) {
-			//Ajouter message ici
+			setBackground(Color.WHITE);
 			return;
 		}
 		
 		if (getControleur().getNbForme() == 0) {
-			//Ajouter message ici
+			setBackground(Color.WHITE);
 			return;
 		}
 		
@@ -170,6 +174,7 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 	 * On retire tous les composants des panels de la matrice et on repeint leurs fonds en blanc.
 	 */
 	public void clearVue() {
+		if (matrice != null)
 		layeredPane.remove(matrice);
 	}
 	
@@ -190,7 +195,8 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 		image = new JLabel(new ImageIcon(IMAGE_RETURN));
 		image.addMouseListener(new MouseListener() {
 			public void mouseClicked(MouseEvent e) {
-				fenetre.switchPanel(new VueAccueil(fenetre));
+				getControleur().getModele().retireObservateur(getView());
+				fenetre.switchPanel(new VueAccueil(fenetre, new AccueilControleur(Modele.getInstance())));
 			}
 			public void mouseEntered(MouseEvent e) {
 				// TODO Auto-generated method stub
@@ -279,11 +285,19 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 				parent.add(formeCourante);
 			}
 			formeCourante.setVisible(true);
+			((PlateauControleur) getControleur()).estFini(matrice);
 		}
 	}
 
 	public void actualise(int sig) {
-		refreshVue();
+		if (sig == SIG_PARTIE_FINIE) {
+			getControleur().getModele().retireObservateur(this);
+			layeredPane.add(new VueFinPartie(fenetre), 0);
+			layeredPane.setOpaque(false);
+			layeredPane.removeMouseListener(this);
+			layeredPane.removeMouseMotionListener(this);
+		} else {			
+			refreshVue();
+		}
 	}
-
 }

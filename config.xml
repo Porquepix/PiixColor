@@ -2,28 +2,28 @@
 <piixcolor>
   <matrice>
     <couleurs>
-      <couleur>4</couleur>
+      <couleur>8</couleur>
       <couleur>7</couleur>
       <couleur>0</couleur>
     </couleurs>
     <formes>
       <forme>triangle.png</forme>
-      <forme>cercle.png</forme>
       <forme>carre.png</forme>
+      <forme>cercle.png</forme>
     </formes>
   </matrice>
   <formePool>
     <forme>
       <path>carre.png</path>
-      <couleur>0</couleur>
-    </forme>
-    <forme>
-      <path>triangle.png</path>
       <couleur>8</couleur>
     </forme>
     <forme>
       <path>triangle.png</path>
       <couleur>7</couleur>
+    </forme>
+    <forme>
+      <path>cercle.png</path>
+      <couleur>0</couleur>
     </forme>
   </formePool>
 </piixcolor>

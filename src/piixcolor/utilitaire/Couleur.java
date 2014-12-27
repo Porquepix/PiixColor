@@ -5,7 +5,7 @@ import java.awt.Color;
 public enum Couleur {
 	
 	BLEU (3, 169, 244),
-	BEIGE (220, 220, 180),
+	BEIGE (218, 163, 122),
 	GRIS (158, 158, 158),
 	JAUNE (255, 255, 0),
 	ORANGE (255, 152, 0),

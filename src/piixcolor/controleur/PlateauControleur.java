@@ -1,17 +1,32 @@
 package piixcolor.controleur;
 
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JPanel;
 
 import piixcolor.modele.Modele;
 import piixcolor.utilitaire.ObjetColore;
+import piixcolor.utilitaire.Observateur;
 import piixcolor.vue.Fenetre;
 
 public class PlateauControleur extends Controleur{
 
 	private Point coordObjetCourant = null;
+	private List<ObjetColore> possibilities;
 	
 	public PlateauControleur(Modele m){
 		super(m);
+		
+		possibilities = new ArrayList<ObjetColore>();
+		for (int i =0; i < getNbCouleur(); i++) {
+			for (int j = 0; j < getNbForme(); j++) {
+				possibilities.add(new ObjetColore(getModele().getCouleursConfig().get(i), getModele().getFormesConfig().get(j)));
+			}
+		}
 	}
 	
 	/**
@@ -45,9 +60,33 @@ public class PlateauControleur extends Controleur{
 		}
 	}
 	
-	public void actualise(int sig) {
-		// TODO Auto-generated method stub
-		
+
+	public void estFini(JPanel matrice) {
+		boolean fini = true;
+		for (int i =  (getNbCouleur() + 1) * (getNbForme() + 1); i < taillePlateau() - 1; i++) {
+			Component c = matrice.getComponent(i);		
+			if (((Container) c).getComponentCount() == 0) {
+				continue; //Si il n'y a aucune forme on passe l'étape
+			}
+			
+			//On recupere l'index de l'objet
+			Point coord = coordMatrice(c.getLocation());
+			int nbLigne = (int) (coord.getY() - getNbCouleur());
+			int index =  (int) coord.getX() + ((getNbForme() + 1) * (nbLigne - 1));
+			if (index >= getNbObjetColore()) {
+				break;
+			}
+			
+			//On regarde si l'objet fait partie des possibilités
+			ObjetColore obj = getModele().getReserveForme().get(index);
+			if (possibilities.contains(obj)) {
+				fini = false;
+				break;
+			}
+		}
+		if (fini) {
+			getModele().notifier(Observateur.SIG_PARTIE_FINIE);
+		}
 	}
 
 	public Point getCoordObjetCourant() {

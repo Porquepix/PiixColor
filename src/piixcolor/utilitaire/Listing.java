@@ -8,16 +8,23 @@ import java.util.Comparator;
 import javax.swing.JOptionPane;
 
 import piixcolor.modele.Modele;
-import piixcolor.vue.Fenetre;
+import piixcolor.vue.BoiteDialogue;
 
 public class Listing {
 
+	/**
+	 * Liste les images (uniquement .png) présent dans le dossier passer en paramètre.
+	 * La liste est triés par ordre croissant de dernière modification.
+	 * 
+	 * @param path dossier ou chercher les images
+	 * @return liste des images dans le dossier (null si le dossier n'existe pas)
+	 */
 	public static File[] listeImages(String path) {
 		File f = new File(path);
 		
 		if (!f.exists()) {
-			JOptionPane.showMessageDialog(Fenetre.getInstance(), "Impossible d'ouvrir le dossier : '" + f.getAbsolutePath() + "'", "Erreur", JOptionPane.ERROR_MESSAGE);
-			System.exit(-1);
+			BoiteDialogue.createModalBox(JOptionPane.ERROR_MESSAGE, "Erreur", "Impossible d'ouvrir le dossier : '" + f.getAbsolutePath() + "'.");
+			return null;
 		}
 
 		FilenameFilter filtre = new FilenameFilter() {

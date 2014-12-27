@@ -11,24 +11,31 @@ import piixcolor.utilitaire.Observateur;
 
 public class AdminControleur extends Controleur {
 
+	/**
+	 * Constructeur du controleur de l'admin. Il se contente d'appeler celui de la classe Controleur.
+	 * 
+	 * @param m modele de l'application
+	 * 
+	 * @see Controleur#Controleur(Modele)
+	 */
 	public AdminControleur(Modele m) {
 		super(m);
 	}
 	
 	/**
-	 * Enregistre une image ï¿½ l'interieur de l'application.
-	 * L'image est prï¿½alablement redimensionnï¿½e pour gagner de l'espace disque.
-	 * La mï¿½thode possï¿½de une sï¿½curitï¿½ pour ï¿½viter l'ï¿½crasement d'image (dans le cas oï¿½ le nom de l'image importï¿½e est dï¿½jï¿½ prï¿½sent). 
+	 * Enregistre une image à l'interieur de l'application (Forme).
+	 * L'image est préalablement redimensionnée pour gagner de l'espace disque.
+	 * La méthode possède une sécurité pour éviter l'écrasement d'image (dans le cas où le nom de l'image importée est déjà présent). 
 	 * 
-	 * @param image image a enregistï¿½
-	 * @return true si l'image a pu ï¿½tre enregistrï¿½, false sinon
+	 * @param image image a enregisté
+	 * @return true si l'image a pu être enregistré, false sinon
 	 */
 	public boolean saveImage(File image) {
 		try {
 			BufferedImage i = ImageIO.read(image);
 			String imageName = image.getName().split("\\.")[0];
 			
-			//sï¿½curitï¿½ pour empï¿½cher l'ï¿½crasement d'image
+			//sécurité pour empécher l'écrasement de l'image
 			File f = new File(Modele.DOSSIER_FORMES + imageName + "." + Modele.FORMAT_IMAGE_SAVE);
 			int j = 1;
 			while (f.exists()) {
@@ -49,15 +56,16 @@ public class AdminControleur extends Controleur {
 		}
 	}
 
+	/**
+	 * Supprime une image de l'application.
+	 * 
+	 * @param image image a supprimé
+	 * @return true si l'image a pu être supprimé, false sinon
+	 */
 	public boolean deleteImage(File image) {
 		if (image.delete()) {
 			return true;
 		}
 		return false;
 	}
-
-	public void actualise(int sig) {
-		
-	}
-
 }
