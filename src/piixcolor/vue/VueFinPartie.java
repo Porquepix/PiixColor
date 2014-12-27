@@ -29,10 +29,10 @@ public class VueFinPartie extends Vue {
 	public VueFinPartie(Fenetre f) {
 		super(f, null);
 		
-		setBackground(Color.WHITE);
+		setBackground(new Color(255, 255, 255, 210));
 		
 		JPanel container = new JPanel();
-		container.setBackground(Color.WHITE);
+		container.setOpaque(false);
 		container.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		

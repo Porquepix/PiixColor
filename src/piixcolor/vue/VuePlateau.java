@@ -292,9 +292,12 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 	public void actualise(int sig) {
 		if (sig == SIG_PARTIE_FINIE) {
 			getControleur().getModele().retireObservateur(this);
-			fenetre.switchPanel(new VueFinPartie(fenetre));
+			layeredPane.add(new VueFinPartie(fenetre), 0);
+			layeredPane.setOpaque(false);
+			layeredPane.removeMouseListener(this);
+			layeredPane.removeMouseMotionListener(this);
+		} else {			
+			refreshVue();
 		}
-		
-		refreshVue();
 	}
 }
