@@ -597,7 +597,7 @@ public class VueAdmin extends Vue {
 	 *            MouseListener s'appliquant sur le bouton supprimer
 	 * @return Un panel (JPanel) contenant les actions
 	 * 
-	 * @see VueAdmin#createFormeFrame(File, Map)
+	 * @see VueAdmin#createFormeFrame(File, Map, ActionListener, MouseListener)
 	 */
 	private JPanel createFormesActionPane(File image,
 			Map<String, JCheckBox> whereSaveCheckBoxs, ActionListener ae,

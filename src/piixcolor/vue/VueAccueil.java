@@ -34,6 +34,15 @@ public class VueAccueil extends Vue {
 	
 	private BufferedImage image;
 
+	/**
+	 * Constructeur de la VueAccueil. Appel le superconstructeur de Vue.
+	 * De nombreux assets sont chargés.
+	 * Il faut aussi définir des Listener pour les deux boutons.
+	 * 
+	 * @param f La fenêtre.
+	 * @param controleur Le controleur.
+	 * @see AccueilControleur
+	 */
 	public VueAccueil(Fenetre f, AccueilControleur controleur) {
 		super(f, controleur);
 		
@@ -82,6 +91,9 @@ public class VueAccueil extends Vue {
 		add(container);
 	}
 
+	/**
+	 * Redéfinition de paintComponent pour adapter le dessin du graphics à la taille de notre fenêtre.
+	 */
 	public void paintComponent(Graphics g) {
 	    super.paintComponent(g);
 	    Graphics2D g2d = (Graphics2D) g;
