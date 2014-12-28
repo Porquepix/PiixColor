@@ -1,5 +1,4 @@
-ï»¿package piixcolor.vue;
-
+package piixcolor.vue;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -29,25 +28,46 @@ import piixcolor.modele.Modele;
 @SuppressWarnings("serial")
 public class VuePlateau extends Vue implements MouseListener, MouseMotionListener {
 	private static final String IMAGE_RETURN = Modele.DOSSIER_ASSETS + "exit.png";
-	
+	/**
+	 * layeredPane, permet le glisser déposer.
+	 */
 	JLayeredPane layeredPane;
+	/**
+	 * La matrice, grille contenant tout le plateau.
+	 */
 	JPanel matrice;
+	/**
+	 * Forme que le joueur est entrain de déplacer.
+	 */
 	JLabel formeCourante;
+	/**
+	 * Case d'où provenait la forme courante.
+	 * @see VuePlateau#formeCourante
+	 */
 	Container caseFormeCourante;
+	/**
+	 * Ajustement horizontal du curseur.
+	 */
 	int ajustementX;
+	/**
+	 * Ajustement vertical du curseur.
+	 */
 	int ajustementY;
+	/**
+	 * Dimension de la matrice.
+	 */
 	Dimension dimensionMatrice;
 
 	
 /**
- * Constructeur classique d'une vue de plateau de jeu. On crÃ©e un LayeredPane pour le drag and drop, on crÃ©e un Panel reprÃ©sentant la matrice que l'on divise en grille de sous pannels carrÃ©s.
- * On crÃ©e un bouton pour retourner Ã  l'accueil. Enfin on initialise la vue en appelant initVue().
+ * Constructeur classique d'une vue de plateau de jeu. On crée un LayeredPane pour le drag and drop, on crée un Panel représentant la matrice que l'on divise en grille de sous pannels carrés.
+ * On crée un bouton pour retourner à  l'accueil. Enfin on initialise la vue en appelant initVue().
  * 
  * @param f 
  * 		Fenetre dans laquelle se trouve la vue du plateau
  * @param c
  * 		Controleur de la vue du plateau
- * @see initVue
+ * @see VuePlateau#initVue()
  */
 	public VuePlateau(Fenetre f, PlateauControleur c) {
 		super(f, c);
@@ -67,20 +87,20 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 		// Initialisation de la vue
 		initVue();
 		
-		// CrÃ©ation du bouton de retour Ã  l'accueil
+		// Création du bouton de retour à  l'accueil
 		ajoutBoutonRetour();		
 	}
 	
 	/**
-	 * Constructeur permettant de crÃ©er une vue plateau complÃ¨tment statique et dÃ©pourvu de bouton de retour.
-	 * Elle est nÃ©anmoins mise Ã  jour automatiquement en fonction des modification du modÃ¨le grÃ¢ce Ã  son controleur. Constructeur servant Ã  la gÃ©nÃ©ration d'aperÃ§us.
+	 * Constructeur permettant de créer une vue plateau complètment statique et dépourvu de bouton de retour.
+	 * Elle est néanmoins mise à  jour automatiquement en fonction des modification du modèle grâce à  son controleur. Constructeur servant à  la génération d'aperçus.
 	 * 
 	 * @param f 
 	 * 		Fenetre dans laquelle se trouve la vue du plateau
 	 * @param c
 	 * 		Controleur de la vue du plateau
-	 * @param dimensionVue
-	 * 		Dimension voulue pour l'aperÃ§u
+	 * @param dimension
+	 * 		Dimension voulue pour l'aperçu
 	 * @see VueAdmin
 	 */
 	public VuePlateau(Fenetre f, PlateauControleur c, Dimension dimension) {
@@ -98,8 +118,8 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 	}
 	/**
 	 * Initialisation de la vue plateau :
-	 * CrÃ©ation d'un GridLayout correspondant on nombre de case actuel puis parcours de la matrice pour y ajouter ses composantes et son quadrillage.
-	 * Ensuite trois boucles qui parcourent les panels de la matrice pour y afficher les formes, couleurs et objets colorÃ©s correspondant Ã  la configuration en cours.
+	 * Création d'un GridLayout correspondant on nombre de case actuel puis parcours de la matrice pour y ajouter ses composantes et son quadrillage.
+	 * Ensuite trois boucles qui parcourent les panels de la matrice pour y afficher les formes, couleurs et objets colorés correspondant à  la configuration en cours.
 	 */
 	public void initVue(){
 		JLabel image;
@@ -154,12 +174,12 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 			k++;
 		}
 		
-		//Ajout des formes colorÃ©s Ã  "formes"
+		//Ajout des formes colorés à  "formes"
 		int l = ((getControleur().getNbCouleur()+1)*(getControleur().getNbForme()+1));
 		for (int i = 0; i < getControleur().getNbObjetColore(); i++) {
 			BufferedImage image1 = getControleur().getModele().getReserveForme().get(i).getImage();
 			JLabel objetColore = new JLabel(new ImageIcon(getControleur().resizeImage(image1, ((PlateauControleur) getControleur()).getCaseHeight(), ((PlateauControleur) getControleur()).getCaseHeight())));	
-			//On empÃ¨che d'Ã©crire au delÃ  du plateau mais aussi sur le bouton de retour donc si on atteint taillePlateau() - 1 on arrÃªte de dessiner des formes
+			//On empèche d'écrire au delà  du plateau mais aussi sur le bouton de retour donc si on atteint taillePlateau() - 1 on arràªte de dessiner des formes
 			if(l >= getControleur().taillePlateau() - 1) {
 				break;
 			}
@@ -170,7 +190,7 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 	}
 	
 	/**
-	 * MÃ©thode de nettoyage de la vue plateau :
+	 * Méthode de nettoyage de la vue plateau :
 	 * On retire tous les composants des panels de la matrice et on repeint leurs fonds en blanc.
 	 */
 	public void clearVue() {
@@ -180,15 +200,20 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 	
 	/**
 	 * Rafraichissement de la vue :
-	 * On nettoie la vue de tous ses anciens composants et on la rÃ©initialise avec le modÃ¨le mis Ã  jour
-	 * @see clearVue
-	 * @see initVue
+	 * On nettoie la vue de tous ses anciens composants et on la réinitialise avec le modèle mis à  jour
+	 * @see VuePlateau#clearVue()
+	 * @see VuePlateau#initVue()
 	 */
 	public void refreshVue() {
 		clearVue();
 		initVue();
 	}
 
+	/**
+	 * Ajout du bouton de retour lorsque la matrice à créer n'est pas un apercu.
+	 * Il faut créer un label avec un MouseListener pour repérer quand l'utilisateur clique sur le bouton. Il faut également charger l'image de ce bouton dans les assets.
+	 * On place le bouton en bas à droite du plateau dans la dernière case.
+	 */
 	public void ajoutBoutonRetour(){
 		JLabel image;
 		JPanel panel;
@@ -198,29 +223,23 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 				getControleur().getModele().retireObservateur(getView());
 				fenetre.switchPanel(new VueAccueil(fenetre, new AccueilControleur(Modele.getInstance())));
 			}
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
+			public void mouseEntered(MouseEvent e) {}
 				
-			}
-					@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-					@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-					@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub	
-			}
+			public void mouseExited(MouseEvent e) {}
+
+			public void mousePressed(MouseEvent e) {}
+
+			public void mouseReleased(MouseEvent e) {}
 		});
 		panel =  (JPanel) matrice.getComponent(getControleur().taillePlateau() - 1);
 		panel.add(image);
 	}
 	
+	/**
+	 * Méthode pour récupérer les évènements concernant un déplacement de la souris lorsque le bouton de celle-ci est pressé.
+	 * Il faut s'assurer que cela ne marche qu'avec le bouton gauche de la souris.
+	 * On test si la vue a une forme courante et si oui on peut la déplacer en fonction des mouvements de la souris en prenant compte de l'ajustement vertical et horizontal.
+	 */
 	public void mouseDragged(MouseEvent me) {
 		if(SwingUtilities.isLeftMouseButton(me)) {
 			if (formeCourante == null)
@@ -229,28 +248,22 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 		}
 	}
 
-	@Override
-	public void mouseMoved(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-	}
+	public void mouseMoved(MouseEvent arg0) {}
 
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-	}
+	public void mouseClicked(MouseEvent e) {}
 
-	@Override
-	public void mouseEntered(MouseEvent me) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
+	public void mouseEntered(MouseEvent me) {}
+	
+	public void mouseExited(MouseEvent arg0) {}
 
 
+	/**
+	 * Méthode pour récupérer un évènement concernant la pression des boutons de la souris.
+	 * Il faut s'assurer que cela ne marche qu'avec le bouton gauche de la souris.
+	 * On observe le composant de la matrice sur lequel l'utilisateur à cliqué.
+	 * On s'assure qu'il s'agit bien d'une forme coloré (divers test sur la position et la contenance des cases de la matrice) et si c'est bien le cas on peut donner une forme courante à la vue et passer cette forme dans la couche draggable.
+	 * De plus il faut gérer l'affichage de cette forme courante lorsqu'on clique dessus : il faut prendre en compte l'ajustement vertical et horizontal.
+	 */
 	public void mousePressed(MouseEvent e) {
 		if(SwingUtilities.isLeftMouseButton(e)) {
 			formeCourante = null;
@@ -272,6 +285,14 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 		}
 	}
 
+	/**
+	 * Méthode pour récupérer un évènement concernant le relachement d'un bouton de la souris.
+	 * Il faut s'assurer que cela ne marche qu'avec le bouton gauche de la souris.
+	 * On effectue divers test pour vérifier que l'utilisateur relache bien la souris sur la matrice et qu'il existe bien une forme courante draggée.
+	 * Après cela on peut tester si l'emplacement est correct pour l'objet coloré et enfin tester si la partie est finie à l'aide de divers méthode du PlateauControleur
+	 * @see PlateauControleur#positionCorrecte(Point)
+	 * @see PlateauControleur#estFini(JPanel)
+	 */
 	public void mouseReleased(MouseEvent e) {
 		if(SwingUtilities.isLeftMouseButton(e)) {
 			if (formeCourante == null)
@@ -289,6 +310,11 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 		}
 	}
 
+	/**
+	 * Méthode d'actualisation appelée quand le modèle est mis à jour et qu'il notifie ses observateurs.
+	 * Dans la vue Plateau un seul signal nous interesse : si la partie est finie il faut switcher vers la vue de fin de partie.
+	 * Si un autre signal est envoyé on se contentera de rafraichir la vue.
+	 */
 	public void actualise(int sig) {
 		if (sig == SIG_PARTIE_FINIE) {
 			getControleur().getModele().retireObservateur(this);

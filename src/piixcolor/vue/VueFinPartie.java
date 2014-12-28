@@ -26,6 +26,13 @@ public class VueFinPartie extends Vue {
 	private static final String IMAGE_HOME_BUTTON = Modele.DOSSIER_ASSETS + "/btn-accueil.png";
 	private static final String IMAGE_HOME_BUTTON_HOVER = Modele.DOSSIER_ASSETS + "/btn-accueil-hover.png";
 
+	/**
+	 * Constructeur de la VueFinPartie. Appel le superconstructeur de Vue (sans controleur ?).
+	 * De nombreux assets sont chargés et le fond de la vue n'est pas complètement opaque.
+	 * Il faut aussi définir des Listener pour les deux boutons.
+	 * 
+	 * @param f La fenêtre.
+	 */
 	public VueFinPartie(Fenetre f) {
 		super(f, null);
 		
