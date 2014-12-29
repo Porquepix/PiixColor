@@ -682,7 +682,7 @@ public class VueAdmin extends Vue {
 
 		ActionListener ae = null;
 		for (Couleur c : Couleur.values()) {
-			ae = new AtpCouleurListener(c);
+			ae = new ApCouleurListener(c);
 			colorsTable.add(createColorFrame(c, apCouleursCheckBoxes, ae));
 		}
 
@@ -715,7 +715,7 @@ public class VueAdmin extends Vue {
 		ActionListener ae = null;
 		MouseListener ml = null;
 		for (File image : images) {
-			ae = new AtpFormeListener(image);
+			ae = new ApFormeListener(image);
 			ml = new DeleteFormeMouseListener(image);
 			box.add(createFormeFrame(image, apFormesCheckBoxes, ae, ml));
 		}
@@ -794,7 +794,7 @@ public class VueAdmin extends Vue {
 		JPanel colorsContainer = createContainer(PANEL_WIDTH, PANEL_HEIGHT - 25);
 		JPanel colorsTable = createColorsTable();
 
-		ActionListener ae = new AbpCouleurListener();
+		ActionListener ae = new ArCouleurListener();
 		for (Couleur c : Couleur.values()) {
 			colorsTable.add(createColorFrame(c, arCouleursCheckBoxes, ae));
 		}
@@ -817,7 +817,7 @@ public class VueAdmin extends Vue {
 	private JPanel initArFormesPanel() {
 		Box box = Box.createVerticalBox();
 
-		ActionListener ae = new AbpFormeListener();
+		ActionListener ae = new ArFormeListener();
 		File[] images = Listing.listeImages(Modele.DOSSIER_FORMES);
 		for (File image : images) {
 			MouseListener ml = new DeleteFormeMouseListener(image);
@@ -1201,14 +1201,30 @@ public class VueAdmin extends Vue {
 
 	}
 
-	class AtpCouleurListener implements ActionListener {
-
+	/**
+	 * Listener implémenté sur les checkboxs du panel des couleurs de la partie "Configuration du plateau".
+	 * Lorsqu'une des checkboxs est coché / décoché la fonction actionPerformed est automatiquement appelée.
+	 */
+	class ApCouleurListener implements ActionListener {
+		
+		/**
+		 * Couleur représentée la checkbox.
+		 */
 		private Couleur c;
 
-		public AtpCouleurListener(Couleur c) {
+		/**
+		 * Constructeur du listener.
+		 * 
+		 * @param c Couelur représentée par la checkbox.
+		 */
+		public ApCouleurListener(Couleur c) {
 			this.c = c;
 		}
 
+		/**
+		 * Fonction appelé lorsqu'une des checkboxs est coché / décoché.
+		 * Si la checkbox était cochée retire la couleur du modele. Sinon l'ajoute au modele.
+		 */
 		public void actionPerformed(ActionEvent e) {
 			if (((JCheckBox) e.getSource()).isSelected()) {
 				getControleur().getModele().addCouleur(c);
@@ -1218,20 +1234,44 @@ public class VueAdmin extends Vue {
 		}
 	}
 
-	class AbpCouleurListener implements ActionListener {
+	/**
+	 * Listener implémenté sur les checkboxs du panel des couleurs de la partie "Configuration de la réserve".
+	 * Lorsqu'une des checkboxs est coché / décoché la fonction actionPerformed est automatiquement appelée.
+	 */
+	class ArCouleurListener implements ActionListener {
+		
+		/**
+		 * Lorsqu'une des checkboxs est coché / décoché rafraichie le panel.
+		 */
 		public void actionPerformed(ActionEvent e) {
 			refreshArColorsCheckBoxs();
 		}
 	}
 
-	class AtpFormeListener implements ActionListener {
+	/**
+	 * Listener implémenté sur les checkboxs du panel des formes de la partie "Configuration du plateau".
+	 * Lorsqu'une des checkboxs est coché / décoché la fonction actionPerformed est automatiquement appelée.
+	 */
+	class ApFormeListener implements ActionListener {
 
+		/**
+		 * Fichier représentée par la checkbox.
+		 */
 		private File image;
 
-		public AtpFormeListener(File image) {
+		/**
+		 * Constructeur du listener.
+		 * 
+		 * @param image Fichier représentée par la checkbox.
+		 */
+		public ApFormeListener(File image) {
 			this.image = image;
 		}
 
+		/**
+		 * Fonction appelé lorsqu'une des checkboxs est coché / décoché.
+		 * Si la checkbox était cochée retire la forme du modele. Sinon l'ajoute au modele.
+		 */
 		public void actionPerformed(ActionEvent e) {
 			if (((JCheckBox) e.getSource()).isSelected()) {
 				getControleur().getModele().addForme(image);
@@ -1241,16 +1281,36 @@ public class VueAdmin extends Vue {
 		}
 	}
 
-	class AbpFormeListener implements ActionListener {
+	/**
+	 * Listener implémenté sur les checkboxs du panel des formes de la partie "Configuration de la réserve".
+	 * Lorsqu'une des checkboxs est coché / décoché la fonction actionPerformed est automatiquement appelée.
+	 */
+	class ArFormeListener implements ActionListener {
+		
+		/**
+		 * Lorsqu'une des checkboxs est coché / décoché rafraichie le panel.
+		 */
 		public void actionPerformed(ActionEvent e) {
 			refreshArFormesCheckBoxs();
 		}
 	}
 
+	/**
+	 * Listener implémenté sur l'icone pour supprimer une forme. 
+	 * Il sert à détecter le clic dessus ainsi que le survol pour faire changer le style du bouton.
+	 */
 	class DeleteFormeMouseListener implements MouseListener {
 
+		/**
+		 * Fichier à supprimer lors du clic.
+		 */
 		private File image;
 
+		/**
+		 * Constructeur du listener.
+		 * 
+		 * @param imageToDelete Fichier à supprimer lors du clic.
+		 */
 		public DeleteFormeMouseListener(File imageToDelete) {
 			this.image = imageToDelete;
 		}
@@ -1261,14 +1321,24 @@ public class VueAdmin extends Vue {
 		public void mousePressed(MouseEvent e) {
 		}
 
+		/**
+		 * Remets le style par défaut de l'icone lorsque la souris ne le survol plus.
+		 */
 		public void mouseExited(MouseEvent e) {
 			((JLabel) e.getSource()).setIcon(new ImageIcon(IMAGE_TRASH));
 		}
 
+		/**
+		 * Change le style de l'icone quand la souris le survol.
+		 */
 		public void mouseEntered(MouseEvent e) {
 			((JLabel) e.getSource()).setIcon(new ImageIcon(IMAGE_TRASH_HOVER));
 		}
 
+		/**
+		 * Lorsque l'on clique sur l'icone une boite de dialogue de confirmation s'ouvre.
+		 * Si oui est répondu le fichier est supprimé.
+		 */
 		public void mouseClicked(MouseEvent e) {
 			String[] options = { "Oui", "Non" };
 			int retour = BoiteDialogue
@@ -1302,10 +1372,22 @@ public class VueAdmin extends Vue {
 
 	}
 
+	/**
+	 * Listener implémenté sur l'icone pour supprimer un objet coloré de la réserve. 
+	 * Il sert à détecter le clic dessus ainsi que le survol pour faire changer le style du bouton.
+	 */
 	class DeleteFormeColoreeMouseListener implements MouseListener {
 
+		/**
+		 * Objet à retirer lors du clic.
+		 */
 		private ObjetColore image;
 
+		/**
+		 * Construteur du listener.
+		 * 
+		 * @param imageToDelete Objet à retirer lors du clic.
+		 */
 		public DeleteFormeColoreeMouseListener(ObjetColore imageToDelete) {
 			this.image = imageToDelete;
 		}
@@ -1316,14 +1398,23 @@ public class VueAdmin extends Vue {
 		public void mousePressed(MouseEvent e) {
 		}
 
+		/**
+		 * Remets le style par défaut de l'icone lorsque la souris ne le survol plus.
+		 */
 		public void mouseExited(MouseEvent e) {
 			((JLabel) e.getSource()).setIcon(new ImageIcon(IMAGE_CLOSE));
 		}
 
+		/**
+		 * Change le style de l'icone quand la souris le survol.
+		 */
 		public void mouseEntered(MouseEvent e) {
 			((JLabel) e.getSource()).setIcon(new ImageIcon(IMAGE_CLOSE_HOVER));
 		}
 
+		/**
+		 * Lorsque l'on clique sur l'icone l'objet est enlevé de la réserve.
+		 */
 		public void mouseClicked(MouseEvent e) {
 			getControleur().getModele().removeObjetColore(this.image);
 		}

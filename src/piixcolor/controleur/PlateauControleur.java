@@ -98,7 +98,7 @@ public class PlateauControleur extends Controleur{
 	 */
 	public boolean positionCorrecte (Point coordPhys) {
 		Point coordMatricielle = coordMatrice(coordPhys);
-		if (coordMatricielle.getY() > getNbCouleur()){
+		if (coordMatricielle.getX() <= 0 || coordMatricielle.getX() > getNbForme() || coordMatricielle.getY() <= 0 || coordMatricielle.getY() > getNbCouleur()){
 			return false;
 		} else {
 			ObjetColore objetCorrect = new ObjetColore(getModele().getCouleursConfig().get((int)coordMatricielle.getY()-1), getModele().getFormesConfig().get((int)coordMatricielle.getX()-1));
@@ -107,12 +107,12 @@ public class PlateauControleur extends Controleur{
 		}
 	}
 	
-/**
- * Test si la partie en cours est finie ou pas. On appelera cette méthode à chaque formes déposées sur la matrice. Dans le cas ou la partie est terminée il faudra notifier le programme avec un signal de fin de partie.
- * On parcourt toute la réserve de forme en testant si la forme déposée fait partie des possibilités
- * 
- * @param matrice La matrice du plateau
- */
+	/**
+	 * Test si la partie en cours est finie ou pas. On appelera cette méthode à chaque formes déposées sur la matrice. Dans le cas ou la partie est terminée il faudra notifier le programme avec un signal de fin de partie.
+	 * On parcourt toute la réserve de forme en testant si la forme déposée fait partie des possibilités
+	 * 
+	 * @param matrice La matrice du plateau
+	 */
 	public void estFini(JPanel matrice) {
 		boolean fini = true;
 		for (int i =  (getNbCouleur() + 1) * (getNbForme() + 1); i < taillePlateau() - 1; i++) {

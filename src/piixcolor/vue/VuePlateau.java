@@ -27,6 +27,9 @@ import piixcolor.modele.Modele;
 
 @SuppressWarnings("serial")
 public class VuePlateau extends Vue implements MouseListener, MouseMotionListener {
+	/**
+	 * Chemin vers l'icone du bouton de sortie.
+	 */
 	private static final String IMAGE_RETURN = Modele.DOSSIER_ASSETS + "exit.png";
 	/**
 	 * layeredPane, permet le glisser déposer.
@@ -58,17 +61,16 @@ public class VuePlateau extends Vue implements MouseListener, MouseMotionListene
 	 */
 	Dimension dimensionMatrice;
 
-	
-/**
- * Constructeur classique d'une vue de plateau de jeu. On crée un LayeredPane pour le drag and drop, on crée un Panel représentant la matrice que l'on divise en grille de sous pannels carrés.
- * On crée un bouton pour retourner à  l'accueil. Enfin on initialise la vue en appelant initVue().
- * 
- * @param f 
- * 		Fenetre dans laquelle se trouve la vue du plateau
- * @param c
- * 		Controleur de la vue du plateau
- * @see VuePlateau#initVue()
- */
+	/**
+	 * Constructeur classique d'une vue de plateau de jeu. On crée un LayeredPane pour le drag and drop, on crée un Panel représentant la matrice que l'on divise en grille de sous pannels carrés.
+	 * On crée un bouton pour retourner à  l'accueil. Enfin on initialise la vue en appelant initVue().
+	 * 
+	 * @param f 
+	 * 		Fenetre dans laquelle se trouve la vue du plateau
+	 * @param c
+	 * 		Controleur de la vue du plateau
+	 * @see VuePlateau#initVue()
+	 */
 	public VuePlateau(Fenetre f, PlateauControleur c) {
 		super(f, c);
 		

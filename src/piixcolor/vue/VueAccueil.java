@@ -25,14 +25,40 @@ import piixcolor.modele.Modele;
 @SuppressWarnings("serial")
 public class VueAccueil extends Vue {
 
+	/**
+	 * Chemin vers l'image de fond de l'accueil.
+	 */
 	private static final String IMAGE_BACKGROUND = Modele.DOSSIER_ASSETS + "/bg.jpg";
+	
+	/**
+	 * Chemin vers l'image du logo PiixColor.
+	 */
 	private static final String IMAGE_LOGO = Modele.DOSSIER_ASSETS + "/logo.png";
+	
+	/**
+	 * Chemin vers l'image du bouton "jouer".
+	 */
 	private static final String IMAGE_PLAY_BUTTON = Modele.DOSSIER_ASSETS + "/btn-jouer.png";
+	
+	/**
+	 * Chemin vers l'image du bouton "jouer" quand la souris passe dessus.
+	 */
 	private static final String IMAGE_PLAY_BUTTON_HOVER = Modele.DOSSIER_ASSETS + "/btn-jouer-hover.png";
+	
+	/**
+	 * Chemin vers l'image du bouton "espace enseignant".
+	 */
 	private static final String IMAGE_ADMIN_BUTTON = Modele.DOSSIER_ASSETS + "/btn-enseignant.png";
+	
+	/**
+	 * Chemin vers l'image du bouton "espace enseignant" quand la souris passe dessus.
+	 */
 	private static final String IMAGE_ADMIN_BUTTON_HOVER = Modele.DOSSIER_ASSETS + "/btn-enseignant-hover.png";
 	
-	private BufferedImage image;
+	/**
+	 * Image de fond de la vue accueil.
+	 */
+	private BufferedImage background;
 
 	/**
 	 * Constructeur de la VueAccueil. Appel le superconstructeur de Vue.
@@ -54,7 +80,7 @@ public class VueAccueil extends Vue {
 		//LOAD BACKGROUND
 		try {
 			BufferedImage bg = ImageIO.read(new File(IMAGE_BACKGROUND));
-			image = getControleur().resizeImage(bg, Fenetre.FRAME_WIDTH, Fenetre.FRAME_HEIGHT);
+			background = getControleur().resizeImage(bg, Fenetre.FRAME_WIDTH, Fenetre.FRAME_HEIGHT);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
@@ -97,17 +123,24 @@ public class VueAccueil extends Vue {
 	public void paintComponent(Graphics g) {
 	    super.paintComponent(g);
 	    Graphics2D g2d = (Graphics2D) g;
-	    int x = (this.getWidth() - image.getWidth(null)) / 2;
-	    int y = (this.getHeight() - image.getHeight(null)) / 2;
-	    g2d.drawImage(image, x, y, null);
+	    int x = (this.getWidth() - background.getWidth(null)) / 2;
+	    int y = (this.getHeight() - background.getHeight(null)) / 2;
+	    g2d.drawImage(background, x, y, null);
 	}
 	
 	public void actualise(int sig) {
 		
 	}
 	
+	/**
+	 * Listener implémenté sur le bouton "jouer". 
+	 * Il sert à détecter le clic dessus ainsi que le survol pour faire changer le style du bouton.
+	 */
 	class playButtonListener implements MouseListener {
 
+		/**
+		 * Lorsque l'on clique sur le bouton le plateau de jeu s'ouvre et une nouvelle partie commence.
+		 */
 		public void mouseClicked(MouseEvent e) {
 			Modele m = Modele.getInstance();
 			if(m.getCouleursConfig().size() == 0 || m.getFormesConfig().size() == 0) {
@@ -117,10 +150,16 @@ public class VueAccueil extends Vue {
 			}
 		}
 
+		/**
+		 * Change le style du bouton quand la souris le survol.
+		 */
 		public void mouseEntered(MouseEvent e) {
 			((JLabel) e.getSource()).setIcon(new ImageIcon(IMAGE_PLAY_BUTTON_HOVER));
 		}
 
+		/**
+		 * Remets le style par défaut du bouton lorsque la souris ne le survol plus.
+		 */
 		public void mouseExited(MouseEvent e) {	
 			((JLabel) e.getSource()).setIcon(new ImageIcon(IMAGE_PLAY_BUTTON));
 		}
@@ -135,16 +174,29 @@ public class VueAccueil extends Vue {
 		
 	}
 	
+	/**
+	 * Listener implémenté sur le bouton "espace enseignant". 
+	 * Il sert à détecter le clic dessus ainsi que le survol pour faire changer le style du bouton.
+	 */
 	class adminButtonListener implements MouseListener {
 
+		/**
+		 * Lorsque l'on clique sur le bouton l'administration s'ouvre.
+		 */
 		public void mouseClicked(MouseEvent e) {
 			fenetre.switchPanel(new VueAdmin(fenetre, new AdminControleur(Modele.getInstance())));		
 		}
 
+		/**
+		 * Change le style du bouton quand la souris le survol.
+		 */
 		public void mouseEntered(MouseEvent e) {
 			((JLabel) e.getSource()).setIcon(new ImageIcon(IMAGE_ADMIN_BUTTON_HOVER));
 		}
 
+		/**
+		 * Remets le style par défaut du bouton lorsque la souris ne le survol plus.
+		 */
 		public void mouseExited(MouseEvent e) {	
 			((JLabel) e.getSource()).setIcon(new ImageIcon(IMAGE_ADMIN_BUTTON));
 		}

@@ -20,10 +20,29 @@ import piixcolor.modele.Modele;
 @SuppressWarnings("serial")
 public class VueFinPartie extends Vue {
 	
+	/**
+	 * Chemin vers l'image de fin de partie.
+	 */
 	private static final String IMAGE_END = Modele.DOSSIER_ASSETS + "/partie-finie.png";
+	
+	/**
+	 * Chemin vers l'image du  bouton "rejouer".
+	 */
 	private static final String IMAGE_REPLAY_BUTTON = Modele.DOSSIER_ASSETS + "/btn-rejouer.png";
+	
+	/**
+	 * Chemin vers l'image du bouton "rejouer" quand la souris passe dessus.
+	 */
 	private static final String IMAGE_REPLAY_BUTTON_HOVER = Modele.DOSSIER_ASSETS + "/btn-rejouer-hover.png";
+	
+	/**
+	 * Chemin vers l'image du bouton "accueil".
+	 */
 	private static final String IMAGE_HOME_BUTTON = Modele.DOSSIER_ASSETS + "/btn-accueil.png";
+	
+	/**
+	 * Chemin vers l'image du bouton "accueil" quand la souris passe dessus.
+	 */
 	private static final String IMAGE_HOME_BUTTON_HOVER = Modele.DOSSIER_ASSETS + "/btn-accueil-hover.png";
 
 	/**
@@ -74,20 +93,31 @@ public class VueFinPartie extends Vue {
 		add(container);
 	}
 
-	public void actualise(int sig) {
-		
-	}
+	public void actualise(int sig) {}
 	
+	/**
+	 * Listener implémenté sur le bouton "rejouer". 
+	 * Il sert à détecter le clic dessus ainsi que le survol pour faire changer le style du bouton.
+	 */
 	class playButtonListener implements MouseListener {
 
+		/**
+		 * Lorsque l'on clique sur le bouton on joue une nouvelle partie.
+		 */
 		public void mouseClicked(MouseEvent e) {
 			fenetre.switchPanel(new VuePlateau(fenetre, new PlateauControleur(Modele.getInstance())));	
 		}
 
+		/**
+		 * Change le style du bouton quand la souris le survol.
+		 */
 		public void mouseEntered(MouseEvent e) {
 			((JLabel) e.getSource()).setIcon(new ImageIcon(IMAGE_REPLAY_BUTTON_HOVER));
 		}
 
+		/**
+		 * Remets le style par défaut du bouton lorsque la souris ne le survol plus.
+		 */
 		public void mouseExited(MouseEvent e) {	
 			((JLabel) e.getSource()).setIcon(new ImageIcon(IMAGE_REPLAY_BUTTON));
 		}
@@ -102,16 +132,29 @@ public class VueFinPartie extends Vue {
 		
 	}
 	
+	/**
+	 * Listener implémenté sur le bouton "accueil". 
+	 * Il sert à détecter le clic dessus ainsi que le survol pour faire changer le style du bouton.
+	 */
 	class homeButtonListener implements MouseListener {
 
+		/**
+		 * Lorsque l'on clique sur le bouton on retourne à l'accueil.
+		 */
 		public void mouseClicked(MouseEvent e) {
 			fenetre.switchPanel(new VueAccueil(fenetre, new AccueilControleur(Modele.getInstance())));		
 		}
 
+		/**
+		 * Change le style du bouton quand la souris le survol.
+		 */
 		public void mouseEntered(MouseEvent e) {
 			((JLabel) e.getSource()).setIcon(new ImageIcon(IMAGE_HOME_BUTTON_HOVER));
 		}
 
+		/**
+		 * Remets le style par défaut du bouton lorsque la souris ne le survol plus.
+		 */
 		public void mouseExited(MouseEvent e) {	
 			((JLabel) e.getSource()).setIcon(new ImageIcon(IMAGE_HOME_BUTTON));
 		}

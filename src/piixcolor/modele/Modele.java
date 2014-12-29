@@ -243,7 +243,8 @@ public class Modele {
 	 * @param signal Un entier représentant un signal spécifique qui permet de donner une information supplémentaire sur la modification qui a été effectuée.
 	 */
 	public void notifier(int signal) {
-		for (Observateur ob : observateurs) {
+		List<Observateur> observateurs2 = new ArrayList<Observateur>(observateurs);
+		for (Observateur ob : observateurs2) {
 			ob.actualise(signal);
 		}
 	}
